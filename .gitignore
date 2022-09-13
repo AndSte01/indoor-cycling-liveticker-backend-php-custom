@@ -1,0 +1,15 @@
+# generated documentation
+/doc
+/.phpdoc
+
+# vscode settings
+/.vscode
+
+# legacy code
+/legacy
+
+# legacy testing
+/testing-legacy
+
+# internal-testing
+/internal-testing
