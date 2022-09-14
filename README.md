@@ -40,8 +40,9 @@ All of the documentation can be found in the [wiki](https://github.com/AndSte01/
     - test-cases
     - testing
   - documentation
-- Results [code_testing]
+- Results [testing]
   - all
+- poll [all]
 
 ## Testing
 Testing is done with [Hoppscotch](https://hoppscotch.io/) using the [environment](./testing/env.json) and test cases in the [testing](./testing) folder.
