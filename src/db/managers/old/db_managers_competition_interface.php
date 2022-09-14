@@ -33,7 +33,7 @@ interface managerCompetitionInterface
     /** @var int Some information required for the desired task is missing (like a missing id in the competition element) */
     const ERROR_MISSING_INFORMATION = 16;
     /** @var int Error happened at adaptor level */
-    const ERROR_adaptor = 32;
+    const ERROR_ADAPTOR = 32;
 
     /**
      * Searches for a competition with the id provided as argument

@@ -28,7 +28,7 @@ require_once(dirname(__FILE__) . "/../db_config.php");
 class managerUser
 {
     /** @var int Error at adaptor level */
-    public const ERROR_adaptor = 1;
+    public const ERROR_ADAPTOR = 1;
     /** @var int The desired user doesn't exist */
     public const ERROR_NOT_EXISTING = 2;
     /** @var int Error regarding the user password (e. g. it is false) */
@@ -304,7 +304,7 @@ class managerUser
 
         // add user to the database, and check for success
         if (adaptorUser::add($this->db, [$user]) == null)
-            return self::ERROR_adaptor;
+            return self::ERROR_ADAPTOR;
 
         // seems as if no errors occurred so return 0
         return 0;
@@ -361,7 +361,7 @@ class managerUser
 
         // check if password was written successfully
         if ($result == false)
-            return self::ERROR_adaptor;
+            return self::ERROR_ADAPTOR;
 
         // seems as if no errors occurred so return 0
         return 0;
@@ -414,7 +414,7 @@ class managerUser
 
         // check if role was changed successfully
         if ($result == false)
-            return self::ERROR_adaptor;
+            return self::ERROR_ADAPTOR;
 
         // seems as if no errors occurred so return 0
         return 0;

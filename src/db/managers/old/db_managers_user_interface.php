@@ -24,7 +24,7 @@ interface managerUserInterface
 {
     // Errors
     /** @var int Error happened at adaptor level */
-    const ERROR_adaptor = 1;
+    const ERROR_ADAPTOR = 1;
     /** @var int There is no such user with this id (or id's don't match) */
     const ERROR_ID = 2;
     /** @var int There is no such user with this name (or names's don't match) */

@@ -98,7 +98,7 @@ class managerResultsOld implements managerResultInterface
 
         // check if result was written successfully
         if ($result == null)
-            return self::ERROR_adaptor;
+            return self::ERROR_ADAPTOR;
 
         // return added result
         return $result;
@@ -123,7 +123,7 @@ class managerResultsOld implements managerResultInterface
 
         // check if result was written successfully
         if ($result == null)
-            return self::ERROR_adaptor;
+            return self::ERROR_ADAPTOR;
 
         // return added result
         return $result;

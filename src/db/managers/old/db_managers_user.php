@@ -62,7 +62,7 @@ class managerUserOld implements managerUserInterface
 
         // if result is an empty array an error happened at adaptor level
         if ($result == null)
-            return self::ERROR_adaptor;
+            return self::ERROR_ADAPTOR;
 
         // if no error happened (checked previously) the array will be of size 1 
         return 0;

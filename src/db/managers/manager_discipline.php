@@ -34,7 +34,7 @@ class managerDiscipline
     /** @var int Some information required for the desired task is missing (like a missing id in the discipline element) */
     const ERROR_MISSING_INFORMATION = 16;
     /** @var int Error happened at adaptor level */
-    const ERROR_adaptor = 32;
+    const ERROR_ADAPTOR = 32;
 
     /** @var int current competition id */
     protected int $currentCompetitionID;
@@ -145,7 +145,7 @@ class managerDiscipline
 
         // check if discipline was written successfully
         if ($result == null)
-            return self::ERROR_adaptor;
+            return self::ERROR_ADAPTOR;
 
         // return added discipline
         return $result;
@@ -172,7 +172,7 @@ class managerDiscipline
             // return error that happened during validation
             return $validation;
 
-        // make the competition ready for the database
+        // make the discipline ready for the database
         adaptorDiscipline::makeRepresentativeDbReady($this->db, $discipline);
 
         // Note: we don't need to check fields since adaptorDiscipline::edit() is robust against invalid fields
@@ -187,7 +187,7 @@ class managerDiscipline
 
         // check if discipline was written successfully
         if ($result == false)
-            return self::ERROR_adaptor;
+            return self::ERROR_ADAPTOR;
 
         // return 0 since action was successful (or the error wasn't reported)
         return 0;

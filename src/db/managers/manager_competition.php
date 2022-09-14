@@ -34,7 +34,7 @@ class managerCompetition
     /** @var int Some information required for the desired task is missing (like a missing id in the competition element) */
     const ERROR_MISSING_INFORMATION = 16;
     /** @var int Error happened at adaptor level */
-    const ERROR_adaptor = 32;
+    const ERROR_ADAPTOR = 32;
 
     /** @var ?int current users id */
     protected ?int $currentUserID = null;
@@ -186,7 +186,7 @@ class managerCompetition
 
         // check if competition was written successfully
         if ($result == null)
-            return self::ERROR_adaptor;
+            return self::ERROR_ADAPTOR;
 
         // return added competition
         return $result;
@@ -222,7 +222,7 @@ class managerCompetition
 
         // check if competition was written successfully
         if ($result == false)
-            return self::ERROR_adaptor;
+            return self::ERROR_ADAPTOR;
 
         // return 0 since action was successful (or the error wasn't reported)
         return 0;

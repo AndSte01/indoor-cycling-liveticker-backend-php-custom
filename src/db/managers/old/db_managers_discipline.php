@@ -102,7 +102,7 @@ class managerDisciplineOld implements managerDisciplineInterface
 
         // check if discipline was written successfully
         if ($result == null)
-            return self::ERROR_adaptor;
+            return self::ERROR_ADAPTOR;
 
         // return added discipline
         return $result;
@@ -127,7 +127,7 @@ class managerDisciplineOld implements managerDisciplineInterface
 
         // check if discipline was written successfully
         if ($result == null)
-            return self::ERROR_adaptor;
+            return self::ERROR_ADAPTOR;
 
         // return added discipline
         return $result;

@@ -139,7 +139,7 @@ class managerCompetitionOld implements managerCompetitionInterface
 
         // check if competition was written successfully
         if ($result == null)
-            return self::ERROR_adaptor;
+            return self::ERROR_ADAPTOR;
 
         // added competition
         return $result;
