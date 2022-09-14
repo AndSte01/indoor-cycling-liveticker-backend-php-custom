@@ -14,6 +14,7 @@ use errors;
 use managerAuthentication;
 use managerCompetition;
 use managerDiscipline;
+use managerResult;
 use managerUser;
 
 // import required filed
@@ -21,6 +22,7 @@ require_once(dirname(__FILE__) . "/../managers/manager_authentication.php");
 require_once(dirname(__FILE__) . "/../managers/manager_user.php");
 require_once(dirname(__FILE__) . "/../managers/manager_competition.php");
 require_once(dirname(__FILE__) . "/../managers/manager_discipline.php");
+require_once(dirname(__FILE__) . "/../managers/manager_result.php.php");
 require_once(dirname(__FILE__) . "/../../errors.php");
 
 /**
@@ -74,7 +76,7 @@ function authenticationErrorsToString(int $error): string
 function userErrorsToString(int $error,  bool $prepareDie = false): string
 {
     switch ($error) {
-        case managerUser::ERROR_adaptor:
+        case managerUser::ERROR_ADAPTOR:
             return errors::to_error_string([errors::INTERNAL_ERROR], $prepareDie);
 
         case managerUser::ERROR_NOT_EXISTING:
@@ -126,7 +128,7 @@ function competitionErrorsToString(int $error, bool $prepareDie = false): string
         case managerCompetition::ERROR_WRONG_USER_ID:
             return errors::to_error_string([errors::ACCESS_DENIED], $prepareDie);
 
-        case managerCompetition::ERROR_adaptor:
+        case managerCompetition::ERROR_ADAPTOR:
             return errors::to_error_string([errors::INTERNAL_ERROR], $prepareDie);
 
         default:
@@ -160,7 +162,41 @@ function disciplineErrorsToString(int $error, bool $prepareDie = false): string
         case managerDiscipline::ERROR_MISSING_INFORMATION:
             return errors::to_error_string([errors::MISSING_INFORMATION], $prepareDie);
 
-        case managerDiscipline::ERROR_adaptor:
+        case managerDiscipline::ERROR_ADAPTOR:
+            return errors::to_error_string([errors::INTERNAL_ERROR], $prepareDie);
+
+        default:
+            return errors::to_error_string([errors::SUCCESS]);
+    }
+}
+
+/**
+ * Converts results errors to a string of errors defined in errors.php
+ * 
+ * @param int $error the error from managerResult
+ * @param bool $prepareDie Prepares the header for immediate call of die() afterwards
+ * 
+ * @return string the errors as a string
+ */
+function resultErrorsToString(int $error, bool $prepareDie = false): string
+{
+    switch ($error) {
+        case managerResult::ERROR_WRONG_DISCIPLINE_ID:
+            return errors::to_error_string([errors::INVALID_PARENT], $prepareDie);
+
+        case managerResult::ERROR_OUT_OF_RANGE:
+            return errors::to_error_string([errors::PARAM_OUT_OF_RANGE], $prepareDie);
+
+        case managerResult::ERROR_NOT_EXISTING:
+            return errors::to_error_string([errors::NOT_EXISTING], $prepareDie);
+
+        case managerResult::ERROR_ALREADY_EXISTING:
+            return errors::to_error_string([errors::ALREADY_EXISTS], $prepareDie);
+
+        case managerResult::ERROR_MISSING_INFORMATION:
+            return errors::to_error_string([errors::MISSING_INFORMATION], $prepareDie);
+
+        case managerResult::ERROR_ADAPTOR:
             return errors::to_error_string([errors::INTERNAL_ERROR], $prepareDie);
 
         default:

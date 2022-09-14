@@ -13,21 +13,18 @@ namespace IO\result;
 
 // define aliases
 use DateTime;
-use db\adaptorCompetition;
-use db\adaptorDiscipline;
+use db\adaptorGeneric;
+use db\competition;
 use db\discipline;
 use db\user;
+use db\result;
 use errors;
 use managerAuthentication;
 use managerCompetition;
 use managerDiscipline;
 use managerUser;
-use mysqli;
-use db\adaptorGeneric;
-use db\result;
-use managerResults;
+use managerResult;
 use function db\utils\authenticationErrorsToString;
-use function db\utils\competitionErrorsToString;
 use function db\utils\resultErrorsToString;
 
 // Error logging
@@ -35,6 +32,8 @@ use function db\utils\resultErrorsToString;
 // error_reporting(E_ALL);
 
 // import required files
+require_once("errors.php");
+require_once("db/adaptor/adaptor_generic.php");
 require_once("db/managers/db_managers_authentication.php");
 require_once("db/managers/db_managers_user.php");
 require_once("db/managers/db_managers_discipline.php");
@@ -47,6 +46,7 @@ require_once("db/utils/db_utils_authentication.php");
 $realm = "global";
 
 // get params
+$param_id = $_GET["id"];
 $param_method = $_GET["method"];
 $param_discipline_id = $_GET["discipline"];
 $param_timestamp = $_GET["timestamp"];
@@ -54,201 +54,220 @@ $param_timestamp = $_GET["timestamp"];
 // get json from body
 $json = file_get_contents('php://input'); // empty if GET
 
+// get request body if post request
+$body_content = file_get_contents('php://input'); // empty if GET
+
 // set correct content type
 header("Content-Type: application/json");
 
-
-// check if discipline_id is (correctly) provided
-if (filter_var($param_discipline_id, FILTER_VALIDATE_INT) !== false) {
-    // if discipline_id is a number convert it to an int
-    $param_discipline_id = intval($param_discipline_id);
-
-    // check wether discipline_id is in rage
-    if ($param_discipline_id < 1)
-        die(errors::to_error_string([errors::PARAM_OUT_OF_RANGE], true));
-} else {
-    // if discipline_id is neither null nor a number return error
-    die(errors::to_error_string([errors::MISSING_INFORMATION], true));
+// check wether method is in the desired range
+if (!in_array($param_method, [null, "add", "edit", "remove"])) {
+    die(errors::to_error_string([errors::PARAM_OUT_OF_RANGE], true));
 }
 
+// try to convert parameters to the correct data types (FILTER_VALIDATE_INT doesn't accept null, two birds with one stone)
+$param_id = filter_var($param_id, FILTER_VALIDATE_INT);
+$param_discipline_id = filter_var($param_discipline_id, FILTER_VALIDATE_INT);
+try {
+    $param_timestamp = new DateTime("@" . $param_timestamp); // if creation fails it trows an error
+} catch (\Throwable $th) {
+    $param_timestamp = new DateTime("@0"); // create datetime at unix null
+}
 
-// check what the client wants to do
+// now check if parameters are provided according to method nad also try if the can be converted to the correct types
+switch ($param_method) {
+    case null: // getting a result
+        // we need either an id or a discipline, timestamp is not required
+        if ($param_id === false && $param_discipline_id === false) {
+            die(errors::to_error_string([errors::MISSING_INFORMATION], true));
+        }
+        break;
 
-// if it is null the client wants to get disciplines
-if ($param_method == null)
-    die(getResults($param_discipline_id, $param_timestamp));
+    case "remove":
+    case "edit":
+        // if we want to remove or add wee need the id
+        if ($param_id === false) {
+            die(errors::to_error_string([errors::MISSING_INFORMATION], true));
+        }
+        break;
 
-// $param_method is at this point obviously not null (so check if it contains an correct keyword)
-// checked to prevent unnecessary code execution
-if (!in_array($param_method, ["add", "edit", "remove"]))
-    die(errors::to_error_string([errors::PARAM_OUT_OF_RANGE], true));
+    case "add":
+        // if we want to add a discipline we need to know it's discipline
+        if ($param_discipline_id === false) {
+            die(errors::to_error_string([errors::MISSING_INFORMATION], true));
+        }
+        break;
+}
 
-
-// all available methods require authentication and a user management so initiate that
-
-// connect to database
+// connect to the database
 $db = adaptorGeneric::connect();
 
-// check if discipline exists
-$discipline_to_use = adaptorDiscipline::search($db, $param_discipline_id)[0];
+// create the result, discipline and competition manager
+$manager_competition = new managerCompetition($db);
+$manager_discipline = new managerDiscipline($db, 0);
+$manager_result = new managerResult($db, 0);
 
-if ($discipline_to_use == null) {
-    printf(errors::to_error_string([errors::INVALID_PARENT]));
-    $db->close();
-    exit();
+// next handle all the request only wanting to get results so they are out of the way
+if ($param_method == null) {
+    // you need to search for results differently depending on which parameters are provided
+    if ($param_id !== false) {
+        $result = $manager_result->getResultById($param_id); // get result from database
+
+        $db->close(); // close database connection
+
+        // check wether a result was found or not
+        if ($result == null)
+            die(errors::to_error_string([errors::NOT_EXISTING], true)); // die with error
+
+        // at this point we know a result was found
+        die(json_encode($result, JSON_UNESCAPED_UNICODE)); // die with encoded json
+    } else { // so $param_discipline_id mustn't be null
+        // check if such discipline exists
+        if ($manager_discipline->getDisciplineById($param_discipline_id) == null) {
+            $db->close(); // close database connection
+            die(errors::to_error_string([errors::NOT_EXISTING], true)); // die with error
+        }
+
+        $manager_result->setDisciplineId($param_discipline_id); // set discipline id in results manager
+
+        $results = $manager_result->getResult($param_timestamp); // search for results
+
+        $db->close(); // close database connection
+        die(json_encode($results, JSON_UNESCAPED_UNICODE)); // encode the result to json and die with it
+    }
 }
 
-// create user manager and authentication manager
-$user_manager = new managerUser($db);
-$authentication_manager = new managerAuthentication($user_manager, $realm);
+// next get additional information form database (according to method)
+switch ($param_method) {
+    case "remove":
+    case "edit":
+        $selected_result = $manager_result->getResultById($param_id);
+        // now check if any result was found
+        if ($selected_result == null) {
+            $db->close();
+            die(errors::to_error_string([errors::NOT_EXISTING], true)); // die with error
+        }
 
-// initiated login routine
-$result = $authentication_manager->initiateLoginRoutine();
+        // now search for the discipline (must exist due to the foreign key setup in the database)
+        $selected_discipline = $manager_discipline->getDisciplineById($selected_result->{result::KEY_DISCIPLINE_ID});
+
+        // now search for the competition (must exist due to the foreign key setup in the database)
+        $selected_competition =  $manager_competition->getCompetitionById($selected_discipline->{discipline::KEY_COMPETITION_ID});
+        break;
+
+    case "add":
+        // we need the selected discipline (and wether it exists or not)
+        $selected_discipline = $manager_discipline->getDisciplineById($param_discipline_id);
+
+        //check wether any discipline was found
+        if ($selected_discipline == null)
+            die(errors::to_error_string([errors::NOT_EXISTING], true)); // die with error
+
+        // we also need the competition the discipline is assigned to (must exist due to the foreign key setup in the database)
+        $selected_competition =  $manager_competition->getCompetitionById($selected_discipline->{discipline::KEY_COMPETITION_ID});
+        break;
+}
+
+// so now we know, the user wants to add, edit or remove a result, we have the result and/or it's parents (the discipline and the competition)
+// and we have all parameters parsed to useful values, so let's get started with work.
+
+// create user and authentication manager
+$manager_user = new managerUser($db);
+$manager_authentication = new managerAuthentication($manager_user, $realm);
+
+// authenticate the user
+// initiate login routine
 
 // check if login was successful, else die with error as string
-if ($result != 0) {
+if ($authentication_result != 0) {
     printf(authenticationErrorsToString($result));
     $db->close();
     exit();
 }
 
-// verify if user has access to desired competition (and discipline)
-$competition_manager = new managerCompetition($db);
-$competition_manager->setCurrentUserId($authentication_manager->getCurrentUser()->{user::KEY_ID});
-
-$errors = $competition_manager->userHasAccess($discipline_to_use->{discipline::KEY_COMPETITION_ID});
-if ($errors != 0) {
-    printf(competitionErrorsToString($errors, true));
-    $db->close();
-    exit();
+// now set the authenticated user in the competition manager, and check wether he has access to the competition selected by the user or not
+$manager_competition->setCurrentUserId($manager_authentication->getCurrentUser()->{user::KEY_ID});
+if ($manager_competition->userHasAccess($selected_competition->{competition::KEY_ID}) != 0) {
+    $db->close(); // close database connection
+    die(errors::to_error_string([errors::ACCESS_DENIED], true)); // die with error
 }
 
-// decide what the user want's todo
+// now we know that the user has access to the competition and all it's children
+
+// set the correct discipline id in the result manager
+$manager_result->setDisciplineId($selected_discipline->{discipline::KEY_ID});
+
+// if the user just wants to remove the result get that out of the way
+if ($param_method == "remove") {
+    $errors = $manager_result->remove($selected_result); // remove result form database
+
+    $db->close(); // close database connection
+    die(resultErrorsToString($errors, true));
+}
+
+// now add or edit the result in the database
+
+// first try ti decode and parse result
+
+// decode json to assoc array
+$decoded = json_decode($body_content, true);
+
+// check if decode was possible
+if (gettype($decoded) != "array") {
+    $db->close(); // close database connection
+    die(errors::to_error_string([errors::INVALID_JSON], true)); // die with error
+}
+
+// create result and parse data into it
+$result = new result();
+$parsing_errors = $result->parse(
+    strval($selected_result->{result::KEY_ID}),
+    "", // timestamp is auto generated
+    strval($selected_discipline->{discipline::KEY_ID}),
+    strval($decoded[result::KEY_START_NUMBER]),
+    strval($decoded[result::KEY_NAME]),
+    strval($decoded[result::KEY_CLUB]),
+    strval($decoded[result::KEY_SCORE_SUBMITTED]),
+    strval($decoded[result::KEY_SCORE_ACCOMPLISHED]),
+    strval($decoded[result::KEY_TIME]),
+    strval($decoded[result::KEY_FINISHED])
+);
+
+// unset variables for fields that unsuccessfully parsed (only relevant for editing)
+switch (true) { // inverted switch, don't use break since multiple errors could occur
+        // ignored errors are: ERROR_NAME, ERROR_CLUB (and ERROR_ID, ERROR_TIMESTAMP, ERROR_DISCIPLINE_ID since they aren't modified anyways)
+    case $parsing_errors & result::ERROR_START_NUMBER:
+        unset($decoded[result::KEY_START_NUMBER]);
+
+    case $parsing_errors & result::ERROR_SCORE_SUBMITTED:
+        unset($decoded[result::KEY_SCORE_SUBMITTED]);
+
+    case $parsing_errors & result::ERROR_SCORE_ACCOMPLISHED:
+        unset($decoded[result::KEY_SCORE_ACCOMPLISHED]);
+
+    case $parsing_errors & result::ERROR_TIME:
+        unset($decoded[result::KEY_TIME]);
+
+    case $parsing_errors & result::ERROR_FINISHED:
+        unset($decoded[result::KEY_FINISHED]);
+}
+
+// either add or edit result
 switch ($param_method) {
     case "add":
-        printf(parseVerifyModifyDiscipline($json, 0, $authentication_manager->getCurrentUser()->{user::KEY_ID}, $db));
-        $db->close();
-        exit();
+        // try to add result to database
+        $return = $manager_result->add($result);
+
+        $db->close(); // close database connection
+
+        // do error handling
+        if (is_int($return))
+            die(resultErrorsToString($return, true));
+
+        // if no error ocurred die with result as json
+        die(json_encode($return, JSON_UNESCAPED_UNICODE));
 
     case "edit":
-        printf(parseVerifyModifyDiscipline($json, 1, $authentication_manager->getCurrentUser()->{user::KEY_ID}, $db));
-        $db->close();
-        exit();
-
-    case "remove":
-        printf(parseVerifyModifyDiscipline($json, 2, $authentication_manager->getCurrentUser()->{user::KEY_ID}, $db));
-        $db->close();
-        exit();
-
-    default:
-        $db->close();
-        exit();
-}
-
-// unnecessary but safe is safe
-$db->close();
-exit();
-
-
-// --- functions used above ---
-
-/**
- * Gets results from database
- * 
- * @param string $discipline_id The id of the discipline of whom results shall be returned
- * @param string $timestamp only get results that were modified (or added) after this timestamp
- * 
- * @return string String of a JSON array either containing the occurred errors or the results
- */
-function getResults($discipline_id, $timestamp): string
-{
-    // work with the result manager to get the disciplines
-
-    // connect to database
-    $db = adaptorGeneric::connect();
-
-    // create result manager
-    $result_manager = new managerResults($db, $discipline_id);
-
-    // get current timestamp from database (it is important to get it before asking for disciplines)
-    $new_timestamp =  adaptorGeneric::getCurrentTime($db)->getTimestamp();
-
-    // decide what to do
-    switch (true) {
-        case ($timestamp == ""): // if $timestamp is not set make it null
-            $result = $result_manager->getResult();
-            break;
-
-        case (filter_var($timestamp, FILTER_VALIDATE_INT) !== false): // if timestamp is a number try to convert it to unix time
-            // create new datetime, convert timestamp to int and apply timestamp to DateTime object
-            // get results with the timestamp
-            $result = $result_manager->getResult((new DateTime())->setTimestamp(intval($timestamp)));
-            break;
-
-        default: // if timestamp is neither null nor a number return error
-            return errors::to_error_string([errors::NaN], true);
-    }
-
-    // merge new timestamp and result into array and return ist as json
-    return json_encode(array_merge([$new_timestamp], $result), JSON_UNESCAPED_UNICODE);
-}
-
-/**
- * Adds, edits or removes a result to/from database
- * 
- * @param string $json JSON representation of the result to work with
- * @param int $action 0 = try to add the result, 1 = try to edit the given result, 2 = remove result
- * @param int $disciplineId The discipline_id to work with
- * @param mysqli $db The database to work with
- * 
- * @return string String ready for sending to client
- */
-function parseVerifyModifyDiscipline(string $json, int $action, int $disciplineId, mysqli $db): string
-{
-    // decode json to assoc array
-    $decoded = json_decode($json, true);
-
-    // check if decode was possible
-    if (gettype($decoded) != "array")
-        return errors::to_error_string([errors::INVALID_JSON]);
-
-    // create empty result and parse data
-    $result = new result();
-    $result->parse(
-        $decoded[result::KEY_ID],
-        $decoded[result::KEY_TIMESTAMP],
-        $decoded[result::KEY_DISCIPLINE_ID],
-        $decoded[result::KEY_START_NUMBER],
-        $decoded[result::KEY_NAME],
-        $decoded[result::KEY_CLUB],
-        $decoded[result::KEY_SCORE_SUBMITTED],
-        $decoded[result::KEY_SCORE_ACCOMPLISHED],
-        $decoded[result::KEY_TIME],
-        $decoded[result::KEY_FINISHED]
-    );
-
-    // use result manager to complete task
-    $result_manager = new managerResults($db, $disciplineId);
-
-    // either add, edit or remove result
-    switch ($action) {
-        case 0: // add
-            // try to add competition to database
-            $result_from_manager = $result_manager->add($result);
-
-            // do error handling
-            if (is_int($result_from_manager))
-                return resultErrorsToString($result_from_manager, true);
-
-            // if no error ocurred return discipline (in $result) as json
-            return json_encode($result, JSON_UNESCAPED_UNICODE);
-
-        case 1: // edit
-            $result_from_manager = $result_manager->edit($result);
-            return resultErrorsToString($result_from_manager, true);
-
-        case 2: // remove
-            $result_from_manager = $result_manager->remove($result);
-            return resultErrorsToString($result_from_manager, true);
-    }
+        $return = $manager_result->edit($result, array_keys($decoded));
+        die(resultErrorsToString($return, true));
 }

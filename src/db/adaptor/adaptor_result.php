@@ -38,7 +38,7 @@ class adaptorResult implements adaptorInterface
     public static function search(
         mysqli $db,
         ?int $results_id = null,
-        ?array $discipline_id = null,
+        ?int $discipline_id = null,
         ?DateTime $modified_since = null,
         ?int $start_number = null,
         ?string $name = null,
@@ -57,14 +57,8 @@ class adaptorResult implements adaptorInterface
             $parameters[] = strval($results_id);
         }
         if (($discipline_id != null)) {
-            $filter[] = db_kwd::RESULT_DISCIPLINE .
-                " IN(?" . // if array is not null at least one element is in there (this is it's question mark)
-                str_repeat(",?", count($discipline_id) - 1) . // add additional question marks for id's that aren't stored in the first array element
-                ")";
-            // merge the two arrays
-            // array_values is used to make $discipline_id (that might be an assoc array) a list (see array_is_list)
-            // array_map is used to convert to strings
-            $parameters = array_merge($parameters, array_values(array_map('strval', $discipline_id)));
+            $filter[] = db_kwd::RESULT_DISCIPLINE . "=?";
+            $parameters[] = strval($discipline_id);
         }
         if ($modified_since != null) {
             // greater or equal is required so no disciplines with "bad timing" are missed,
@@ -84,7 +78,6 @@ class adaptorResult implements adaptorInterface
             $filter[] = db_kwd::RESULT_CLUB . "=?";
             $parameters[] = $club;
         }
-
 
         // Make $filter (a) string again!
         if ($filter != null)
@@ -137,7 +130,7 @@ class adaptorResult implements adaptorInterface
         // iterate over results
         while ($statement->fetch()) {
             $entry = new result();
-            $entry->parse($_1, $_2, $_3, $_4, $_5, $_6, $_7, $_8, $_9, $_10, $db);
+            $entry->parse($_1, $_2, $_3, $_4, $_5, $_6, $_7, $_8, $_9, $_10);
 
             // append to list
             $return[] = $entry;
@@ -174,7 +167,7 @@ class adaptorResult implements adaptorInterface
         // parameters
         $parameters = [$competition_id];
 
-        // check if addititonal filter for timestamp should be added
+        // check if additional filter for timestamp should be added
         if ($modified_since != null) {
             $timestamp = " AND " . db_config::TABLE_RESULT . "." . db_kwd::RESULT_TIMESTAMP . ">=?";
             $parameters[] = $modified_since->format('Y-m-d H:i:s');
@@ -226,7 +219,7 @@ class adaptorResult implements adaptorInterface
         // iterate over results
         while ($statement->fetch()) {
             $entry = new result();
-            $entry->parse($_1, $_2, $_3, $_4, $_5, $_6, $_7, $_8, $_9, $_10, $db);
+            $entry->parse($_1, $_2, $_3, $_4, $_5, $_6, $_7, $_8, $_9, $_10);
 
             // append to list
             $return[] = $entry;
@@ -239,7 +232,7 @@ class adaptorResult implements adaptorInterface
     /**
      * Note the timestamp won't be updated on returned results, use search with result_id for that
      */
-    public static function add(mysqli $db, array $results): array
+    public static function add(mysqli $db, array $representatives): array
     {
         // empty return array
         $return = [];
@@ -256,7 +249,7 @@ class adaptorResult implements adaptorInterface
                 db_kwd::RESULT_TIME,
                 db_kwd::RESULT_FINISHED
             ])
-            . ") VALUES (?, ?, ?, ?, ?, ?, ? ,?);");
+            . ") VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
 
         // bind parameters to statement
         $statement->bind_param(
@@ -272,7 +265,7 @@ class adaptorResult implements adaptorInterface
         );
 
         // iterate through array of results and add to database
-        foreach ($results as &$result) {
+        foreach ($representatives as &$result) {
             $result_discipline_id = $result->{result::KEY_DISCIPLINE_ID};
             $result_start_number = $result->{result::KEY_START_NUMBER};
             $result_name = $result->{result::KEY_NAME};
@@ -297,65 +290,171 @@ class adaptorResult implements adaptorInterface
     }
 
     // explained in the interface
-    public static function edit(mysqli $db, array $results): void
+    public static function edit(mysqli $db, RepresentativeInterface $representative, array $keys): bool
     {
-        // use prepared statement to prevent SQL injections
-        $statement = $db->prepare("UPDATE " . db_config::TABLE_RESULT . " SET " .
-            implode(", ", [
-                db_kwd::RESULT_DISCIPLINE . "=? ",
-                db_kwd::RESULT_START_NUMBER . "=? ",
-                db_kwd::RESULT_NAME . "=? ",
-                db_kwd::RESULT_CLUB . "=? ",
-                db_kwd::RESULT_SCORE_SUBMITTED . "=? ",
-                db_kwd::RESULT_SCORE_ACCOMPLISHED . "=? ",
-                db_kwd::RESULT_TIME . "=? ",
-                db_kwd::RESULT_FINISHED . "=? "
-            ])
-            . " WHERE " . db_kwd::RESULT_ID . "=?");
+        // convert the names from representative fields to database fields
 
-        // bind parameters to statement
-        $statement->bind_param(
-            "iissddiii",
-            $result_discipline_id,
-            $result_start_number,
-            $result_name,
-            $result_club,
-            $result_score_submitted,
-            $result_score_accomplished,
-            $result_time,
-            $result_finished,
-            $result_id
-        );
+        // map names together (id is skipped since you cant change it anyways, timestamp is because it's auto generated)
+        $key_map = [
+            result::KEY_DISCIPLINE_ID => db_kwd::RESULT_DISCIPLINE,
+            result::KEY_START_NUMBER => db_kwd::RESULT_START_NUMBER,
+            result::KEY_NAME => db_kwd::RESULT_NAME,
+            result::KEY_CLUB => db_kwd::RESULT_CLUB,
+            result::KEY_SCORE_SUBMITTED => db_kwd::RESULT_SCORE_SUBMITTED,
+            result::KEY_SCORE_ACCOMPLISHED => db_kwd::RESULT_SCORE_ACCOMPLISHED,
+            result::KEY_TIME => db_kwd::RESULT_TIME,
+            result::KEY_FINISHED => db_kwd::RESULT_FINISHED
+        ];
 
-        // iterate through array of results and add to database
-        foreach ($results as &$result) {
-            $result_discipline_id = $result->{result::KEY_DISCIPLINE_ID};
-            $result_start_number = $result->{result::KEY_START_NUMBER};
-            $result_name = $result->{result::KEY_NAME};
-            $result_club = $result->{result::KEY_CLUB};
-            $result_score_submitted = $result->{result::KEY_SCORE_SUBMITTED};
-            $result_score_accomplished = $result->{result::KEY_SCORE_ACCOMPLISHED};
-            $result_time = $result->{result::KEY_TIME};
-            $result_finished = (int) $result->{result::KEY_FINISHED};
-            $result_id = $result->{result::KEY_ID};
+        // empty arrays to hold fields that should be updated
+        $fields = []; // field names in database containing an additional =? for sql query
+        $params = []; // values to insert in database
 
-            if (!$statement->execute()) {
-                error_log("error while writing result to database");
+        // treat finished object differently
+        $array_key_finished = array_search(result::KEY_FINISHED, $keys);
+        if (false !== $array_key_finished) {
+            // add to fields
+            $fields[] = $key_map[result::KEY_FINISHED] . "=? ";
+            // convert to int and add to params
+            $params[] = intval($representative->{result::KEY_FINISHED});
+            // remove key from array to prevent multiple addition
+            unset($keys[$array_key_finished]);
+        }
+
+        foreach ($keys as $key) {
+            // get mapped key (might be null if fields contained unsupported key)
+            $field = $key_map[$key];
+
+            // add field to update list
+            if ($field != null) {
+                // add string for prepare statement
+                $fields[] = $field . "=? ";
+
+                // add value to array (Note: use correct key)
+                $params[] = $representative->{$key};
             }
         }
+
+        // if no fields should be changed, skip sql statement and return directly
+        if (count($fields) == 0)
+            return true; // act as if the statement was successful
+
+        // add id as last value to params
+        $params[] = $representative->{discipline::KEY_ID};
+
+        // use prepared statement to prevent SQL injections
+        $statement = $db->prepare("UPDATE " . db_config::TABLE_RESULT . " SET " .
+            implode(", ", $fields)
+            . " WHERE " . db_kwd::RESULT_ID . "=?");
+
+        // execute statement with prepared values
+        return $statement->execute($params);
     }
 
     // explained in the interface
-    public static function remove(mysqli $db, array $results): void
+    public static function remove(mysqli $db, array $representatives): void
     {
         // prepare statement
         $statement = $db->prepare("DELETE FROM " . db_config::TABLE_RESULT . " WHERE " . db_kwd::RESULT_ID . "=?");
         $statement->bind_param("i", $ID);
 
         // iterate through array and execute statement for different ids
-        foreach ($results as &$result) {
+        foreach ($representatives as &$result) {
             $ID = $result->{result::KEY_ID};
             $statement->execute();
         }
+    }
+
+    // explained int the interface
+    public static function makeRepresentativeDbReady(mysqli $db, RepresentativeInterface &$representative): int
+    {
+        // variable for error messages
+        $error = 0;
+
+        // get values form old representative
+        $old_id = $representative->{result::KEY_ID};
+        $old_timestamp = $representative->{result::KEY_TIMESTAMP};
+        $old_discipline = $representative->{result::KEY_DISCIPLINE_ID};
+        $new_start_number = $representative->{result::KEY_START_NUMBER};
+        $new_name = $representative->{result::KEY_NAME};
+        $new_club = $representative->{result::KEY_CLUB};
+        $new_score_submitted = $representative->{result::KEY_SCORE_SUBMITTED};
+        $new_score_accomplished = $representative->{result::KEY_SCORE_ACCOMPLISHED};
+        $new_time = $representative->{result::KEY_TIME};
+        $new_finished = $representative->{result::KEY_FINISHED};
+
+        // timestamp won't be checked because it's never written to database (only relevant when getting a result form it)
+
+        // check if invalid characters are present in string, if so remove them and add error
+        if (strcmp($new_name, $db->real_escape_string($new_name)) != 0) {
+            $new_name = $db->real_escape_string($new_name);
+            $error |= result::ERROR_NAME;
+        }
+
+        if (strcmp($new_club, $db->real_escape_string($new_club)) != 0) {
+            $new_club = $db->real_escape_string($new_club);
+            $error |= result::ERROR_CLUB;
+        }
+
+        // check if integers are within their correct range, if not make them 0 and add error
+
+        // start number is greater or equal 0 by definition (max. value determined by database)
+        if ($new_start_number < 0) {
+            $new_start_number = 0;
+            $error |= result::ERROR_START_NUMBER;
+        }
+        if ($new_start_number > 65535) {
+            $new_start_number = 65535;
+            $error |= result::ERROR_START_NUMBER;
+        }
+
+        // time is greater or equal 0 by definition (max. value determined by database)
+        if ($new_time < 0) {
+            $new_time = 0;
+            $error |= result::ERROR_TIME;
+        }
+        if ($new_time > 65535) {
+            $new_time = 65535;
+            $error |= result::ERROR_TIME;
+        }
+
+        // check if floats are in their correct range
+        if ($new_score_submitted < 0) {
+            $new_score_submitted = 0.0;
+            $error |= result::ERROR_SCORE_SUBMITTED;
+        }
+        if ($new_score_accomplished < 0) {
+            $new_score_accomplished = 0.0;
+            $error |= result::ERROR_SCORE_ACCOMPLISHED;
+        }
+
+        // finished is seen as a boolean (so make it one)
+        // 0 for everything < 0
+        if ($new_finished < 0) {
+            $new_finished = 0;
+            $error |= result::ERROR_FINISHED;
+        }
+        // 1 for everything > 1
+        if ($new_finished > 1) {
+            $new_finished = 1;
+            $error |= result::ERROR_FINISHED;
+        }
+
+        // overwrite result with new one containing the newly created variables
+        $representative = new result(
+            $old_id,
+            $old_timestamp,
+            $old_discipline,
+            $new_start_number,
+            $new_name,
+            $new_club,
+            $new_score_submitted,
+            $new_score_accomplished,
+            $new_time,
+            $new_finished
+        );
+
+        // return errors
+        return $error;
     }
 }

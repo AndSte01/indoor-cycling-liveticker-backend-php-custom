@@ -149,72 +149,6 @@ class result implements JsonSerializable, RepresentativeChildInterface
         $this->data[self::ERROR_DISCIPLINE_ID] = $ID;
     }
 
-    // explained in RepresentativeInterface
-    public function makeDbReady(mysqli $db): int
-    {
-        // variable for error messages
-        $error = 0;
-
-        // timestamp won't be checked because it's never written to database (only relevant when getting a result form it)
-
-        // check if invalid characters are present in string, if so remove them and add error
-        if (strcmp($this->{self::KEY_NAME}, $db->real_escape_string($this->{self::KEY_NAME})) != 0) {
-            $this->date[self::KEY_NAME] = $db->real_escape_string($this->{self::KEY_NAME});
-            $error |= self::ERROR_NAME;
-        }
-
-        if (strcmp($this->{self::KEY_CLUB}, $db->real_escape_string($this->{self::KEY_CLUB})) != 0) {
-            $this->date[self::KEY_CLUB] = $db->real_escape_string($this->{self::KEY_CLUB});
-            $error |= self::ERROR_CLUB;
-        }
-
-        // check if integers are within their correct range, if not make them 0 and add error
-        // won't check id, it isn't used when writing to db and if reading from db and id is out of range nothing happens
-        // results id can't be smaller than 1 (max. value is due to db limitations)
-        if ($this->{self::KEY_DISCIPLINE_ID} < 1 || $this->{self::KEY_DISCIPLINE_ID} > 2147483647) {
-            $this->data[self::KEY_DISCIPLINE_ID] = 0; // marks result as obviously wrong in database
-            $error |= self::ERROR_DISCIPLINE_ID;
-        }
-
-        // start number is greater or equal 0 by definition (max. value determined by database)
-        if ($this->{self::KEY_START_NUMBER} < 0) {
-            $this->data[self::KEY_START_NUMBER] = 0;
-            $error |= self::ERROR_START_NUMBER;
-        }
-        if ($this->{self::KEY_START_NUMBER} > 65535) {
-            $this->data[self::KEY_START_NUMBER] = 65535;
-            $error |= self::ERROR_START_NUMBER;
-        }
-
-        // time is greater or equal 0 by definition (max. value determined by database)
-        if ($this->{self::KEY_TIME} < 0) {
-            $this->data[self::KEY_TIME] = 0;
-            $error |= self::ERROR_TIME;
-        }
-        if ($this->{self::KEY_TIME} > 65535) {
-            $this->data[self::KEY_TIME] = 65535;
-            $error |= self::ERROR_TIME;
-        }
-
-        // check if floats are in their correct range
-        if ($this->{self::KEY_SCORE_SUBMITTED} < 0) {
-            $this->data[self::KEY_SCORE_SUBMITTED] = 0.0;
-            $error |= self::ERROR_SCORE_SUBMITTED;
-        }
-        if ($this->{self::KEY_SCORE_ACCOMPLISHED} < 0) {
-            $this->data[self::KEY_SCORE_ACCOMPLISHED] = 0.0;
-            $error |= self::ERROR_SCORE_ACCOMPLISHED;
-        }
-
-        // finished is a boolean and never null, so it already is ok
-
-        // mark result as ready for database
-        $this->isDbReady = true;
-
-        // return errors
-        return $error;
-    }
-
     /**
      * Parse strings into the result
      * 
@@ -245,9 +179,6 @@ class result implements JsonSerializable, RepresentativeChildInterface
         ?string $finished = "",
         ?mysqli $db = null
     ): int {
-        // after parsing no result isDbReady
-        $this->isDbReady = false;
-
         // variable for error
         $error = 0;
 
@@ -262,7 +193,7 @@ class result implements JsonSerializable, RepresentativeChildInterface
             $error |= self::ERROR_TIMESTAMP;
         }
 
-        // write string
+        // write strings
         $this->data[self::KEY_NAME] = strval($name);
         $this->data[self::KEY_CLUB] = strval($club);
 
@@ -278,10 +209,6 @@ class result implements JsonSerializable, RepresentativeChildInterface
 
         // mark result as finished or not (ongoing)
         $this->data[self::KEY_FINISHED] = filter_var($finished, FILTER_VALIDATE_BOOLEAN);;
-
-        // if a $db is passed also run makeDbReady()
-        if ($db != null)
-            $error = $error | $this->makeDbReady($db); // add errors together
 
         // return errors
         return $error;
