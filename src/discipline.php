@@ -174,7 +174,7 @@ if ($authentication_result != 0) {
     exit();
 }
 
-// now set the authenticate user in the competition manager, and check wether he has access to the competition selected by the user or not
+// now set the authenticated user in the competition manager, and check wether he has access to the competition selected by the user or not
 $manager_competition->setCurrentUserId($manager_authentication->getCurrentUser()->{user::KEY_ID});
 if ($manager_competition->userHasAccess($selected_competition->{competition::KEY_ID}) != 0) {
     $db->close(); // close database connection
@@ -209,7 +209,7 @@ if (gettype($decoded) != "array") {
 
 // create discipline and parse data into it
 $discipline = new discipline();
-$discipline->parse(
+$parsing_errors = $discipline->parse(
     strval($selected_discipline->{discipline::KEY_ID}),
     "", // timestamp is auto generated
     strval($selected_competition->{competition::KEY_ID}),
@@ -232,7 +232,7 @@ switch (true) { // inverted switch, don't use break since multiple errors could 
         unset($decoded[discipline::KEY_FALLBACK_NAME]);
 }
 
-// either add, edit or remove discipline
+// either add or edit discipline
 switch ($param_method) {
     case "add":
         // try to add discipline to database
