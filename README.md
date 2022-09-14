@@ -44,5 +44,7 @@ All of the documentation can be found in the [wiki](https://github.com/AndSte01/
   - all
 - poll [all]
 
+check garbage collection after every test, some test scripts leave elements in the database...
+
 ## Testing
 Testing is done with [Hoppscotch](https://hoppscotch.io/) using the [environment](./testing/env.json) and test cases in the [testing](./testing) folder.
