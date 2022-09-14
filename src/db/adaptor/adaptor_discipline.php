@@ -254,14 +254,14 @@ class adaptorDiscipline implements adaptorInterface
     }
 
     // explained in the interface
-    public static function remove(mysqli $db, array $disciplines): void
+    public static function remove(mysqli $db, array $representatives): void
     {
         // prepare statement
         $statement = $db->prepare("DELETE FROM " . db_config::TABLE_DISCIPLINE . " WHERE " . db_kwd::DISCIPLINE_ID . " = ?");
         $statement->bind_param("i", $ID);
 
         // iterate through array and execute statement for different ids
-        foreach ($disciplines as &$discipline) {
+        foreach ($representatives as &$discipline) {
             $ID = $discipline->{discipline::KEY_ID};
             $statement->execute();
         }
