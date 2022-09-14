@@ -114,7 +114,6 @@ class user implements JsonSerializable, RepresentativeInterface
      * @param ?string $password_salt The BINARY representation of the password salt
      * @param ?string $bearer_timestamp The timestamp of the generated bearer token
      * @param ?string $bearer_token The BINARY representation of the bearer token
-     * @param ?mysqli $db Database to make compatible with
      * 
      * @return int the errors occurred during parsing
      */

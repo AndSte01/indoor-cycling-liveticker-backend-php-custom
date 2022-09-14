@@ -145,7 +145,7 @@ class adaptorCompetition implements adaptorInterface
         // iterate over results
         while ($statement->fetch()) {
             $entry = new competition();
-            $entry->parse($_1, $_2, $_3, $_4, $_5, $_6, $_7, $_8, $db);
+            $entry->parse($_1, $_2, $_3, $_4, $_5, $_6, $_7, $_8);
 
             // append to list
             $return[] = $entry;

@@ -133,7 +133,7 @@ class adaptorDiscipline implements adaptorInterface
         // iterate over results
         while ($statement->fetch()) {
             $entry = new discipline();
-            $entry->parse($_1, $_2, $_3, $_4, $_5, $_6, $_7, $db);
+            $entry->parse($_1, $_2, $_3, $_4, $_5, $_6, $_7);
 
             // append to list
             $return[] = $entry;

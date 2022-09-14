@@ -132,7 +132,6 @@ class competition implements JsonSerializable, RepresentativeChildInterface
      * @param ?string $areas Number of areas of the competition
      * @param ?string $feature_set Feature set of the competition
      * @param ?string $live Wether competition is live or not
-     * @param ?mysqli $db Database to make compatible with
      * 
      * @return int the errors occurred during parsing
      */
@@ -145,7 +144,6 @@ class competition implements JsonSerializable, RepresentativeChildInterface
         ?string $areas = "",
         ?string $feature_set = "",
         ?string $live = "",
-        ?mysqli $db = null
     ): int {
         // variable for error
         $error = 0;
