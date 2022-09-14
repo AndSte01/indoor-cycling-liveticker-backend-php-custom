@@ -19,7 +19,6 @@ require_once("adaptor_interface.php");
 require_once(dirname(__FILE__) . "/../representatives/db_representatives_user.php");
 
 // define aliases
-
 use DateTime;
 use mysqli;
 
