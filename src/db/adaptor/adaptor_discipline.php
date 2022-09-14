@@ -308,12 +308,12 @@ class adaptorDiscipline implements adaptorInterface
         // 0 for everything < 0
         if ($new_finished < 0) {
             $new_finished = 0;
-            $error |= competition::ERROR_LIVE;
+            $error |= discipline::ERROR_FINISHED;
         }
         // 1 for everything > 1
         if ($new_finished > 1) {
             $new_finished = 1;
-            $error |= competition::ERROR_LIVE;
+            $error |= discipline::ERROR_FINISHED;
         }
 
         // overwrite discipline with new one containing the newly created variables
