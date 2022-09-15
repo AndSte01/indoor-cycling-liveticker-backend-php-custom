@@ -13,3 +13,6 @@
 
 # internal-testing
 /internal-testing
+
+# ignore results of test_all
+/testing/results.ansi
