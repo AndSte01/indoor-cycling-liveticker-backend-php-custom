@@ -985,13 +985,8 @@
             "headers": [],
             "method": "GET",
             "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token1>>",
-                "authActive": true,
-                "addTo": "Headers"
+                "authType": "none",
+                "authActive": true
             },
             "preRequestScript": "",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.id).toBe(parseInt(pw.env.get(\"result_id2\")));\n  pw.expect(pw.response.body.discipline).toBe(parseInt(pw.env.get(\"discipline_id1\")));\n  pw.expect(pw.response.body.start_number).toBe(1002);\n  pw.expect(pw.response.body.name).toBe(\"result2.1\");\n  pw.expect(pw.response.body.club).toBe(\"ghi\");\n  pw.expect(pw.response.body.score_submitted).toBe(95.4);\n  pw.expect(pw.response.body.score_accomplished).toBe(53.47);\n  pw.expect(pw.response.body.time).toBe(300);\n  pw.expect(pw.response.body.finished).toBe(true);\n})",
@@ -1008,13 +1003,8 @@
             "headers": [],
             "method": "GET",
             "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token1>>",
-                "authActive": true,
-                "addTo": "Headers"
+                "authType": "none",
+                "authActive": true
             },
             "preRequestScript": "",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"MISSING_INFORMATION\");\n})",
@@ -1037,13 +1027,8 @@
             "headers": [],
             "method": "GET",
             "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token1>>",
-                "authActive": true,
-                "addTo": "Headers"
+                "authType": "none",
+                "authActive": true
             },
             "preRequestScript": "",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.id).toBe(parseInt(pw.env.get(\"result_id1\")));\n})",
@@ -1066,13 +1051,8 @@
             "headers": [],
             "method": "GET",
             "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token1>>",
-                "authActive": true,
-                "addTo": "Headers"
+                "authType": "none",
+                "authActive": true
             },
             "preRequestScript": "",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  for(var result of pw.response.body){\n    pw.expect(result.discipline).toBe(parseInt(pw.env.get(\"discipline_id3\")))\n  }\n})",
