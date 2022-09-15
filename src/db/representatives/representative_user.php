@@ -8,7 +8,7 @@
 namespace db;
 
 // import trait and interface
-require_once("db_representatives_interface_trait.php");
+require_once("representative_interface_trait.php");
 
 // define aliases
 use DateTime;
