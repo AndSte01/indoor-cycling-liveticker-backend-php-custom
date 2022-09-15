@@ -34,13 +34,12 @@ use function db\utils\resultErrorsToString;
 // import required files
 require_once("errors.php");
 require_once("db/adaptor/adaptor_generic.php");
-require_once("db/managers/db_managers_authentication.php");
-require_once("db/managers/db_managers_user.php");
-require_once("db/managers/db_managers_discipline.php");
-require_once("db/managers/db_managers_competition.php");
-require_once("db/managers/db_managers_result.php");
-require_once("db/utils/db_utils_competition.php");
-require_once("db/utils/db_utils_authentication.php");
+require_once("db/managers/manager_authentication.php");
+require_once("db/managers/manager_user.php");
+require_once("db/managers/manager_discipline.php");
+require_once("db/managers/manager_competition.php");
+require_once("db/managers/manager_result.php");
+require_once("db/utils/utils_error_converters.php");
 
 // realm for authentication
 $realm = "global";
@@ -177,6 +176,7 @@ $manager_authentication = new managerAuthentication($manager_user, $realm);
 
 // authenticate the user
 // initiate login routine
+$authentication_result = $manager_authentication->authenticate(managerAuthentication::AUTHENTICATION_METHOD_BEARER, 0);
 
 // check if login was successful, else die with error as string
 if ($authentication_result != 0) {
