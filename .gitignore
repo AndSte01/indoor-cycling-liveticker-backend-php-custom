@@ -15,4 +15,4 @@
 /internal-testing
 
 # ignore results of test_all
-/testing/results.ansi
+/testing/test_results.ansi
