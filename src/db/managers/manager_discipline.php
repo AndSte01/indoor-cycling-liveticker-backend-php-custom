@@ -15,7 +15,7 @@ use db\adaptorDiscipline;
 // add required database tools
 require_once(dirname(__FILE__) . "/../adaptor/adaptor_generic.php");
 require_once(dirname(__FILE__) . "/../adaptor/adaptor_discipline.php");
-require_once(dirname(__FILE__) . "/../representatives/db_representatives_discipline.php");
+require_once(dirname(__FILE__) . "/../representatives/representative_discipline.php");
 
 /**
  * A class implementing a discipline management

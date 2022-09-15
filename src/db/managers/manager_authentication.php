@@ -12,7 +12,7 @@
 use db\user;
 
 // add required database tools
-require_once(dirname(__FILE__) . "/../representatives/db_representatives_user.php");
+require_once(dirname(__FILE__) . "/../representatives/representative_user.php");
 require_once(dirname(__FILE__) . "/../../errors.php");
 
 /**

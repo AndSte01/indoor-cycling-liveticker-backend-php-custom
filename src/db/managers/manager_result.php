@@ -15,7 +15,7 @@ use db\adaptorResult;
 // add required database tools
 require_once(dirname(__FILE__) . "/../adaptor/adaptor_generic.php");
 require_once(dirname(__FILE__) . "/../adaptor/adaptor_result.php");
-require_once(dirname(__FILE__) . "/../representatives/db_representatives_result.php");
+require_once(dirname(__FILE__) . "/../representatives/representative_result.php");
 
 /**
  * A class implementing a result management

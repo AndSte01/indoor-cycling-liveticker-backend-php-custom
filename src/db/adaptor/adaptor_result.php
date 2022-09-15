@@ -16,7 +16,7 @@ namespace db;
 
 // import required files
 require_once("adaptor_interface.php");
-require_once(dirname(__FILE__) . "/../representatives/db_representatives_result.php");
+require_once(dirname(__FILE__) . "/../representatives/representative_result.php");
 
 // define aliases
 use DateTime;
