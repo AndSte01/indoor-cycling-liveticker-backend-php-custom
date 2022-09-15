@@ -22,7 +22,7 @@ require_once(dirname(__FILE__) . "/../managers/manager_authentication.php");
 require_once(dirname(__FILE__) . "/../managers/manager_user.php");
 require_once(dirname(__FILE__) . "/../managers/manager_competition.php");
 require_once(dirname(__FILE__) . "/../managers/manager_discipline.php");
-require_once(dirname(__FILE__) . "/../managers/manager_result.php.php");
+require_once(dirname(__FILE__) . "/../managers/manager_result.php");
 require_once(dirname(__FILE__) . "/../../errors.php");
 
 /**
