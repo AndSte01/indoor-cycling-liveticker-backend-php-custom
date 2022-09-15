@@ -9,42 +9,7 @@ A small overview of the projects architecture. Please note that this diagram rep
 All of the documentation can be found in the [wiki](https://github.com/AndSte01/indoor-cycling-liveticker-backend-php/wiki).
 
 ## To-Do
-- Users
-  - some additional testing about logout and logging in with bearer tokens
-+ Competition [done]
-  + adaptor
-    + coding
-    + testing
-  + representative
-    + coding
-    + testing
-  + manager
-    + code
-    + testing
-  + top-level
-    + code
-    + testing
-  - documentation
-- Disciplines [done]
-  - adaptor
-    + code
-    - testing
-  - representative
-    + code
-    - testing
-  - manager
-    + code
-    - testing
-  - top-level
-    + code
-    - test-cases
-    - testing
-  - documentation
-- Results [testing]
-  - all
-- poll [all]
-
-check garbage collection after every test, some test scripts leave elements in the database...
+All documentation needs to be revisited.
 
 ## Testing
 Testing is done with [Hoppscotch](https://hoppscotch.io/) using the [environment](./testing/env.json) and test cases in the [testing](./testing) folder.
