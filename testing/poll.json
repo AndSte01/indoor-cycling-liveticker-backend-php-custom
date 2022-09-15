@@ -1,0 +1,120 @@
+{
+    "v": 1,
+    "name": "poll",
+    "folders": [],
+    "requests": [
+        {
+            "v": "1",
+            "endpoint": "<<url>>/poll.php",
+            "name": "poll - no competition",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+                "authType": "none",
+                "authActive": true
+            },
+            "preRequestScript": "",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"MISSING_INFORMATION\");\n})",
+            "body": {
+                "contentType": null,
+                "body": null
+            }
+        },
+        {
+            "v": "1",
+            "endpoint": "<<url>>/poll.php",
+            "name": "poll - not existing competition",
+            "params": [
+                {
+                    "key": "competition",
+                    "value": "-1",
+                    "active": true
+                }
+            ],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+                "authType": "none",
+                "authActive": true
+            },
+            "preRequestScript": "",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"NOT_EXISTING\");\n})",
+            "body": {
+                "contentType": null,
+                "body": null
+            }
+        },
+        {
+            "v": "1",
+            "endpoint": "<<url>>/competition.php",
+            "name": "get competitions",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+                "authType": "none",
+                "authActive": true
+            },
+            "preRequestScript": "",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// write id of competition in environment\npw.env.set(\"competition_id\", pw.response.body[0].id.toString());",
+            "body": {
+                "contentType": null,
+                "body": null
+            }
+        },
+        {
+            "v": "1",
+            "endpoint": "<<url>>/poll.php",
+            "name": "poll - latest competition",
+            "params": [
+                {
+                    "key": "competition",
+                    "value": "<<competition_id>>",
+                    "active": true
+                }
+            ],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+                "authType": "none",
+                "authActive": true
+            },
+            "preRequestScript": "",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.length).toBe(3);\n  pw.expect(pw.response.body[0]).toBeType(\"number\");\n  pw.expect(pw.response.body[1]).toBeType(\"object\");\n  pw.expect(pw.response.body[2]).toBeType(\"object\");\n\n  for(var discipline of pw.response.body[1]){\n    pw.expect(discipline.competition).toBe(parseInt(pw.env.get(\"competition_id\")))\n  };\n})",
+            "body": {
+                "contentType": null,
+                "body": null
+            }
+        },
+        {
+            "v": "1",
+            "endpoint": "<<url>>/poll.php",
+            "name": "poll - timestamp in the future",
+            "params": [
+                {
+                    "key": "competition",
+                    "value": "1",
+                    "active": true
+                },
+                {
+                    "key": "timestamp",
+                    "value": "<<timestamp>>",
+                    "active": true
+                }
+            ],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+                "authType": "none",
+                "authActive": true
+            },
+            "preRequestScript": "let date = new Date();\ndate.setDate(date.getDate() + 3);\npw.env.set(\"timestamp\", String(date.getTime()));",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.length).toBe(3);\n  pw.expect(pw.response.body[0]).toBeType(\"number\");\n  pw.expect(pw.response.body[1]).toBeType(\"object\");\n  pw.expect(pw.response.body[1].length).toBe(0);\n  pw.expect(pw.response.body[2]).toBeType(\"object\");\n  pw.expect(pw.response.body[2].length).toBe(0);\n})",
+            "body": {
+                "contentType": null,
+                "body": null
+            }
+        }
+    ]
+}
