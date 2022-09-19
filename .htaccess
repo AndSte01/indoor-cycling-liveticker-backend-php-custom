@@ -1,1 +1,2 @@
-SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1 # add authentication information to header variables
+# Header set Access-Control-Allow-Origin * # set Cross-Origin Header
