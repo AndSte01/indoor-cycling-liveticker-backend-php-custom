@@ -233,6 +233,10 @@ function getCompetitionsId($id): string
     // try to get competitions
     $result = $competition_manager->getCompetitionById($id);
 
+    if ($result == null) {
+        return errors::to_error_string([errors::NOT_EXISTING]);
+    }
+
     // return the result
     return json_encode($result, JSON_UNESCAPED_UNICODE);
 }
