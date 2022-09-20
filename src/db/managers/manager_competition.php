@@ -174,7 +174,7 @@ class managerCompetition
 
         // check if any competitions were found if so return to prevent duplicates
         if ($found_competitions != null)
-            return self::ERROR_ALREADY_EXISTING;
+            return $found_competitions[0]; // return the first found competition
 
         // update fields in competition object
 

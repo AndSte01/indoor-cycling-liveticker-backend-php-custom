@@ -126,7 +126,7 @@ class managerDiscipline
         adaptorDiscipline::makeRepresentativeDbReady($this->db, $discipline);
 
         // search for similar disciplines in database
-        if (adaptorDiscipline::search(
+        $found_disciplines = adaptorDiscipline::search(
             $this->db,
             null,
             $this->currentCompetitionID,
@@ -134,8 +134,10 @@ class managerDiscipline
             $discipline->{discipline::KEY_FALLBACK_NAME},
             $discipline->{discipline::KEY_TYPE},
             $discipline->{discipline::KEY_ROUND}
-        ) != null)
-            return self::ERROR_ALREADY_EXISTING;
+        );
+
+        if ($found_disciplines != null)
+            return $found_disciplines[0];
 
         // update competition id in discipline
         $discipline->updateParentId($this->currentCompetitionID);
