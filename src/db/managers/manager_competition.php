@@ -173,8 +173,14 @@ class managerCompetition
         );
 
         // check if any competitions were found if so return to prevent duplicates
-        if ($found_competitions != null)
-            return self::ERROR_ALREADY_EXISTING;
+        if ($found_competitions != null) {
+            // if the competition already exists check if the user has access to it, if not return error
+            if ($found_competitions[0]->{competition::KEY_USER} != $this->currentUserID)
+                return self::ERROR_WRONG_USER_ID;
+
+            // seems like the user has access, so simply return the found competition
+            return $found_competitions[0];
+        }
 
         // update fields in competition object
 

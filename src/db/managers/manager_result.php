@@ -124,15 +124,17 @@ class managerResult
         adaptorResult::makeRepresentativeDbReady($this->db, $result);
 
         // search for similar results in the database
-        if (adaptorResult::search(
+        $found_results = adaptorResult::search(
             $this->db,
             null,
             $this->currentDisciplineID,
             null,
             $result->{result::KEY_START_NUMBER},
             $result->{result::KEY_NAME}
-        ) != null)
-            return self::ERROR_ALREADY_EXISTING;
+        );
+
+        if ($found_results != null)
+            return $found_results[0];
 
         // update discipline id in result
         $result->updateParentId($this->currentDisciplineID);
