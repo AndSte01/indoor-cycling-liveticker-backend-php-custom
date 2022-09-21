@@ -1,149 +1,135 @@
 {
-    "v": 1,
-    "folders": [],
     "requests": [
         {
             "headers": [],
-            "name": "add user - user 1",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
-            "body": {
-                "body": "{\n    \"name\": \"<<username1>>\",\n    \"password\": \"<<password1>>\"\n}",
-                "contentType": "application/json"
-            },
-            "method": "POST",
             "auth": {
                 "authType": "none",
-                "value": "",
-                "key": "",
                 "authActive": true,
-                "addTo": "Headers"
+                "value": "",
+                "addTo": "Headers",
+                "key": ""
             },
-            "v": "1",
-            "preRequestScript": "// set username and password in environment\npw.env.set(\"username1\", \"Rashmi\");\npw.env.set(\"password1\", \"Sonam\");",
-            "endpoint": "<<url>>/user.php",
             "params": [
                 {
                     "active": true,
                     "value": "add",
                     "key": "method"
                 }
-            ]
+            ],
+            "preRequestScript": "// set username and password in environment\npw.env.set(\"username1\", \"Rashmi\");\npw.env.set(\"password1\", \"Sonam\");",
+            "endpoint": "<<url>>/user.php",
+            "name": "add user - user 1",
+            "body": {
+                "body": "{\n    \"name\": \"<<username1>>\",\n    \"password\": \"<<password1>>\"\n}",
+                "contentType": "application/json"
+            },
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
+            "method": "POST",
+            "v": "1"
         },
         {
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
-            "preRequestScript": "// set username and password in environment\npw.env.set(\"username2\", \"Jarka\");\npw.env.set(\"password2\", \"Gust\");",
-            "name": "add user - user 2",
-            "headers": [],
-            "endpoint": "<<url>>/user.php",
             "auth": {
-                "authActive": true,
                 "addTo": "Headers",
+                "authType": "none",
+                "authActive": true,
                 "value": "",
-                "key": "",
-                "authType": "none"
+                "key": ""
             },
+            "preRequestScript": "// set username and password in environment\npw.env.set(\"username2\", \"Jarka\");\npw.env.set(\"password2\", \"Gust\");",
+            "method": "POST",
+            "endpoint": "<<url>>/user.php",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
             "v": "1",
+            "headers": [],
             "body": {
-                "contentType": "application/json",
-                "body": "{\n    \"name\": \"<<username2>>\",\n    \"password\": \"<<password2>>\"\n}"
+                "body": "{\n    \"name\": \"<<username2>>\",\n    \"password\": \"<<password2>>\"\n}",
+                "contentType": "application/json"
             },
             "params": [
                 {
                     "key": "method",
-                    "active": true,
-                    "value": "add"
+                    "value": "add",
+                    "active": true
                 }
             ],
-            "method": "POST"
+            "name": "add user - user 2"
         },
         {
-            "v": "1",
-            "name": "authenticate - user 1",
-            "headers": [],
             "params": [],
+            "endpoint": "<<url>>/user.php",
             "preRequestScript": "",
+            "name": "authenticate - user 1",
+            "auth": {
+                "addTo": "Headers",
+                "username": "<<username1>>",
+                "authType": "basic",
+                "password": "<<password1>>",
+                "value": "",
+                "key": "",
+                "authActive": true
+            },
+            "body": {
+                "body": null,
+                "contentType": null
+            },
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is Bearer token\", () => {\n  pw.expect(pw.response.body).toInclude(\"UmFzaG1p:0:\"); // base 64 encoding of first username\n})\n\n// write bearer token to environment variable\npw.env.set(\"token1\", pw.response.body);",
+            "headers": [],
+            "method": "GET",
+            "v": "1"
+        },
+        {
+            "headers": [],
+            "preRequestScript": "",
+            "name": "authenticate - user 2",
+            "v": "1",
+            "params": [],
+            "auth": {
+                "username": "<<username2>>",
+                "password": "<<password2>>",
+                "value": "",
+                "authType": "basic",
+                "authActive": true,
+                "addTo": "Headers",
+                "key": ""
+            },
             "body": {
                 "contentType": null,
                 "body": null
             },
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is Bearer token\", () => {\n  pw.expect(pw.response.body).toInclude(\"SmFya2E=:0:\"); // base 64 encoding of first username\n})\n\n// write bearer token to environment variable\npw.env.set(\"token2\", pw.response.body);",
             "endpoint": "<<url>>/user.php",
-            "auth": {
-                "key": "",
-                "value": "",
-                "authType": "basic",
-                "addTo": "Headers",
-                "authActive": true,
-                "password": "<<password1>>",
-                "username": "<<username1>>"
-            },
             "method": "GET"
         },
         {
             "auth": {
-                "key": "",
-                "authActive": true,
-                "authType": "basic",
-                "username": "<<username2>>",
-                "addTo": "Headers",
                 "value": "",
-                "password": "<<password2>>"
-            },
-            "headers": [],
-            "name": "authenticate - user 2",
-            "method": "GET",
-            "preRequestScript": "",
-            "params": [],
-            "v": "1",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is Bearer token\", () => {\n  pw.expect(pw.response.body).toInclude(\"SmFya2E=:0:\"); // base 64 encoding of first username\n})\n\n// write bearer token to environment variable\npw.env.set(\"token2\", pw.response.body);",
-            "endpoint": "<<url>>/user.php",
-            "body": {
-                "body": null,
-                "contentType": null
-            }
-        },
-        {
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is id (number)\", () => {\n  pw.expect(pw.response.body.id).toBeType(\"number\");\n})\n\n// write id of competition in environment\npw.env.set(\"competition_id1\", pw.response.body.id.toString());",
-            "v": "1",
-            "name": "add competition - competition 1",
-            "headers": [],
-            "auth": {
-                "key": "",
-                "authActive": true,
                 "addTo": "Headers",
+                "key": "",
                 "username": "<<token1>>",
-                "value": "",
-                "authType": "bearer",
-                "token": "<<token1>>"
+                "authActive": true,
+                "token": "<<token1>>",
+                "authType": "bearer"
             },
-            "method": "POST",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is id (number)\", () => {\n  pw.expect(pw.response.body.id).toBeType(\"number\");\n})\n\n// write id of competition in environment\npw.env.set(\"competition_id1\", pw.response.body.id.toString());",
             "body": {
                 "contentType": "application/json",
                 "body": "{\n   \"date\":\"<<date>>\",\n   \"name\":\"Demo Competition 1\",\n   \"location\":\"Demo Location\",\n   \"areas\":0,\n   \"feature_set\":4,\n   \"live\":true\n}"
             },
+            "method": "POST",
             "endpoint": "<<url>>/competition.php",
+            "preRequestScript": "let date = new Date();\ndate.setDate(date.getDate() - 3);\npw.env.set(\"date\", date.toISOString().split('T')[0]);",
+            "headers": [],
+            "name": "add competition - competition 1",
+            "v": "1",
             "params": [
                 {
-                    "key": "method",
+                    "value": "add",
                     "active": true,
-                    "value": "add"
+                    "key": "method"
                 }
-            ],
-            "preRequestScript": "let date = new Date();\ndate.setDate(date.getDate() - 3);\npw.env.set(\"date\", date.toISOString().split('T')[0]);"
+            ]
         },
         {
-            "name": "add competition - competition 2",
-            "v": "1",
-            "endpoint": "<<url>>/competition.php",
-            "auth": {
-                "token": "<<token2>>",
-                "key": "",
-                "username": "<<token1>>",
-                "addTo": "Headers",
-                "authActive": true,
-                "value": "",
-                "authType": "bearer"
-            },
             "preRequestScript": "let date = new Date();\ndate.setDate(date.getDate() - 1);\npw.env.set(\"date\", date.toISOString().split('T')[0]);",
             "body": {
                 "contentType": "application/json",
@@ -151,38 +137,83 @@
             },
             "params": [
                 {
-                    "value": "add",
                     "key": "method",
+                    "value": "add",
                     "active": true
                 }
             ],
-            "headers": [],
+            "endpoint": "<<url>>/competition.php",
+            "name": "add competition - competition 2",
             "method": "POST",
+            "auth": {
+                "username": "<<token1>>",
+                "addTo": "Headers",
+                "authType": "bearer",
+                "value": "",
+                "authActive": true,
+                "token": "<<token2>>",
+                "key": ""
+            },
+            "headers": [],
+            "v": "1",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is id (number)\", () => {\n  pw.expect(pw.response.body.id).toBeType(\"number\");\n})\n\n// write id of competition in environment\npw.env.set(\"competition_id2\", pw.response.body.id.toString());"
         },
         {
-            "endpoint": "<<url>>/discipline.php",
+            "params": [
+                {
+                    "value": "add",
+                    "key": "method",
+                    "active": true
+                },
+                {
+                    "value": "<<competition_id1>>",
+                    "key": "competition",
+                    "active": true
+                }
+            ],
+            "method": "POST",
+            "auth": {
+                "authActive": true,
+                "value": "",
+                "key": "",
+                "token": "<<token1>>",
+                "username": "<<token1>>",
+                "addTo": "Headers",
+                "authType": "bearer"
+            },
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.fallback_name).toBe(\"discipline1\");\n  pw.expect(pw.response.body.competition).toBe(parseInt(pw.env.get(\"competition_id1\")));\n})\n\n// write id in environment\npw.env.set(\"discipline_id1\", pw.response.body.id.toString());",
+            "preRequestScript": "",
+            "endpoint": "<<url>>/discipline.php",
+            "headers": [],
+            "name": "add discipline - discipline 1 (comp 1)",
+            "v": "1",
             "body": {
-                "body": "{\n  \"type\": -1,\n  \"fallback_name\": \"discipline1\",\n  \"round\": 0,\n  \"finished\": true\n}",
+                "contentType": "application/json",
+                "body": "{\n  \"type\": -1,\n  \"fallback_name\": \"discipline1\",\n  \"round\": 0,\n  \"finished\": true\n}"
+            }
+        },
+        {
+            "method": "POST",
+            "body": {
+                "body": "{\n  \"type\": -1,\n  \"fallback_name\": \"discipline2\",\n  \"round\": 0,\n  \"finished\": false\n}",
                 "contentType": "application/json"
             },
             "auth": {
-                "key": "",
-                "addTo": "Headers",
-                "value": "",
-                "authType": "bearer",
-                "token": "<<token1>>",
                 "authActive": true,
-                "username": "<<token1>>"
+                "username": "<<token1>>",
+                "addTo": "Headers",
+                "key": "",
+                "value": "",
+                "token": "<<token1>>",
+                "authType": "bearer"
             },
-            "method": "POST",
-            "v": "1",
+            "preRequestScript": "",
+            "endpoint": "<<url>>/discipline.php",
             "params": [
                 {
-                    "active": true,
+                    "value": "add",
                     "key": "method",
-                    "value": "add"
+                    "active": true
                 },
                 {
                     "active": true,
@@ -190,69 +221,20 @@
                     "value": "<<competition_id1>>"
                 }
             ],
-            "headers": [],
-            "preRequestScript": "",
-            "name": "add discipline - discipline 1 (comp 1)"
-        },
-        {
-            "preRequestScript": "",
-            "params": [
-                {
-                    "key": "method",
-                    "active": true,
-                    "value": "add"
-                },
-                {
-                    "value": "<<competition_id1>>",
-                    "active": true,
-                    "key": "competition"
-                }
-            ],
             "v": "1",
-            "endpoint": "<<url>>/discipline.php",
-            "body": {
-                "body": "{\n  \"type\": -1,\n  \"fallback_name\": \"discipline2\",\n  \"round\": 0,\n  \"finished\": false\n}",
-                "contentType": "application/json"
-            },
-            "method": "POST",
             "name": "add discipline - discipline 2 (comp 1)",
-            "auth": {
-                "key": "",
-                "value": "",
-                "authActive": true,
-                "username": "<<token1>>",
-                "authType": "bearer",
-                "addTo": "Headers",
-                "token": "<<token1>>"
-            },
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.fallback_name).toBe(\"discipline2\");\n  pw.expect(pw.response.body.competition).toBe(parseInt(pw.env.get(\"competition_id1\")));\n})\n\n// write id in environment\npw.env.set(\"discipline_id2\", pw.response.body.id.toString());",
             "headers": []
         },
         {
-            "headers": [],
-            "name": "add discipline - discipline 3 (comp 2)",
-            "auth": {
-                "key": "",
-                "addTo": "Headers",
-                "authActive": true,
-                "value": "",
-                "username": "<<token1>>",
-                "authType": "bearer",
-                "token": "<<token2>>"
-            },
             "v": "1",
-            "method": "POST",
-            "endpoint": "<<url>>/discipline.php",
             "preRequestScript": "",
-            "body": {
-                "body": "{\n  \"type\": -1,\n  \"fallback_name\": \"discipline3\",\n  \"round\": 0,\n  \"finished\": true\n}",
-                "contentType": "application/json"
-            },
+            "method": "POST",
             "params": [
                 {
-                    "active": true,
                     "key": "method",
-                    "value": "add"
+                    "value": "add",
+                    "active": true
                 },
                 {
                     "value": "<<competition_id2>>",
@@ -260,74 +242,92 @@
                     "active": true
                 }
             ],
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.fallback_name).toBe(\"discipline3\");\n  pw.expect(pw.response.body.competition).toBe(parseInt(pw.env.get(\"competition_id2\")));\n})\n\n// write id in environment\npw.env.set(\"discipline_id3\", pw.response.body.id.toString());"
+            "auth": {
+                "authActive": true,
+                "key": "",
+                "addTo": "Headers",
+                "authType": "bearer",
+                "username": "<<token1>>",
+                "token": "<<token2>>",
+                "value": ""
+            },
+            "name": "add discipline - discipline 3 (comp 2)",
+            "endpoint": "<<url>>/discipline.php",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.fallback_name).toBe(\"discipline3\");\n  pw.expect(pw.response.body.competition).toBe(parseInt(pw.env.get(\"competition_id2\")));\n})\n\n// write id in environment\npw.env.set(\"discipline_id3\", pw.response.body.id.toString());",
+            "headers": [],
+            "body": {
+                "body": "{\n  \"type\": -1,\n  \"fallback_name\": \"discipline3\",\n  \"round\": 0,\n  \"finished\": true\n}",
+                "contentType": "application/json"
+            }
         },
         {
+            "name": "add result - no discipline",
             "endpoint": "<<url>>/result.php",
             "headers": [],
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"MISSING_INFORMATION\");\n})",
-            "name": "add result - no discipline",
             "v": "1",
+            "preRequestScript": "",
+            "body": {
+                "contentType": "application/json",
+                "body": "{\n  \"type\": -1,\n  \"fallback_name\": \"discipline3\",\n  \"round\": 0,\n  \"finished\": true\n}"
+            },
             "params": [
                 {
-                    "value": "add",
                     "key": "method",
+                    "value": "add",
                     "active": true
                 }
             ],
-            "method": "POST",
             "auth": {
                 "value": "",
-                "token": "<<token2>>",
-                "key": "",
-                "addTo": "Headers",
-                "username": "<<token1>>",
-                "authActive": true,
-                "authType": "bearer"
-            },
-            "body": {
-                "body": "{\n  \"type\": -1,\n  \"fallback_name\": \"discipline3\",\n  \"round\": 0,\n  \"finished\": true\n}",
-                "contentType": "application/json"
-            },
-            "preRequestScript": ""
-        },
-        {
-            "name": "add result - not existing discipline",
-            "params": [
-                {
-                    "value": "add",
-                    "active": true,
-                    "key": "method"
-                },
-                {
-                    "active": true,
-                    "value": "-1",
-                    "key": "discipline"
-                }
-            ],
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"NOT_EXISTING\");\n})",
-            "auth": {
-                "username": "<<token1>>",
-                "addTo": "Headers",
-                "authActive": true,
-                "key": "",
                 "authType": "bearer",
-                "value": "",
+                "username": "<<token1>>",
+                "key": "",
+                "authActive": true,
+                "addTo": "Headers",
                 "token": "<<token2>>"
             },
-            "v": "1",
-            "body": {
-                "body": "{\n  \"type\": -1,\n  \"fallback_name\": \"discipline3\",\n  \"round\": 0,\n  \"finished\": true\n}",
-                "contentType": "application/json"
-            },
-            "preRequestScript": "",
-            "endpoint": "<<url>>/result.php",
-            "headers": [],
             "method": "POST"
         },
         {
-            "v": "1",
             "endpoint": "<<url>>/result.php",
+            "preRequestScript": "",
+            "params": [
+                {
+                    "active": true,
+                    "key": "method",
+                    "value": "add"
+                },
+                {
+                    "active": true,
+                    "key": "discipline",
+                    "value": "-1"
+                }
+            ],
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"NOT_EXISTING\");\n})",
+            "method": "POST",
+            "name": "add result - not existing discipline",
+            "v": "1",
+            "auth": {
+                "username": "<<token1>>",
+                "value": "",
+                "addTo": "Headers",
+                "authActive": true,
+                "key": "",
+                "token": "<<token2>>",
+                "authType": "bearer"
+            },
+            "body": {
+                "contentType": "application/json",
+                "body": "{\n  \"type\": -1,\n  \"fallback_name\": \"discipline3\",\n  \"round\": 0,\n  \"finished\": true\n}"
+            },
+            "headers": []
+        },
+        {
+            "preRequestScript": "",
+            "endpoint": "<<url>>/result.php",
+            "v": "1",
+            "headers": [],
             "name": "add result - result 1 (discipline 1)",
             "params": [
                 {
@@ -336,33 +336,73 @@
                     "key": "method"
                 },
                 {
-                    "key": "discipline",
+                    "value": "<<discipline_id1>>",
                     "active": true,
-                    "value": "<<discipline_id1>>"
+                    "key": "discipline"
                 }
             ],
-            "headers": [],
-            "method": "POST",
-            "auth": {
-                "token": "<<token1>>",
-                "authType": "bearer",
-                "addTo": "Headers",
-                "authActive": true,
-                "value": "",
-                "key": "",
-                "username": "<<token1>>"
-            },
-            "preRequestScript": "",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.discipline).toBe(parseInt(pw.env.get(\"discipline_id1\")));\n  pw.expect(pw.response.body.start_number).toBe(101);\n  pw.expect(pw.response.body.name).toBe(\"result1\");\n  pw.expect(pw.response.body.club).toBe(\"def\");\n  pw.expect(pw.response.body.score_submitted).toBe(101.13);\n  pw.expect(pw.response.body.score_accomplished).toBe(85.02);\n  pw.expect(pw.response.body.time).toBe(300);\n  pw.expect(pw.response.body.finished).toBe(true);\n})\n\n// write id in environment\npw.env.set(\"result_id1\", pw.response.body.id.toString());",
             "body": {
-                "body": "{\n  \"start_number\": 101,\n  \"name\": \"result1\",\n  \"club\": \"def\",\n  \"score_submitted\": 101.13,\n  \"score_accomplished\": 85.02,\n  \"time\": 300,\n  \"finished\": true\n}",
+                "contentType": "application/json",
+                "body": "{\n  \"start_number\": 101,\n  \"name\": \"result1\",\n  \"club\": \"def\",\n  \"score_submitted\": 101.13,\n  \"score_accomplished\": 85.02,\n  \"time\": 300,\n  \"finished\": true\n}"
+            },
+            "auth": {
+                "addTo": "Headers",
+                "username": "<<token1>>",
+                "authType": "bearer",
+                "key": "",
+                "authActive": true,
+                "token": "<<token1>>",
+                "value": ""
+            },
+            "method": "POST"
+        },
+        {
+            "params": [
+                {
+                    "key": "method",
+                    "value": "add",
+                    "active": true
+                },
+                {
+                    "value": "<<discipline_id1>>",
+                    "active": true,
+                    "key": "discipline"
+                }
+            ],
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.name).toBe(\"result2\");\n  pw.expect(pw.response.body.discipline).toBe(parseInt(pw.env.get(\"discipline_id1\")));\n})\n\n// write id in environment\npw.env.set(\"result_id2\", pw.response.body.id.toString());",
+            "name": "add result - result 2 (discipline 1)",
+            "method": "POST",
+            "endpoint": "<<url>>/result.php",
+            "auth": {
+                "value": "",
+                "authType": "bearer",
+                "authActive": true,
+                "token": "<<token1>>",
+                "addTo": "Headers",
+                "username": "<<token1>>",
+                "key": ""
+            },
+            "headers": [],
+            "v": "1",
+            "preRequestScript": "",
+            "body": {
+                "body": "{\n  \"start_number\": 102,\n  \"name\": \"result2\",\n  \"club\": \"def\",\n  \"score_submitted\": 0,\n  \"score_accomplished\": 0,\n  \"time\": 0,\n  \"finished\": false\n}",
                 "contentType": "application/json"
             }
         },
         {
-            "v": "1",
-            "endpoint": "<<url>>/result.php",
-            "name": "add result - result 2 (discipline 1)",
+            "headers": [],
+            "name": "add result - result 3 (discipline 2)",
+            "auth": {
+                "value": "",
+                "authActive": true,
+                "key": "",
+                "username": "<<token1>>",
+                "authType": "bearer",
+                "addTo": "Headers",
+                "token": "<<token1>>"
+            },
             "params": [
                 {
                     "active": true,
@@ -370,71 +410,27 @@
                     "key": "method"
                 },
                 {
+                    "value": "<<discipline_id2>>",
                     "active": true,
-                    "value": "<<discipline_id1>>",
                     "key": "discipline"
                 }
             ],
-            "headers": [],
-            "method": "POST",
-            "auth": {
-                "addTo": "Headers",
-                "token": "<<token1>>",
-                "authType": "bearer",
-                "authActive": true,
-                "username": "<<token1>>",
-                "key": "",
-                "value": ""
-            },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.name).toBe(\"result2\");\n  pw.expect(pw.response.body.discipline).toBe(parseInt(pw.env.get(\"discipline_id1\")));\n})\n\n// write id in environment\npw.env.set(\"result_id2\", pw.response.body.id.toString());",
-            "body": {
-                "contentType": "application/json",
-                "body": "{\n  \"start_number\": 102,\n  \"name\": \"result2\",\n  \"club\": \"def\",\n  \"score_submitted\": 0,\n  \"score_accomplished\": 0,\n  \"time\": 0,\n  \"finished\": false\n}"
-            }
-        },
-        {
-            "v": "1",
-            "endpoint": "<<url>>/result.php",
-            "name": "add result - result 3 (discipline 2)",
-            "params": [
-                {
-                    "value": "add",
-                    "key": "method",
-                    "active": true
-                },
-                {
-                    "key": "discipline",
-                    "active": true,
-                    "value": "<<discipline_id2>>"
-                }
-            ],
-            "headers": [],
-            "method": "POST",
-            "auth": {
-                "authType": "bearer",
-                "value": "",
-                "authActive": true,
-                "key": "",
-                "addTo": "Headers",
-                "token": "<<token1>>",
-                "username": "<<token1>>"
-            },
-            "preRequestScript": "",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.name).toBe(\"result3\");\n  pw.expect(pw.response.body.discipline).toBe(parseInt(pw.env.get(\"discipline_id2\")));\n})\n\n// write id in environment\npw.env.set(\"result_id3\", pw.response.body.id.toString());",
+            "method": "POST",
+            "preRequestScript": "",
+            "endpoint": "<<url>>/result.php",
             "body": {
                 "contentType": "application/json",
                 "body": "{\n  \"start_number\": 103,\n  \"name\": \"result3\",\n  \"club\": \"def\",\n  \"score_submitted\": 0,\n  \"score_accomplished\": 0,\n  \"time\": 100,\n  \"finished\": false\n}"
-            }
+            },
+            "v": "1"
         },
         {
-            "v": "1",
-            "endpoint": "<<url>>/result.php",
-            "name": "add result - result 4 (discipline 3)",
+            "preRequestScript": "",
             "params": [
                 {
-                    "active": true,
                     "value": "add",
+                    "active": true,
                     "key": "method"
                 },
                 {
@@ -443,62 +439,164 @@
                     "value": "<<discipline_id3>>"
                 }
             ],
+            "v": "1",
+            "body": {
+                "contentType": "application/json",
+                "body": "{\n  \"start_number\": 104,\n  \"name\": \"result4\",\n  \"club\": \"def\",\n  \"score_submitted\": 0,\n  \"score_accomplished\": 0,\n  \"time\": 0,\n  \"finished\": true\n}"
+            },
+            "endpoint": "<<url>>/result.php",
+            "method": "POST",
+            "auth": {
+                "value": "",
+                "username": "<<token1>>",
+                "token": "<<token2>>",
+                "key": "",
+                "addTo": "Headers",
+                "authType": "bearer",
+                "authActive": true
+            },
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.name).toBe(\"result4\");\n  pw.expect(pw.response.body.discipline).toBe(parseInt(pw.env.get(\"discipline_id3\")));\n})\n\n// write id in environment\npw.env.set(\"result_id4\", pw.response.body.id.toString());",
+            "headers": [],
+            "name": "add result - result 4 (discipline 3)"
+        },
+        {
+            "v": "1",
+            "endpoint": "<<url>>/result.php",
+            "name": "add result - already existing (result 4, discipline 3)",
+            "params": [
+                {
+                    "value": "add",
+                    "active": true,
+                    "key": "method"
+                },
+                {
+                    "value": "<<discipline_id3>>",
+                    "key": "discipline",
+                    "active": true
+                }
+            ],
             "headers": [],
             "method": "POST",
             "auth": {
-                "key": "",
-                "authActive": true,
+                "value": "",
                 "username": "<<token1>>",
                 "addTo": "Headers",
-                "value": "",
+                "authActive": true,
                 "authType": "bearer",
+                "key": "",
                 "token": "<<token2>>"
             },
             "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.name).toBe(\"result4\");\n  pw.expect(pw.response.body.discipline).toBe(parseInt(pw.env.get(\"discipline_id3\")));\n})\n\n// write id in environment\npw.env.set(\"result_id4\", pw.response.body.id.toString());",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.id).toBe(parseInt(pw.env.get(\"result_id4\")));\n})",
             "body": {
                 "contentType": "application/json",
                 "body": "{\n  \"start_number\": 104,\n  \"name\": \"result4\",\n  \"club\": \"def\",\n  \"score_submitted\": 0,\n  \"score_accomplished\": 0,\n  \"time\": 0,\n  \"finished\": true\n}"
             }
         },
         {
-            "name": "add result - already existing",
+            "method": "POST",
+            "body": {
+                "contentType": "application/json",
+                "body": "{\n  \"start_number\": 105,\n  \"name\": \"result5\",\n  \"club\": \"def\",\n  \"score_submitted\": 0,\n  \"score_accomplished\": 0,\n  \"time\": 0,\n  \"finished\": true,\n}"
+            },
+            "name": "add result - invalid JSON",
             "preRequestScript": "",
             "auth": {
-                "authType": "bearer",
-                "authActive": true,
-                "value": "",
-                "key": "",
                 "username": "<<token1>>",
                 "token": "<<token2>>",
+                "authType": "bearer",
+                "key": "",
+                "value": "",
+                "authActive": true,
                 "addTo": "Headers"
             },
             "endpoint": "<<url>>/result.php",
-            "method": "POST",
-            "body": {
-                "body": "{\n  \"start_number\": 104,\n  \"name\": \"result4\",\n  \"club\": \"def\",\n  \"score_submitted\": 0,\n  \"score_accomplished\": 0,\n  \"time\": 0,\n  \"finished\": true\n}",
-                "contentType": "application/json"
-            },
-            "v": "1",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"INVALID_JSON\");\n})",
             "headers": [],
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"ALREADY_EXISTS\");\n})",
             "params": [
                 {
-                    "value": "add",
+                    "key": "method",
                     "active": true,
-                    "key": "method"
+                    "value": "add"
+                },
+                {
+                    "active": true,
+                    "key": "discipline",
+                    "value": "<<discipline_id3>>"
+                }
+            ],
+            "v": "1"
+        },
+        {
+            "headers": [],
+            "auth": {
+                "addTo": "Headers",
+                "value": "",
+                "token": "<<token1>>",
+                "key": "",
+                "authActive": true,
+                "authType": "bearer",
+                "username": "<<token1>>"
+            },
+            "preRequestScript": "",
+            "endpoint": "<<url>>/result.php",
+            "body": {
+                "contentType": "application/json",
+                "body": "{\n  \"start_number\": 105,\n  \"name\": \"result5\",\n  \"club\": \"def\",\n  \"score_submitted\": 0,\n  \"score_accomplished\": 0,\n  \"time\": 0,\n  \"finished\": true\n}"
+            },
+            "params": [
+                {
+                    "active": true,
+                    "key": "method",
+                    "value": "add"
                 },
                 {
                     "key": "discipline",
                     "active": true,
+                    "value": "<<discipline_id3>>"
+                }
+            ],
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"ACCESS_DENIED\");\n})",
+            "v": "1",
+            "method": "POST",
+            "name": "add result - access denied"
+        },
+        {
+            "method": "POST",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.name).toBe(\"result5\");\n  pw.expect(pw.response.body.discipline).toBe(parseInt(pw.env.get(\"discipline_id3\")));\n  pw.expect(pw.response.body.start_number).toBe(0);\n})\n\n// write id in environment\npw.env.set(\"result_id5\", pw.response.body.id.toString());",
+            "v": "1",
+            "body": {
+                "contentType": "application/json",
+                "body": "{\n  \"start_number\": -1,\n  \"name\": \"result5\",\n  \"club\": \"def\",\n  \"score_submitted\": 0,\n  \"score_accomplished\": 0,\n  \"time\": 0,\n  \"finished\": true\n}"
+            },
+            "auth": {
+                "authActive": true,
+                "username": "<<token1>>",
+                "addTo": "Headers",
+                "token": "<<token2>>",
+                "authType": "bearer",
+                "value": "",
+                "key": ""
+            },
+            "name": "add result - invalid start number (result 5)",
+            "headers": [],
+            "endpoint": "<<url>>/result.php",
+            "preRequestScript": "",
+            "params": [
+                {
+                    "key": "method",
+                    "active": true,
+                    "value": "add"
+                },
+                {
+                    "active": true,
+                    "key": "discipline",
                     "value": "<<discipline_id3>>"
                 }
             ]
         },
         {
-            "v": "1",
-            "endpoint": "<<url>>/result.php",
-            "name": "add result - invalid JSON",
+            "headers": [],
             "params": [
                 {
                     "active": true,
@@ -511,130 +609,40 @@
                     "value": "<<discipline_id3>>"
                 }
             ],
-            "headers": [],
-            "method": "POST",
-            "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token2>>",
-                "authActive": true,
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"INVALID_JSON\");\n})",
-            "body": {
-                "body": "{\n  \"start_number\": 105,\n  \"name\": \"result5\",\n  \"club\": \"def\",\n  \"score_submitted\": 0,\n  \"score_accomplished\": 0,\n  \"time\": 0,\n  \"finished\": true,\n}",
-                "contentType": "application/json"
-            }
-        },
-        {
-            "v": "1",
-            "endpoint": "<<url>>/result.php",
-            "name": "add result - access denied",
-            "params": [
-                {
-                    "active": true,
-                    "value": "add",
-                    "key": "method"
-                },
-                {
-                    "active": true,
-                    "key": "discipline",
-                    "value": "<<discipline_id3>>"
-                }
-            ],
-            "headers": [],
-            "method": "POST",
-            "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token1>>",
-                "authActive": true,
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"ACCESS_DENIED\");\n})",
-            "body": {
-                "body": "{\n  \"start_number\": 105,\n  \"name\": \"result5\",\n  \"club\": \"def\",\n  \"score_submitted\": 0,\n  \"score_accomplished\": 0,\n  \"time\": 0,\n  \"finished\": true\n}",
-                "contentType": "application/json"
-            }
-        },
-        {
-            "v": "1",
-            "endpoint": "<<url>>/result.php",
-            "name": "add result - invalid start number (result 5)",
-            "params": [
-                {
-                    "active": true,
-                    "value": "add",
-                    "key": "method"
-                },
-                {
-                    "active": true,
-                    "key": "discipline",
-                    "value": "<<discipline_id3>>"
-                }
-            ],
-            "headers": [],
-            "method": "POST",
-            "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token2>>",
-                "authActive": true,
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.name).toBe(\"result5\");\n  pw.expect(pw.response.body.discipline).toBe(parseInt(pw.env.get(\"discipline_id3\")));\n  pw.expect(pw.response.body.start_number).toBe(0);\n})\n\n// write id in environment\npw.env.set(\"result_id5\", pw.response.body.id.toString());",
-            "body": {
-                "body": "{\n  \"start_number\": -1,\n  \"name\": \"result5\",\n  \"club\": \"def\",\n  \"score_submitted\": 0,\n  \"score_accomplished\": 0,\n  \"time\": 0,\n  \"finished\": true\n}",
-                "contentType": "application/json"
-            }
-        },
-        {
-            "v": "1",
-            "endpoint": "<<url>>/result.php",
-            "name": "add result - invalid score_submitted (result 6)",
-            "params": [
-                {
-                    "active": true,
-                    "value": "add",
-                    "key": "method"
-                },
-                {
-                    "active": true,
-                    "key": "discipline",
-                    "value": "<<discipline_id3>>"
-                }
-            ],
-            "headers": [],
-            "method": "POST",
-            "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token2>>",
-                "authActive": true,
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.name).toBe(\"result6\");\n  pw.expect(pw.response.body.discipline).toBe(parseInt(pw.env.get(\"discipline_id3\")));\n  pw.expect(pw.response.body.score_submitted).toBe(0);\n})\n\n// write id in environment\npw.env.set(\"result_id6\", pw.response.body.id.toString());",
             "body": {
                 "body": "{\n  \"start_number\": 106,\n  \"name\": \"result6\",\n  \"club\": \"def\",\n  \"score_submitted\": -1,\n  \"score_accomplished\": 0,\n  \"time\": 0,\n  \"finished\": true\n}",
                 "contentType": "application/json"
-            }
+            },
+            "name": "add result - invalid score_submitted (result 6)",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.name).toBe(\"result6\");\n  pw.expect(pw.response.body.discipline).toBe(parseInt(pw.env.get(\"discipline_id3\")));\n  pw.expect(pw.response.body.score_submitted).toBe(0);\n})\n\n// write id in environment\npw.env.set(\"result_id6\", pw.response.body.id.toString());",
+            "method": "POST",
+            "auth": {
+                "value": "",
+                "addTo": "Headers",
+                "token": "<<token2>>",
+                "authType": "bearer",
+                "username": "<<token1>>",
+                "authActive": true,
+                "key": ""
+            },
+            "endpoint": "<<url>>/result.php",
+            "v": "1",
+            "preRequestScript": ""
         },
         {
+            "auth": {
+                "addTo": "Headers",
+                "authType": "bearer",
+                "username": "<<token1>>",
+                "value": "",
+                "key": "",
+                "authActive": true,
+                "token": "<<token2>>"
+            },
+            "preRequestScript": "",
             "v": "1",
-            "endpoint": "<<url>>/result.php",
             "name": "add result - invalid score_accomplished (result 7)",
+            "method": "POST",
             "params": [
                 {
                     "active": true,
@@ -643,168 +651,163 @@
                 },
                 {
                     "active": true,
+                    "value": "<<discipline_id3>>",
+                    "key": "discipline"
+                }
+            ],
+            "endpoint": "<<url>>/result.php",
+            "body": {
+                "contentType": "application/json",
+                "body": "{\n  \"start_number\": 107,\n  \"name\": \"result7\",\n  \"club\": \"def\",\n  \"score_submitted\": 0,\n  \"score_accomplished\": -1,\n  \"time\": 0,\n  \"finished\": true\n}"
+            },
+            "headers": [],
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.name).toBe(\"result7\");\n  pw.expect(pw.response.body.discipline).toBe(parseInt(pw.env.get(\"discipline_id3\")));\n  pw.expect(pw.response.body.score_accomplished).toBe(0);\n})\n\n// write id in environment\npw.env.set(\"result_id7\", pw.response.body.id.toString());"
+        },
+        {
+            "params": [
+                {
+                    "key": "method",
+                    "active": true,
+                    "value": "add"
+                },
+                {
                     "key": "discipline",
+                    "active": true,
                     "value": "<<discipline_id3>>"
                 }
             ],
-            "headers": [],
-            "method": "POST",
-            "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token2>>",
-                "authActive": true,
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.name).toBe(\"result7\");\n  pw.expect(pw.response.body.discipline).toBe(parseInt(pw.env.get(\"discipline_id3\")));\n  pw.expect(pw.response.body.score_accomplished).toBe(0);\n})\n\n// write id in environment\npw.env.set(\"result_id7\", pw.response.body.id.toString());",
-            "body": {
-                "body": "{\n  \"start_number\": 107,\n  \"name\": \"result7\",\n  \"club\": \"def\",\n  \"score_submitted\": 0,\n  \"score_accomplished\": -1,\n  \"time\": 0,\n  \"finished\": true\n}",
-                "contentType": "application/json"
-            }
-        },
-        {
             "v": "1",
+            "auth": {
+                "username": "<<token1>>",
+                "key": "",
+                "addTo": "Headers",
+                "value": "",
+                "authActive": true,
+                "token": "<<token2>>",
+                "authType": "bearer"
+            },
+            "headers": [],
             "endpoint": "<<url>>/result.php",
             "name": "add result - invalid time (result 8)",
-            "params": [
-                {
-                    "active": true,
-                    "value": "add",
-                    "key": "method"
-                },
-                {
-                    "active": true,
-                    "key": "discipline",
-                    "value": "<<discipline_id3>>"
-                }
-            ],
-            "headers": [],
             "method": "POST",
-            "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token2>>",
-                "authActive": true,
-                "addTo": "Headers"
+            "body": {
+                "contentType": "application/json",
+                "body": "{\n  \"start_number\": 108,\n  \"name\": \"result8\",\n  \"club\": \"def\",\n  \"score_submitted\": 0,\n  \"score_accomplished\": 0,\n  \"time\": -1,\n  \"finished\": true\n}"
             },
             "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.name).toBe(\"result8\");\n  pw.expect(pw.response.body.discipline).toBe(parseInt(pw.env.get(\"discipline_id3\")));\n  pw.expect(pw.response.body.time).toBe(0);\n})\n\n// write id in environment\npw.env.set(\"result_id8\", pw.response.body.id.toString());",
-            "body": {
-                "body": "{\n  \"start_number\": 108,\n  \"name\": \"result8\",\n  \"club\": \"def\",\n  \"score_submitted\": 0,\n  \"score_accomplished\": 0,\n  \"time\": -1,\n  \"finished\": true\n}",
-                "contentType": "application/json"
-            }
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.name).toBe(\"result8\");\n  pw.expect(pw.response.body.discipline).toBe(parseInt(pw.env.get(\"discipline_id3\")));\n  pw.expect(pw.response.body.time).toBe(0);\n})\n\n// write id in environment\npw.env.set(\"result_id8\", pw.response.body.id.toString());"
         },
         {
-            "v": "1",
             "endpoint": "<<url>>/result.php",
+            "v": "1",
+            "headers": [],
+            "auth": {
+                "authActive": true,
+                "username": "<<token1>>",
+                "key": "",
+                "addTo": "Headers",
+                "value": "",
+                "token": "<<token2>>",
+                "authType": "bearer"
+            },
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.name).toBe(\"result9\");\n  pw.expect(pw.response.body.discipline).toBe(parseInt(pw.env.get(\"discipline_id3\")));\n  pw.expect(pw.response.body.finished).toBe(false);\n})\n\n// write id in environment\npw.env.set(\"result_id9\", pw.response.body.id.toString());",
+            "body": {
+                "contentType": "application/json",
+                "body": "{\n  \"start_number\": 109,\n  \"name\": \"result9\",\n  \"club\": \"def\",\n  \"score_submitted\": 0,\n  \"score_accomplished\": 0,\n  \"time\": 0,\n  \"finished\": -1\n}"
+            },
             "name": "add result - invalid finished (result 9)",
             "params": [
                 {
-                    "active": true,
                     "value": "add",
-                    "key": "method"
+                    "key": "method",
+                    "active": true
                 },
                 {
+                    "value": "<<discipline_id3>>",
                     "active": true,
-                    "key": "discipline",
-                    "value": "<<discipline_id3>>"
+                    "key": "discipline"
                 }
             ],
-            "headers": [],
             "method": "POST",
-            "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token2>>",
-                "authActive": true,
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.name).toBe(\"result9\");\n  pw.expect(pw.response.body.discipline).toBe(parseInt(pw.env.get(\"discipline_id3\")));\n  pw.expect(pw.response.body.finished).toBe(false);\n})\n\n// write id in environment\npw.env.set(\"result_id9\", pw.response.body.id.toString());",
-            "body": {
-                "body": "{\n  \"start_number\": 109,\n  \"name\": \"result9\",\n  \"club\": \"def\",\n  \"score_submitted\": 0,\n  \"score_accomplished\": 0,\n  \"time\": 0,\n  \"finished\": -1\n}",
-                "contentType": "application/json"
-            }
+            "preRequestScript": ""
         },
         {
-            "v": "1",
-            "endpoint": "<<url>>/result.php",
-            "name": "edit result - start number (result 2)",
-            "params": [
-                {
-                    "key": "method",
-                    "value": "edit",
-                    "active": true
-                },
-                {
-                    "key": "id",
-                    "value": "<<result_id2>>",
-                    "active": true
-                }
-            ],
             "headers": [],
-            "method": "POST",
-            "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token1>>",
-                "authActive": true,
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
+            "v": "1",
             "body": {
                 "body": "{\n  \"start_number\": 1002\n}",
                 "contentType": "application/json"
-            }
+            },
+            "name": "edit result - start number (result 2)",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
+            "auth": {
+                "authType": "bearer",
+                "addTo": "Headers",
+                "username": "<<token1>>",
+                "authActive": true,
+                "key": "",
+                "token": "<<token1>>",
+                "value": ""
+            },
+            "params": [
+                {
+                    "key": "method",
+                    "value": "edit",
+                    "active": true
+                },
+                {
+                    "active": true,
+                    "key": "id",
+                    "value": "<<result_id2>>"
+                }
+            ],
+            "endpoint": "<<url>>/result.php",
+            "preRequestScript": "",
+            "method": "POST"
         },
         {
-            "v": "1",
+            "preRequestScript": "",
             "endpoint": "<<url>>/result.php",
+            "v": "1",
+            "body": {
+                "contentType": "application/json",
+                "body": "{\n  \"name\": \"result2.1\"\n}"
+            },
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
+            "headers": [],
+            "params": [
+                {
+                    "key": "method",
+                    "value": "edit",
+                    "active": true
+                },
+                {
+                    "active": true,
+                    "value": "<<result_id2>>",
+                    "key": "id"
+                }
+            ],
             "name": "edit result - name (result 2)",
-            "params": [
-                {
-                    "key": "method",
-                    "value": "edit",
-                    "active": true
-                },
-                {
-                    "key": "id",
-                    "value": "<<result_id2>>",
-                    "active": true
-                }
-            ],
-            "headers": [],
             "method": "POST",
             "auth": {
-                "authType": "bearer",
-                "key": "",
+                "addTo": "Headers",
                 "username": "<<token1>>",
                 "value": "",
-                "token": "<<token1>>",
                 "authActive": true,
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
-            "body": {
-                "body": "{\n  \"name\": \"result2.1\"\n}",
-                "contentType": "application/json"
+                "token": "<<token1>>",
+                "authType": "bearer",
+                "key": ""
             }
         },
         {
-            "v": "1",
+            "preRequestScript": "",
+            "method": "POST",
             "endpoint": "<<url>>/result.php",
-            "name": "edit result - club (result 2)",
+            "body": {
+                "contentType": "application/json",
+                "body": "{\n  \"club\": \"ghi\"\n}"
+            },
+            "v": "1",
             "params": [
                 {
                     "key": "method",
@@ -812,38 +815,64 @@
                     "active": true
                 },
                 {
-                    "key": "id",
                     "value": "<<result_id2>>",
+                    "key": "id",
                     "active": true
                 }
             ],
             "headers": [],
-            "method": "POST",
-            "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token1>>",
-                "authActive": true,
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
-            "body": {
-                "body": "{\n  \"club\": \"ghi\"\n}",
-                "contentType": "application/json"
+            "name": "edit result - club (result 2)",
+            "auth": {
+                "authActive": true,
+                "username": "<<token1>>",
+                "authType": "bearer",
+                "addTo": "Headers",
+                "key": "",
+                "token": "<<token1>>",
+                "value": ""
             }
         },
         {
+            "preRequestScript": "",
             "v": "1",
             "endpoint": "<<url>>/result.php",
             "name": "edit result - score_submitted (result 2)",
+            "headers": [],
+            "method": "POST",
+            "auth": {
+                "authActive": true,
+                "authType": "bearer",
+                "username": "<<token1>>",
+                "key": "",
+                "token": "<<token1>>",
+                "value": "",
+                "addTo": "Headers"
+            },
+            "body": {
+                "contentType": "application/json",
+                "body": "{\n  \"score_submitted\": 95.4\n}"
+            },
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
             "params": [
                 {
-                    "key": "method",
+                    "active": true,
                     "value": "edit",
+                    "key": "method"
+                },
+                {
+                    "value": "<<result_id2>>",
+                    "key": "id",
                     "active": true
+                }
+            ]
+        },
+        {
+            "params": [
+                {
+                    "value": "edit",
+                    "active": true,
+                    "key": "method"
                 },
                 {
                     "key": "id",
@@ -851,288 +880,258 @@
                     "active": true
                 }
             ],
-            "headers": [],
-            "method": "POST",
-            "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token1>>",
-                "authActive": true,
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
             "body": {
-                "body": "{\n  \"score_submitted\": 95.4\n}",
-                "contentType": "application/json"
-            }
-        },
-        {
-            "v": "1",
+                "contentType": "application/json",
+                "body": "{\n  \"score_accomplished\": 53.47\n}"
+            },
+            "headers": [],
             "endpoint": "<<url>>/result.php",
-            "name": "edit result - score_accomplished (result 2)",
-            "params": [
-                {
-                    "key": "method",
-                    "value": "edit",
-                    "active": true
-                },
-                {
-                    "key": "id",
-                    "value": "<<result_id2>>",
-                    "active": true
-                }
-            ],
-            "headers": [],
-            "method": "POST",
-            "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token1>>",
-                "authActive": true,
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
-            "body": {
-                "body": "{\n  \"score_accomplished\": 53.47\n}",
-                "contentType": "application/json"
-            }
+            "preRequestScript": "",
+            "name": "edit result - score_accomplished (result 2)",
+            "auth": {
+                "value": "",
+                "authActive": true,
+                "username": "<<token1>>",
+                "addTo": "Headers",
+                "key": "",
+                "token": "<<token1>>",
+                "authType": "bearer"
+            },
+            "v": "1",
+            "method": "POST"
         },
         {
-            "v": "1",
+            "method": "POST",
+            "auth": {
+                "key": "",
+                "token": "<<token1>>",
+                "authActive": true,
+                "value": "",
+                "username": "<<token1>>",
+                "authType": "bearer",
+                "addTo": "Headers"
+            },
             "endpoint": "<<url>>/result.php",
             "name": "edit result - time (result 2)",
-            "params": [
-                {
-                    "key": "method",
-                    "value": "edit",
-                    "active": true
-                },
-                {
-                    "key": "id",
-                    "value": "<<result_id2>>",
-                    "active": true
-                }
-            ],
-            "headers": [],
-            "method": "POST",
-            "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token1>>",
-                "authActive": true,
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
             "body": {
                 "body": "{\n  \"time\": 300\n}",
                 "contentType": "application/json"
-            }
-        },
-        {
-            "v": "1",
-            "endpoint": "<<url>>/result.php",
-            "name": "edit result - finished (result 2)",
+            },
             "params": [
                 {
                     "key": "method",
+                    "active": true,
+                    "value": "edit"
+                },
+                {
+                    "active": true,
+                    "key": "id",
+                    "value": "<<result_id2>>"
+                }
+            ],
+            "headers": [],
+            "preRequestScript": "",
+            "v": "1"
+        },
+        {
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
+            "headers": [],
+            "method": "POST",
+            "endpoint": "<<url>>/result.php",
+            "name": "edit result - finished (result 2)",
+            "body": {
+                "body": "{\n  \"finished\": true\n}",
+                "contentType": "application/json"
+            },
+            "preRequestScript": "",
+            "params": [
+                {
                     "value": "edit",
+                    "key": "method",
                     "active": true
                 },
                 {
                     "key": "id",
-                    "value": "<<result_id2>>",
-                    "active": true
+                    "active": true,
+                    "value": "<<result_id2>>"
                 }
             ],
-            "headers": [],
-            "method": "POST",
             "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
                 "token": "<<token1>>",
+                "addTo": "Headers",
+                "key": "",
+                "value": "",
+                "authType": "bearer",
                 "authActive": true,
-                "addTo": "Headers"
+                "username": "<<token1>>"
             },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
-            "body": {
-                "body": "{\n  \"finished\": true\n}",
-                "contentType": "application/json"
-            }
+            "v": "1"
         },
         {
-            "v": "1",
             "endpoint": "<<url>>/result.php",
+            "headers": [],
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.id).toBe(parseInt(pw.env.get(\"result_id2\")));\n  pw.expect(pw.response.body.discipline).toBe(parseInt(pw.env.get(\"discipline_id1\")));\n  pw.expect(pw.response.body.start_number).toBe(1002);\n  pw.expect(pw.response.body.name).toBe(\"result2.1\");\n  pw.expect(pw.response.body.club).toBe(\"ghi\");\n  pw.expect(pw.response.body.score_submitted).toBe(95.4);\n  pw.expect(pw.response.body.score_accomplished).toBe(53.47);\n  pw.expect(pw.response.body.time).toBe(300);\n  pw.expect(pw.response.body.finished).toBe(true);\n})",
+            "v": "1",
             "name": "edit result - check fields",
             "params": [
                 {
                     "key": "id",
-                    "value": "<<result_id2>>",
-                    "active": true
+                    "active": true,
+                    "value": "<<result_id2>>"
                 }
             ],
-            "headers": [],
+            "preRequestScript": "",
             "method": "GET",
             "auth": {
                 "authType": "none",
                 "authActive": true
             },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.id).toBe(parseInt(pw.env.get(\"result_id2\")));\n  pw.expect(pw.response.body.discipline).toBe(parseInt(pw.env.get(\"discipline_id1\")));\n  pw.expect(pw.response.body.start_number).toBe(1002);\n  pw.expect(pw.response.body.name).toBe(\"result2.1\");\n  pw.expect(pw.response.body.club).toBe(\"ghi\");\n  pw.expect(pw.response.body.score_submitted).toBe(95.4);\n  pw.expect(pw.response.body.score_accomplished).toBe(53.47);\n  pw.expect(pw.response.body.time).toBe(300);\n  pw.expect(pw.response.body.finished).toBe(true);\n})",
             "body": {
-                "contentType": null,
-                "body": null
+                "body": null,
+                "contentType": null
             }
         },
         {
-            "v": "1",
             "endpoint": "<<url>>/result.php",
-            "name": "get result - no id or discipline",
             "params": [],
-            "headers": [],
-            "method": "GET",
-            "auth": {
-                "authType": "none",
-                "authActive": true
-            },
             "preRequestScript": "",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"MISSING_INFORMATION\");\n})",
+            "name": "get result - no id or discipline",
             "body": {
                 "contentType": null,
                 "body": null
-            }
+            },
+            "auth": {
+                "authActive": true,
+                "authType": "none"
+            },
+            "headers": [],
+            "v": "1",
+            "method": "GET"
         },
         {
-            "v": "1",
-            "endpoint": "<<url>>/result.php",
-            "name": "get result - by id",
-            "params": [
-                {
-                    "key": "id",
-                    "value": "<<result_id1>>",
-                    "active": true
-                }
-            ],
-            "headers": [],
-            "method": "GET",
-            "auth": {
-                "authType": "none",
-                "authActive": true
-            },
-            "preRequestScript": "",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.id).toBe(parseInt(pw.env.get(\"result_id1\")));\n})",
             "body": {
                 "contentType": null,
                 "body": null
-            }
-        },
-        {
-            "v": "1",
+            },
+            "preRequestScript": "",
+            "headers": [],
             "endpoint": "<<url>>/result.php",
-            "name": "get result - by discipline",
+            "name": "get result - by id",
             "params": [
                 {
-                    "key": "discipline",
+                    "active": true,
+                    "value": "<<result_id1>>",
+                    "key": "id"
+                }
+            ],
+            "v": "1",
+            "auth": {
+                "authActive": true,
+                "authType": "none"
+            },
+            "method": "GET"
+        },
+        {
+            "name": "get result - by discipline",
+            "endpoint": "<<url>>/result.php",
+            "params": [
+                {
                     "value": "<<discipline_id3>>",
+                    "key": "discipline",
                     "active": true
                 }
             ],
-            "headers": [],
             "method": "GET",
-            "auth": {
-                "authType": "none",
-                "authActive": true
-            },
+            "headers": [],
+            "v": "1",
             "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  for(var result of pw.response.body){\n    pw.expect(result.discipline).toBe(parseInt(pw.env.get(\"discipline_id3\")))\n  }\n})",
+            "auth": {
+                "authActive": true,
+                "authType": "none"
+            },
             "body": {
                 "contentType": null,
                 "body": null
-            }
+            },
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  for(var result of pw.response.body){\n    pw.expect(result.discipline).toBe(parseInt(pw.env.get(\"discipline_id3\")))\n  }\n})"
         },
         {
-            "v": "1",
-            "endpoint": "<<url>>/result.php",
-            "name": "remove result - no id",
-            "params": [
-                {
-                    "key": "method",
-                    "value": "remove",
-                    "active": true
-                }
-            ],
-            "headers": [],
-            "method": "GET",
+            "body": {
+                "body": null,
+                "contentType": null
+            },
             "auth": {
                 "authType": "bearer",
                 "key": "",
+                "addTo": "Headers",
                 "username": "<<token1>>",
                 "value": "",
-                "token": "<<token1>>",
                 "authActive": true,
-                "addTo": "Headers"
+                "token": "<<token1>>"
             },
+            "headers": [],
             "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"MISSING_INFORMATION\");\n})",
-            "body": {
-                "contentType": null,
-                "body": null
-            }
-        },
-        {
             "v": "1",
-            "endpoint": "<<url>>/result.php",
-            "name": "remove result - access denied",
             "params": [
                 {
                     "key": "method",
                     "value": "remove",
                     "active": true
+                }
+            ],
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"MISSING_INFORMATION\");\n})",
+            "endpoint": "<<url>>/result.php",
+            "method": "GET",
+            "name": "remove result - no id"
+        },
+        {
+            "headers": [],
+            "body": {
+                "body": null,
+                "contentType": null
+            },
+            "name": "remove result - access denied",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"ACCESS_DENIED\");\n})",
+            "method": "GET",
+            "v": "1",
+            "params": [
+                {
+                    "key": "method",
+                    "active": true,
+                    "value": "remove"
                 },
                 {
-                    "key": "id",
+                    "active": true,
                     "value": "<<result_id1>>",
-                    "active": true
+                    "key": "id"
                 }
             ],
-            "headers": [],
-            "method": "GET",
+            "endpoint": "<<url>>/result.php",
+            "preRequestScript": "",
             "auth": {
+                "authActive": true,
                 "authType": "bearer",
-                "key": "",
+                "token": "<<token2>>",
                 "username": "<<token1>>",
                 "value": "",
-                "token": "<<token2>>",
-                "authActive": true,
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"ACCESS_DENIED\");\n})",
-            "body": {
-                "contentType": null,
-                "body": null
+                "addTo": "Headers",
+                "key": ""
             }
         },
         {
-            "v": "1",
+            "method": "GET",
             "endpoint": "<<url>>/result.php",
+            "headers": [],
             "name": "remove result - not existing",
             "params": [
                 {
+                    "active": true,
                     "key": "method",
-                    "value": "remove",
-                    "active": true
+                    "value": "remove"
                 },
                 {
                     "key": "id",
@@ -1140,66 +1139,68 @@
                     "active": true
                 }
             ],
-            "headers": [],
-            "method": "GET",
-            "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token1>>",
-                "authActive": true,
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"NOT_EXISTING\");\n})",
+            "v": "1",
             "body": {
                 "contentType": null,
                 "body": null
+            },
+            "preRequestScript": "",
+            "auth": {
+                "value": "",
+                "addTo": "Headers",
+                "username": "<<token1>>",
+                "authType": "bearer",
+                "authActive": true,
+                "key": "",
+                "token": "<<token1>>"
             }
         },
         {
-            "v": "1",
-            "endpoint": "<<url>>/result.php",
-            "name": "remove result - result 1",
             "params": [
                 {
-                    "key": "method",
                     "value": "remove",
-                    "active": true
+                    "active": true,
+                    "key": "method"
                 },
                 {
-                    "key": "id",
                     "value": "<<result_id1>>",
+                    "key": "id",
                     "active": true
                 }
             ],
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
             "headers": [],
-            "method": "GET",
+            "name": "remove result - result 1",
+            "preRequestScript": "",
+            "endpoint": "<<url>>/result.php",
             "auth": {
                 "authType": "bearer",
+                "addTo": "Headers",
                 "key": "",
-                "username": "<<token1>>",
-                "value": "",
                 "token": "<<token1>>",
+                "value": "",
                 "authActive": true,
-                "addTo": "Headers"
+                "username": "<<token1>>"
             },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
+            "method": "GET",
             "body": {
-                "contentType": null,
-                "body": null
-            }
+                "body": null,
+                "contentType": null
+            },
+            "v": "1"
         },
         {
             "v": "1",
-            "endpoint": "<<url>>/result.php",
-            "name": "remove result - result 2",
+            "body": {
+                "body": null,
+                "contentType": null
+            },
+            "method": "GET",
             "params": [
                 {
-                    "key": "method",
                     "value": "remove",
+                    "key": "method",
                     "active": true
                 },
                 {
@@ -1209,133 +1210,127 @@
                 }
             ],
             "headers": [],
-            "method": "GET",
-            "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token1>>",
-                "authActive": true,
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
+            "name": "remove result - result 2",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
+            "endpoint": "<<url>>/result.php",
+            "auth": {
+                "token": "<<token1>>",
+                "value": "",
+                "addTo": "Headers",
+                "authType": "bearer",
+                "username": "<<token1>>",
+                "key": "",
+                "authActive": true
+            },
+            "preRequestScript": ""
+        },
+        {
             "body": {
                 "contentType": null,
                 "body": null
-            }
-        },
-        {
+            },
+            "headers": [],
+            "params": [
+                {
+                    "key": "method",
+                    "value": "remove",
+                    "active": true
+                },
+                {
+                    "key": "id",
+                    "active": true,
+                    "value": "<<result_id3>>"
+                }
+            ],
+            "preRequestScript": "",
+            "method": "GET",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
+            "auth": {
+                "addTo": "Headers",
+                "key": "",
+                "username": "<<token1>>",
+                "authActive": true,
+                "value": "",
+                "token": "<<token1>>",
+                "authType": "bearer"
+            },
             "v": "1",
-            "endpoint": "<<url>>/result.php",
             "name": "remove result - result 3",
-            "params": [
-                {
-                    "key": "method",
-                    "value": "remove",
-                    "active": true
-                },
-                {
-                    "key": "id",
-                    "value": "<<result_id3>>",
-                    "active": true
-                }
-            ],
-            "headers": [],
-            "method": "GET",
-            "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token1>>",
-                "authActive": true,
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
-            "body": {
-                "contentType": null,
-                "body": null
-            }
+            "endpoint": "<<url>>/result.php"
         },
         {
-            "v": "1",
-            "endpoint": "<<url>>/result.php",
-            "name": "remove result - result 4",
-            "params": [
-                {
-                    "key": "method",
-                    "value": "remove",
-                    "active": true
-                },
-                {
-                    "key": "id",
-                    "value": "<<result_id4>>",
-                    "active": true
-                }
-            ],
             "headers": [],
             "method": "GET",
+            "endpoint": "<<url>>/result.php",
+            "v": "1",
             "auth": {
                 "authType": "bearer",
-                "key": "",
+                "addTo": "Headers",
                 "username": "<<token1>>",
                 "value": "",
                 "token": "<<token2>>",
                 "authActive": true,
-                "addTo": "Headers"
+                "key": ""
             },
-            "preRequestScript": "",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
+            "preRequestScript": "",
+            "params": [
+                {
+                    "value": "remove",
+                    "active": true,
+                    "key": "method"
+                },
+                {
+                    "value": "<<result_id4>>",
+                    "active": true,
+                    "key": "id"
+                }
+            ],
             "body": {
-                "contentType": null,
-                "body": null
-            }
+                "body": null,
+                "contentType": null
+            },
+            "name": "remove result - result 4"
         },
         {
-            "v": "1",
-            "endpoint": "<<url>>/result.php",
             "name": "remove result - result 5",
             "params": [
                 {
-                    "key": "method",
                     "value": "remove",
-                    "active": true
+                    "active": true,
+                    "key": "method"
                 },
                 {
+                    "active": true,
                     "key": "id",
-                    "value": "<<result_id5>>",
-                    "active": true
+                    "value": "<<result_id5>>"
                 }
             ],
-            "headers": [],
+            "preRequestScript": "",
+            "body": {
+                "body": null,
+                "contentType": null
+            },
+            "endpoint": "<<url>>/result.php",
             "method": "GET",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
+            "headers": [],
+            "v": "1",
             "auth": {
-                "authType": "bearer",
                 "key": "",
+                "addTo": "Headers",
+                "token": "<<token2>>",
                 "username": "<<token1>>",
                 "value": "",
-                "token": "<<token2>>",
                 "authActive": true,
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
-            "body": {
-                "contentType": null,
-                "body": null
+                "authType": "bearer"
             }
         },
         {
-            "v": "1",
-            "endpoint": "<<url>>/result.php",
-            "name": "remove result - result 6",
             "params": [
                 {
-                    "key": "method",
                     "value": "remove",
+                    "key": "method",
                     "active": true
                 },
                 {
@@ -1344,154 +1339,89 @@
                     "active": true
                 }
             ],
-            "headers": [],
-            "method": "GET",
+            "preRequestScript": "",
+            "body": {
+                "body": null,
+                "contentType": null
+            },
+            "endpoint": "<<url>>/result.php",
             "auth": {
-                "authType": "bearer",
                 "key": "",
-                "username": "<<token1>>",
+                "authType": "bearer",
                 "value": "",
                 "token": "<<token2>>",
+                "addTo": "Headers",
                 "authActive": true,
-                "addTo": "Headers"
+                "username": "<<token1>>"
             },
-            "preRequestScript": "",
+            "method": "GET",
+            "v": "1",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
-            "body": {
-                "contentType": null,
-                "body": null
-            }
+            "headers": [],
+            "name": "remove result - result 6"
         },
         {
+            "body": {
+                "body": null,
+                "contentType": null
+            },
+            "auth": {
+                "addTo": "Headers",
+                "username": "<<token1>>",
+                "authType": "bearer",
+                "authActive": true,
+                "token": "<<token2>>",
+                "key": "",
+                "value": ""
+            },
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
+            "headers": [],
             "v": "1",
             "endpoint": "<<url>>/result.php",
-            "name": "remove result - result 7",
             "params": [
                 {
+                    "active": true,
                     "key": "method",
-                    "value": "remove",
-                    "active": true
-                },
-                {
-                    "key": "id",
-                    "value": "<<result_id7>>",
-                    "active": true
-                }
-            ],
-            "headers": [],
-            "method": "GET",
-            "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token2>>",
-                "authActive": true,
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
-            "body": {
-                "contentType": null,
-                "body": null
-            }
-        },
-        {
-            "v": "1",
-            "endpoint": "<<url>>/result.php",
-            "name": "remove result - result 8",
-            "params": [
-                {
-                    "key": "method",
-                    "value": "remove",
-                    "active": true
-                },
-                {
-                    "key": "id",
-                    "value": "<<result_id8>>",
-                    "active": true
-                }
-            ],
-            "headers": [],
-            "method": "GET",
-            "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token2>>",
-                "authActive": true,
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
-            "body": {
-                "contentType": null,
-                "body": null
-            }
-        },
-        {
-            "v": "1",
-            "endpoint": "<<url>>/result.php",
-            "name": "remove result - result 9",
-            "params": [
-                {
-                    "key": "method",
-                    "value": "remove",
-                    "active": true
-                },
-                {
-                    "key": "id",
-                    "value": "<<result_id9>>",
-                    "active": true
-                }
-            ],
-            "headers": [],
-            "method": "GET",
-            "auth": {
-                "authType": "bearer",
-                "key": "",
-                "username": "<<token1>>",
-                "value": "",
-                "token": "<<token2>>",
-                "authActive": true,
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
-            "body": {
-                "contentType": null,
-                "body": null
-            }
-        },
-        {
-            "v": "1",
-            "endpoint": "<<url>>/discipline.php",
-            "name": "remove discipline - discipline 1 (comp 1)",
-            "params": [
-                {
-                    "value": "remove",
-                    "key": "method",
-                    "active": true
+                    "value": "remove"
                 },
                 {
                     "active": true,
                     "key": "id",
-                    "value": "<<discipline_id1>>"
+                    "value": "<<result_id7>>"
                 }
             ],
-            "headers": [],
-            "method": "GET",
-            "auth": {
-                "value": "",
-                "authActive": true,
-                "token": "<<token1>>",
-                "username": "<<token1>>",
-                "authType": "bearer",
-                "key": "",
-                "addTo": "Headers"
-            },
+            "name": "remove result - result 7",
             "preRequestScript": "",
+            "method": "GET"
+        },
+        {
+            "v": "1",
+            "method": "GET",
+            "headers": [],
+            "name": "remove result - result 8",
+            "auth": {
+                "addTo": "Headers",
+                "token": "<<token2>>",
+                "authActive": true,
+                "value": "",
+                "authType": "bearer",
+                "username": "<<token1>>",
+                "key": ""
+            },
+            "endpoint": "<<url>>/result.php",
+            "preRequestScript": "",
+            "params": [
+                {
+                    "key": "method",
+                    "value": "remove",
+                    "active": true
+                },
+                {
+                    "value": "<<result_id8>>",
+                    "active": true,
+                    "key": "id"
+                }
+            ],
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
             "body": {
                 "body": null,
@@ -1499,175 +1429,220 @@
             }
         },
         {
-            "v": "1",
-            "endpoint": "<<url>>/discipline.php",
-            "name": "remove discipline - discipline 2 (comp 1)",
-            "params": [
-                {
-                    "value": "remove",
-                    "active": true,
-                    "key": "method"
-                },
-                {
-                    "value": "<<discipline_id2>>",
-                    "active": true,
-                    "key": "id"
-                }
-            ],
             "headers": [],
-            "method": "GET",
-            "auth": {
-                "token": "<<token1>>",
-                "key": "",
-                "username": "<<token1>>",
-                "authActive": true,
-                "authType": "bearer",
-                "value": "",
-                "addTo": "Headers"
-            },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
             "body": {
-                "contentType": null,
-                "body": null
-            }
-        },
-        {
-            "v": "1",
-            "endpoint": "<<url>>/discipline.php",
-            "name": "remove discipline - discipline 3 (comp 2)",
+                "body": null,
+                "contentType": null
+            },
+            "name": "remove result - result 9",
+            "preRequestScript": "",
+            "method": "GET",
             "params": [
                 {
                     "key": "method",
                     "active": true,
+                    "value": "remove"
+                },
+                {
+                    "value": "<<result_id9>>",
+                    "active": true,
+                    "key": "id"
+                }
+            ],
+            "auth": {
+                "value": "",
+                "username": "<<token1>>",
+                "authType": "bearer",
+                "authActive": true,
+                "key": "",
+                "addTo": "Headers",
+                "token": "<<token2>>"
+            },
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
+            "v": "1",
+            "endpoint": "<<url>>/result.php"
+        },
+        {
+            "auth": {
+                "token": "<<token1>>",
+                "authType": "bearer",
+                "username": "<<token1>>",
+                "authActive": true,
+                "key": "",
+                "addTo": "Headers",
+                "value": ""
+            },
+            "name": "remove discipline - discipline 1 (comp 1)",
+            "v": "1",
+            "preRequestScript": "",
+            "body": {
+                "contentType": null,
+                "body": null
+            },
+            "endpoint": "<<url>>/discipline.php",
+            "params": [
+                {
+                    "active": true,
+                    "key": "method",
+                    "value": "remove"
+                },
+                {
+                    "active": true,
+                    "value": "<<discipline_id1>>",
+                    "key": "id"
+                }
+            ],
+            "method": "GET",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
+            "headers": []
+        },
+        {
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
+            "body": {
+                "contentType": null,
+                "body": null
+            },
+            "params": [
+                {
+                    "active": true,
+                    "value": "remove",
+                    "key": "method"
+                },
+                {
+                    "key": "id",
+                    "active": true,
+                    "value": "<<discipline_id2>>"
+                }
+            ],
+            "method": "GET",
+            "preRequestScript": "",
+            "auth": {
+                "authType": "bearer",
+                "authActive": true,
+                "key": "",
+                "token": "<<token1>>",
+                "username": "<<token1>>",
+                "value": "",
+                "addTo": "Headers"
+            },
+            "endpoint": "<<url>>/discipline.php",
+            "name": "remove discipline - discipline 2 (comp 1)",
+            "headers": [],
+            "v": "1"
+        },
+        {
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
+            "params": [
+                {
+                    "active": true,
+                    "key": "method",
                     "value": "remove"
                 },
                 {
                     "value": "<<discipline_id3>>",
-                    "active": true,
-                    "key": "id"
-                }
-            ],
-            "headers": [],
-            "method": "GET",
-            "auth": {
-                "username": "<<token1>>",
-                "key": "",
-                "addTo": "Headers",
-                "value": "",
-                "authActive": true,
-                "authType": "bearer",
-                "token": "<<token2>>"
-            },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
-            "body": {
-                "body": null,
-                "contentType": null
-            }
-        },
-        {
-            "v": "1",
-            "endpoint": "<<url>>/competition.php",
-            "name": "remove competition - competition 1",
-            "params": [
-                {
-                    "value": "remove",
-                    "key": "method",
-                    "active": true
-                },
-                {
-                    "active": true,
                     "key": "id",
-                    "value": "<<competition_id1>>"
+                    "active": true
                 }
             ],
-            "headers": [],
             "method": "GET",
+            "v": "1",
+            "preRequestScript": "",
+            "endpoint": "<<url>>/discipline.php",
             "auth": {
                 "authType": "bearer",
-                "value": "",
+                "token": "<<token2>>",
                 "authActive": true,
-                "username": "<<token1>>",
-                "token": "<<token1>>",
                 "addTo": "Headers",
-                "key": ""
+                "key": "",
+                "username": "<<token1>>",
+                "value": ""
             },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})\n",
             "body": {
                 "contentType": null,
                 "body": null
-            }
+            },
+            "name": "remove discipline - discipline 3 (comp 2)",
+            "headers": []
         },
         {
+            "body": {
+                "contentType": null,
+                "body": null
+            },
+            "method": "GET",
+            "name": "remove competition - competition 1",
+            "preRequestScript": "",
             "v": "1",
             "endpoint": "<<url>>/competition.php",
-            "name": "remove competition - competition 2",
+            "auth": {
+                "authType": "bearer",
+                "token": "<<token1>>",
+                "value": "",
+                "username": "<<token1>>",
+                "key": "",
+                "authActive": true,
+                "addTo": "Headers"
+            },
+            "headers": [],
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})\n",
             "params": [
                 {
-                    "active": true,
                     "value": "remove",
+                    "active": true,
                     "key": "method"
                 },
                 {
-                    "active": true,
-                    "value": "<<competition_id2>>",
-                    "key": "id"
+                    "key": "id",
+                    "value": "<<competition_id1>>",
+                    "active": true
                 }
-            ],
-            "headers": [],
-            "method": "GET",
+            ]
+        },
+        {
             "auth": {
-                "addTo": "Headers",
-                "username": "<<token1>>",
-                "value": "",
-                "authActive": true,
                 "key": "",
+                "username": "<<token1>>",
+                "authActive": true,
+                "addTo": "Headers",
+                "value": "",
                 "token": "<<token2>>",
                 "authType": "bearer"
             },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})\n",
-            "body": {
-                "contentType": null,
-                "body": null
-            }
-        },
-        {
             "v": "1",
-            "endpoint": "<<url>>/user.php",
-            "name": "remove - user 1",
+            "method": "GET",
+            "body": {
+                "body": null,
+                "contentType": null
+            },
+            "endpoint": "<<url>>/competition.php",
+            "headers": [],
+            "name": "remove competition - competition 2",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})\n",
             "params": [
                 {
                     "value": "remove",
                     "key": "method",
                     "active": true
+                },
+                {
+                    "value": "<<competition_id2>>",
+                    "key": "id",
+                    "active": true
                 }
             ],
-            "headers": [],
-            "method": "GET",
+            "preRequestScript": ""
+        },
+        {
             "auth": {
                 "addTo": "Headers",
                 "authActive": true,
                 "password": "<<password1>>",
-                "value": "",
                 "authType": "basic",
+                "value": "",
                 "username": "<<username1>>",
-                "key": "",
-                "token": "<<username1>>"
+                "token": "<<username1>>",
+                "key": ""
             },
-            "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
-            "body": {
-                "body": null,
-                "contentType": null
-            }
-        },
-        {
-            "v": "1",
-            "endpoint": "<<url>>/user.php",
-            "name": "remove - user 2",
             "params": [
                 {
                     "key": "method",
@@ -1675,24 +1650,49 @@
                     "value": "remove"
                 }
             ],
-            "headers": [],
             "method": "GET",
-            "auth": {
-                "password": "<<password2>>",
-                "addTo": "Headers",
-                "authActive": true,
-                "authType": "basic",
-                "key": "",
-                "username": "<<username2>>",
-                "value": ""
-            },
-            "preRequestScript": "",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
+            "headers": [],
             "body": {
                 "body": null,
                 "contentType": null
-            }
+            },
+            "v": "1",
+            "endpoint": "<<url>>/user.php",
+            "name": "remove - user 1",
+            "preRequestScript": ""
+        },
+        {
+            "method": "GET",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
+            "body": {
+                "contentType": null,
+                "body": null
+            },
+            "preRequestScript": "",
+            "endpoint": "<<url>>/user.php",
+            "headers": [],
+            "auth": {
+                "key": "",
+                "authType": "basic",
+                "addTo": "Headers",
+                "username": "<<username2>>",
+                "authActive": true,
+                "value": "",
+                "password": "<<password2>>"
+            },
+            "params": [
+                {
+                    "key": "method",
+                    "value": "remove",
+                    "active": true
+                }
+            ],
+            "name": "remove - user 2",
+            "v": "1"
         }
     ],
-    "name": "results"
+    "v": 1,
+    "name": "results",
+    "folders": []
 }
