@@ -49,6 +49,8 @@ class discipline implements JsonSerializable, RepresentativeChildInterface
     public const KEY_TYPE = "type";
     /** @var string fallback name of the discipline set by provider if type < 0 */
     public const KEY_FALLBACK_NAME = "fallback_name";
+    /** @var string Area of the competition the discipline takes place on */
+    public const KEY_AREA = "area";
     /** @var string the round of the competition the discipline is located in */
     public const KEY_ROUND = "round";
     /** @var string wether the discipline is finished or not */
@@ -61,6 +63,7 @@ class discipline implements JsonSerializable, RepresentativeChildInterface
         self::KEY_COMPETITION_ID => 0,
         self::KEY_TYPE => 0,
         self::KEY_FALLBACK_NAME => "",
+        self::KEY_AREA => 0,
         self::KEY_ROUND => 0,
         self::KEY_FINISHED => false
     ];
@@ -76,10 +79,12 @@ class discipline implements JsonSerializable, RepresentativeChildInterface
     const ERROR_TYPE = 8;
     /** @var int Error while parsing fallback name (or if it contained invalid characters and they were removed) */
     const ERROR_FALLBACK_NAME = 16;
+    /** @var int Error while parsing area */
+    const ERROR_AREA = 32;
     /** @var int Error while parsing the round */
-    const ERROR_ROUND = 32;
+    const ERROR_ROUND = 64;
     /** @var int Error while setting discipline as finished (or not) */
-    const ERROR_FINISHED = 64;
+    const ERROR_FINISHED = 128;
 
     /**
      * Constructor 
@@ -89,6 +94,7 @@ class discipline implements JsonSerializable, RepresentativeChildInterface
      * @param int $competition_id ID of the competition the discipline is assigned to
      * @param int $type Type of the discipline (see documentation of const KEY_TYPE to get more information about the values)
      * @param string $fallback_name Name used in case $type can'T be decoded
+     * @param int $area Area of the competition the discipline takes place on
      * @param int $round The round of the competition the discipline is located in
      * @param int $finished Wether the discipline is finished or not
      */
@@ -98,6 +104,7 @@ class discipline implements JsonSerializable, RepresentativeChildInterface
         int $competition_id = null,
         int $type = null,
         string $fallback_name = null,
+        int $area = null,
         int $round = null,
         bool $finished = null
     ) {
@@ -108,6 +115,7 @@ class discipline implements JsonSerializable, RepresentativeChildInterface
         $this->data[self::KEY_COMPETITION_ID] = $competition_id ?? 0;
         $this->data[self::KEY_TYPE]           = $type           ?? 0;
         $this->data[self::KEY_FALLBACK_NAME]  = $fallback_name  ?? "";
+        $this->data[self::KEY_AREA]           = $area           ?? 0;
         $this->data[self::KEY_ROUND]          = $round          ?? 0;
         $this->data[self::KEY_FINISHED]       = $finished       ?? false;
     }
@@ -150,6 +158,7 @@ class discipline implements JsonSerializable, RepresentativeChildInterface
      * @param ?string $competition_id Id of the competition the discipline is assigned to
      * @param ?string $type The type of the discipline (see const KEY_TYPE or documentation od api)
      * @param ?string $fallback_name Used in case $type isn't valid or the fronted doesn't support it
+     * @param ?string $area Area of the competition the discipline takes place on
      * @param ?string $round the round of the competition the discipline is located in
      * @param ?string $finished wether a discipline is finished or not
      * 
@@ -161,6 +170,7 @@ class discipline implements JsonSerializable, RepresentativeChildInterface
         ?string $competition_id = "",
         ?string $type = "",
         ?string $fallback_name = "",
+        ?string $area = "",
         ?string $round = "",
         ?string $finished = "",
     ): int {
@@ -185,6 +195,7 @@ class discipline implements JsonSerializable, RepresentativeChildInterface
         $this->data[self::KEY_ID] = intval($ID);
         $this->data[self::KEY_COMPETITION_ID] = intval($competition_id);
         $this->data[self::KEY_TYPE] = intval($type);
+        $this->data[self::KEY_AREA] = intval($area);
         $this->data[self::KEY_ROUND] = intval($round);
 
         // mark discipline as finished or not (ongoing)
@@ -207,6 +218,7 @@ class discipline implements JsonSerializable, RepresentativeChildInterface
             self::KEY_COMPETITION_ID => $this->{self::KEY_COMPETITION_ID},
             self::KEY_TYPE => $this->{self::KEY_TYPE},
             self::KEY_FALLBACK_NAME => $this->{self::KEY_FALLBACK_NAME},
+            self::KEY_AREA => $this->{self::KEY_AREA},
             self::KEY_ROUND => $this->{self::KEY_ROUND},
             self::KEY_FINISHED => $this->{self::KEY_FINISHED}
         ];

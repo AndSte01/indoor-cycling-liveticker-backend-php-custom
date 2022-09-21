@@ -94,6 +94,7 @@ class adaptorDiscipline implements adaptorInterface
             db_kwd::DISCIPLINE_COMPETITION,
             db_kwd::DISCIPLINE_TYPE,
             db_kwd::DISCIPLINE_FALLBACK_NAME,
+            db_kwd::DISCIPLINE_AREA,
             db_kwd::DISCIPLINE_ROUND,
             db_kwd::DISCIPLINE_FINISHED
         ]) .
@@ -128,12 +129,12 @@ class adaptorDiscipline implements adaptorInterface
         $statement->execute($parameters);
 
         // bind result values to statement
-        $statement->bind_result($_1, $_2, $_3, $_4, $_5, $_6, $_7);
+        $statement->bind_result($_1, $_2, $_3, $_4, $_5, $_6, $_7, $_8);
 
         // iterate over results
         while ($statement->fetch()) {
             $entry = new discipline();
-            $entry->parse($_1, $_2, $_3, $_4, $_5, $_6, $_7);
+            $entry->parse($_1, $_2, $_3, $_4, $_5, $_6, $_7, $_8);
 
             // append to list
             $return[] = $entry;
@@ -157,17 +158,19 @@ class adaptorDiscipline implements adaptorInterface
                 db_kwd::DISCIPLINE_COMPETITION,
                 db_kwd::DISCIPLINE_TYPE,
                 db_kwd::DISCIPLINE_FALLBACK_NAME,
+                db_kwd::DISCIPLINE_AREA,
                 db_kwd::DISCIPLINE_ROUND,
                 db_kwd::DISCIPLINE_FINISHED
             ])
-            . ") VALUES (?, ?, ?, ?, ?);");
+            . ") VALUES (?, ?, ?, ?, ?, ?);");
 
         // bind parameters to statement
         $statement->bind_param(
-            "iisii",
+            "iisiii",
             $discipline_competition_id,
             $discipline_type,
             $discipline_fallback_name,
+            $discipline_area,
             $discipline_round,
             $discipline_finished
         );
@@ -177,6 +180,7 @@ class adaptorDiscipline implements adaptorInterface
             $discipline_competition_id = $discipline->{discipline::KEY_COMPETITION_ID};
             $discipline_type = $discipline->{discipline::KEY_TYPE};
             $discipline_fallback_name = $discipline->{discipline::KEY_FALLBACK_NAME};
+            $discipline_area = $discipline->{discipline::KEY_AREA};
             $discipline_round = $discipline->{discipline::KEY_ROUND};
             $discipline_finished = (int) $discipline->{discipline::KEY_FINISHED};
 
@@ -204,6 +208,7 @@ class adaptorDiscipline implements adaptorInterface
             discipline::KEY_COMPETITION_ID => db_kwd::DISCIPLINE_COMPETITION,
             discipline::KEY_TYPE => db_kwd::DISCIPLINE_TYPE,
             discipline::KEY_FALLBACK_NAME => db_kwd::DISCIPLINE_FALLBACK_NAME,
+            discipline::KEY_AREA => db_kwd::DISCIPLINE_AREA,
             discipline::KEY_ROUND => db_kwd::DISCIPLINE_ROUND,
             discipline::KEY_FINISHED => db_kwd::DISCIPLINE_FINISHED
         ];
@@ -279,6 +284,7 @@ class adaptorDiscipline implements adaptorInterface
         $old_competition_id = $representative->{discipline::KEY_COMPETITION_ID};
         $new_type = $representative->{discipline::KEY_TYPE};
         $new_fallback_name = $representative->{discipline::KEY_FALLBACK_NAME};
+        $new_area = $representative->{discipline::KEY_AREA};
         $new_round = $representative->{discipline::KEY_ROUND};
         $new_finished = $representative->{discipline::KEY_FINISHED};
 
@@ -304,6 +310,16 @@ class adaptorDiscipline implements adaptorInterface
             $error |= discipline::ERROR_ROUND;
         }
 
+        // area is greater or equal 1 by definition
+        if ($new_area < 1) {
+            $new_area = 1;
+            $error |= discipline::ERROR_AREA;
+        }
+        if ($new_area > 255) {
+            $new_area = 255;
+            $error |= discipline::ERROR_AREA;
+        }
+
         // finished is seen as a boolean (so make it one)
         // 0 for everything < 0
         if ($new_finished < 0) {
@@ -323,6 +339,7 @@ class adaptorDiscipline implements adaptorInterface
             $old_competition_id,
             $new_type,
             $new_fallback_name,
+            $new_area,
             $new_round,
             $new_finished
         );

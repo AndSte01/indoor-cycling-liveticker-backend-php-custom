@@ -215,6 +215,7 @@ $parsing_errors = $discipline->parse(
     strval($selected_competition->{competition::KEY_ID}),
     strval($decoded[discipline::KEY_TYPE]),
     strval($decoded[discipline::KEY_FALLBACK_NAME]),
+    strval($decoded[discipline::KEY_AREA]),
     strval($decoded[discipline::KEY_ROUND]),
     strval($decoded[discipline::KEY_FINISHED])
 );
@@ -227,6 +228,9 @@ switch (true) { // inverted switch, don't use break since multiple errors could 
 
     case $parsing_errors & discipline::ERROR_ROUND:
         unset($decoded[discipline::KEY_ROUND]);
+
+    case $parsing_errors & discipline::ERROR_AREA:
+        unset($decoded[discipline::KEY_AREA]);
 
     case $parsing_errors & discipline::ERROR_FALLBACK_NAME:
         unset($decoded[discipline::KEY_FALLBACK_NAME]);

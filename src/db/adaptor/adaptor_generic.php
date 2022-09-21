@@ -47,6 +47,7 @@
  * | competition   | `INT`        |    X     |                       | `FOREIGN KEY ... REFERENCES competition(ID) ON DELETE CASCADE ON UPDATE CASCADE` | Id of the competition the discipline is assigned to   |
  * | type          | `TINYINT(1)` |    X     | -1                    |                                                                                  | type of the discipline                                |
  * | fallback_name | `text`       |          |                       |                                                                                  | The name used in case type couldn't be set            |
+ * | area          | `TINYINT(1)` |    X     | 1                     |                                                                                  | Area of the competition the discipline takes place on |
  * | round         | `TINYINT(1)` |    X     | 0                     | `UNSIGNED`                                                                       | Round of the competition the discipline is located in |
  * | finished      | `TINYINT(1)` |    X     | 1                     |                                                                                  | Wether the discipline is finished or not              |
  * 
@@ -76,7 +77,7 @@
  * | discipline         | `INT`        |    X     |                       | `FOREIGN KEY ... REFERENCES discipline(ID) ON DELETE CASCADE ON UPDATE CASCADE` | Id of the discipline the result is assigned to                  |
  * | start_number       | `SMALLINT`   |          |                       | `UNSIGNED`                                                                      | Start number of the competitor                                  |
  * | name               | `text`       |          |                       |                                                                                 | Name of the competitor                                          |
- * | club               | `text`       |          |                       |                                                                                 | NAme of the club of the competitor                              |
+ * | club               | `text`       |          |                       |                                                                                 | Name of the club of the competitor                              |
  * | score_submitted    | `float`      |          |                       |                                                                                 | The score the competitor submitted                              |
  * | score_accomplished | `float`      |          |                       |                                                                                 | The score the competitor accomplished                           |
  * | time               | `SMALLINT`   |          | 0                     | `UNSIGNED`                                                                      | The current of the program (the competitor presents) in seconds |
@@ -189,9 +190,10 @@ class adaptorGeneric
         $query = "create table  IF NOT EXISTS " . db_config::TABLE_DISCIPLINE . " ( " .
             db_kwd::DISCIPLINE_ID .            " INT NOT NULL AUTO_INCREMENT, " .                                                    // Id of discipline
             db_kwd::DISCIPLINE_TIMESTAMP .     " TIMESTAMP NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(), " .   // timestamp for calculating deltas
-            db_kwd::DISCIPLINE_COMPETITION .   " INT NOT NULL, " .                                                               // competition id
+            db_kwd::DISCIPLINE_COMPETITION .   " INT NOT NULL, " .                                                                   // competition id
             db_kwd::DISCIPLINE_TYPE .          " TINYINT(1) NOT NULL DEFAULT -1, " .                                                 // type of the category 
             db_kwd::DISCIPLINE_FALLBACK_NAME . " text, " .                                                                           // fallback name, used in case of negative type
+            db_kwd::DISCIPLINE_AREA .          " TINYINT(1) NOT NULL DEFAULT 1, " .                                                  // Area of the competition the discipline takes place on
             db_kwd::DISCIPLINE_ROUND .         " TINYINT(1) UNSIGNED NOT NULL DEFAULT 0, " .                                         // round of the discipline inside of the competition (e.g. preliminary and final round)
             db_kwd::DISCIPLINE_FINISHED .      " TINYINT(1) NOT NULL DEFAULT 1, " .                                                  // 0 ongoing, 1 done
             "PRIMARY KEY (" . db_kwd::DISCIPLINE_ID . "), " .
@@ -209,7 +211,7 @@ class adaptorGeneric
         $query = "create table IF NOT EXISTS " . db_config::TABLE_RESULT . " ( " .
             db_kwd::RESULT_ID .                   " INT NOT NULL AUTO_INCREMENT, " .                                                     // Id of result (INT is enough)
             db_kwd::RESULT_TIMESTAMP .            " TIMESTAMP NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(), " .    // timestamp for calculating deltas
-            db_kwd::RESULT_DISCIPLINE .           " INT NOT NULL, " .                                                                // id of the discipline
+            db_kwd::RESULT_DISCIPLINE .           " INT NOT NULL, " .                                                                    // id of the discipline
             db_kwd::RESULT_START_NUMBER .         " SMALLINT UNSIGNED, " .                                                               // 0 in case of Twitter
             db_kwd::RESULT_NAME .                 " text, " .
             db_kwd::RESULT_CLUB .                 " text, " .                                                                            // empty in case of Twitter

@@ -9,6 +9,7 @@ A small overview of the projects architecture. Please note that this diagram rep
 All of the documentation can be found in the [wiki](https://github.com/AndSte01/indoor-cycling-liveticker-backend-php/wiki).
 
 ## To-Do
+Disciplines need areas they are assigned to!!! Already implemented now do testing
 All documentation needs to be revisited.
 
 ## Testing

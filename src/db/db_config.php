@@ -62,6 +62,7 @@ class db_kwd
     const DISCIPLINE_COMPETITION   = "competition";
     const DISCIPLINE_TYPE          = "type";
     const DISCIPLINE_FALLBACK_NAME = "fallback_name";
+    const DISCIPLINE_AREA          = "area";
     const DISCIPLINE_ROUND         = "round";
     const DISCIPLINE_FINISHED      = "finished";
 
