@@ -1,4 +1,5 @@
-SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1 # add authentication information to header variables
+# add authentication information to header variables
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
 
 # Headers for Cors
 <IfModule mod_headers.c>
@@ -7,7 +8,21 @@ SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1 # add authentication informa
     Header add Access-Control-Allow-Methods "PUT, GET, POST, DELETE, OPTIONS"
 </IfModule>
 
+# Enable RewriteEnging and set it's base url
+RewriteEngine On
+RewriteBase /
+
 # Always return http-status code 200 on OPTIONS Requests
-RewriteEngine On                  
-RewriteCond %{REQUEST_METHOD} OPTIONS 
+RewriteCond %{REQUEST_METHOD} OPTIONS
 RewriteRule ^(.*)$ blank.html [QSA,L]
+
+# Add .php to url (if lacking) if the file exists on the server
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.+)$ $1.php [L]
+
+# hide certain files and folders from the web (some only used during setup)
+# setup file for the dataabse, can be abused to delete all data in the database configure in db/db_config.php
+# RewriteRule ^setup_db\.php$ - [R=404]
+# hide folder containing all the "behind the scenes logic"
+RewriteRule ^db/(.*) - [R=404]
