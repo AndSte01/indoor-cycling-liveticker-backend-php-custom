@@ -20,6 +20,7 @@ require_once("db/db_info.php");
 header("Content-Type: application/json");
 
 printf(json_encode([
+    "url" => $_SERVER["HTTP_HOST"],
     "api" => db_info::API_VERSION,
     "backend" => db_info::BACKEND_TYPE,
     "backend_version" => db_info::BACKEND_VERSION
