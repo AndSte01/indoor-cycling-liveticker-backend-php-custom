@@ -93,7 +93,7 @@ class discipline implements JsonSerializable, RepresentativeChildInterface
      * @param DateTime $timestamp The last time the discipline was modified in the database
      * @param int $competition_id ID of the competition the discipline is assigned to
      * @param int $type Type of the discipline (see documentation of const KEY_TYPE to get more information about the values)
-     * @param string $fallback_name Name used in case $type can'T be decoded
+     * @param string $fallback_name Name used in case $type can't be decoded
      * @param int $area Area of the competition the discipline takes place on
      * @param int $round The round of the competition the discipline is located in
      * @param int $finished Wether the discipline is finished or not
