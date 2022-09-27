@@ -31,5 +31,7 @@ RewriteRule ^(.*)$ blank.html [QSA,L]
 # hide certain files and folders from the web (some only used during setup)
 # setup file for the dataabse, can be abused to delete all data in the database configure in db/db_config.php
 # RewriteRule ^setup_db\.php$ - [R=404]
+# hide errors.php exposing it to the web isn't harmful but hiding it either
+RewriteRule ^errors\.php$ - [R=404]
 # hide folder containing all the "behind the scenes logic"
 RewriteRule ^db/(.*) - [R=404]
