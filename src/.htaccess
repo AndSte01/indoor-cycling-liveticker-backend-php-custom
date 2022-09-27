@@ -10,16 +10,23 @@ SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
 
 # Enable RewriteEnging and set it's base url
 RewriteEngine On
-RewriteBase /
+# RewriteBase / # due to stack overflow copy & paste
 
-# Always return http-status code 200 on OPTIONS Requests
-RewriteCond %{REQUEST_METHOD} OPTIONS
-RewriteRule ^(.*)$ blank.html [QSA,L]
+# remove directory slash so competition can be accessed like every other api element (also be future prove if additional accessories are added to other api elements)
+DirectorySlash Off
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_URI} !/$
+RewriteCond %{REQUEST_FILENAME}/index.php -f
+RewriteRule (.*) $1/index.php [L]
 
 # Add .php to url (if lacking) if the file exists on the server
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}\.php -f
 RewriteRule ^(.+)$ $1.php [L]
+
+# Always return http-status code 200 on OPTIONS Requests
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ blank.html [QSA,L]
 
 # hide certain files and folders from the web (some only used during setup)
 # setup file for the dataabse, can be abused to delete all data in the database configure in db/db_config.php

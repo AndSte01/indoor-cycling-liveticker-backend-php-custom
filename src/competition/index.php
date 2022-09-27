@@ -32,10 +32,10 @@ const GET_COMPETITIONS_LIMIT_MAX = 100;
 // error_reporting(E_ALL);
 
 // import required files
-require_once("db/managers/manager_authentication.php");
-require_once("db/managers/manager_user.php");
-require_once("db/managers/manager_competition.php");
-require_once("db/utils/utils_error_converters.php");
+require_once(dirname(__FILE__) . "/../db/managers/manager_authentication.php");
+require_once(dirname(__FILE__) . "/../db/managers/manager_user.php");
+require_once(dirname(__FILE__) . "/../db/managers/manager_competition.php");
+require_once(dirname(__FILE__) . "/../db/utils/utils_error_converters.php");
 
 // realm for authentication
 $realm = "global";
