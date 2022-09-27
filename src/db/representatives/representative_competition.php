@@ -13,7 +13,6 @@ require_once("representative_interface_trait.php");
 // define aliases
 use DateTime;
 use JsonSerializable;
-use mysqli;
 
 /** 
  * The class used to describe a competition.

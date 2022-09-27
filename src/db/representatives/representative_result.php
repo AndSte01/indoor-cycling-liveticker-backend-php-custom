@@ -13,7 +13,6 @@ require_once("representative_interface_trait.php");
 // define aliases
 use DateTime;
 use JsonSerializable;
-use mysqli;
 
 /** 
  * The class used to describe a result.
@@ -162,7 +161,6 @@ class result implements JsonSerializable, RepresentativeChildInterface
      * @param ?string $score_accomplished The accomplished score of the competitor (NOTE: use '.' as decimal separator)
      * @param ?string $time Current time of the competitor
      * @param ?string $finished Wether the competitor is done or not
-     * @param ?mysqli $db Database to make compatible with 
      * 
      * @return int the errors occurred during parsing
      */
@@ -176,8 +174,7 @@ class result implements JsonSerializable, RepresentativeChildInterface
         ?string $score_submitted = "",
         ?string $score_accomplished = "",
         ?string $time = "",
-        ?string $finished = "",
-        ?mysqli $db = null
+        ?string $finished = ""
     ): int {
         // variable for error
         $error = 0;
