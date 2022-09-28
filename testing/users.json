@@ -26,11 +26,11 @@
             ],
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"PARAM_OUT_OF_RANGE\");\n})",
             "method": "GET",
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "v": "1"
         },
         {
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "preRequestScript": "",
             "name": "add user - no json",
             "v": "1",
@@ -66,7 +66,7 @@
                 "value": ""
             },
             "v": "1",
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "body": {
                 "body": "{\n    \"names\": \"Rashmi\",\n    \"password\": \"Sonam\"\n}",
                 "contentType": "application/json"
@@ -84,7 +84,7 @@
             "method": "POST"
         },
         {
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "preRequestScript": "",
             "method": "POST",
             "v": "1",
@@ -125,7 +125,7 @@
                 "body": "{\n    \"name\": \"<<username1>>\",\n    \"password\": \"<<password1>>\"\n}"
             },
             "headers": [],
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "method": "POST",
             "preRequestScript": "// set username and password in environment\npw.env.set(\"username1\", \"Rashmi\");\npw.env.set(\"password1\", \"Sonam\");",
             "params": [
@@ -159,7 +159,7 @@
             },
             "preRequestScript": "// set username and password in environment\npw.env.set(\"username2\", \"Jarka\");\npw.env.set(\"password2\", \"Gust\");",
             "v": "1",
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "method": "POST",
             "headers": [],
             "name": "add user - user 2"
@@ -189,11 +189,11 @@
             "headers": [],
             "name": "add user - that already exists",
             "method": "POST",
-            "endpoint": "<<url>>/user.php"
+            "endpoint": "<<url>>/user"
         },
         {
             "preRequestScript": "",
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "body": {
                 "contentType": null,
                 "body": null
@@ -233,10 +233,10 @@
             },
             "name": "authenticate - with wrong username",
             "headers": [],
-            "endpoint": "<<url>>/user.php"
+            "endpoint": "<<url>>/user"
         },
         {
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "headers": [],
             "preRequestScript": "",
             "body": {
@@ -277,7 +277,7 @@
             },
             "params": [],
             "headers": [],
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is Bearer token\", () => {\n  pw.expect(pw.response.body).toInclude(\"UmFzaG1p:0:\"); // base 64 encoding of first username\n})\n\n// write bearer token to environment variable\npw.env.set(\"token1\", pw.response.body);",
             "method": "GET"
         },
@@ -299,13 +299,13 @@
                 "contentType": null
             },
             "params": [],
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "headers": [],
             "preRequestScript": "",
             "method": "GET"
         },
         {
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "headers": [],
             "params": [],
             "auth": {
@@ -335,7 +335,7 @@
                 "contentType": null,
                 "body": null
             },
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "method": "GET",
             "name": "logout - with bearer token",
             "params": [
@@ -384,7 +384,7 @@
                     "value": "logout"
                 }
             ],
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(401);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"ACCESS_DENIED\");\n})",
             "headers": []
         },
@@ -411,7 +411,7 @@
                 "contentType": null,
                 "body": null
             },
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "name": "logout - with basic auth",
             "method": "GET",
             "headers": [],
@@ -444,12 +444,12 @@
                 "password": "abs"
             },
             "method": "GET",
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(401);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"ACCESS_DENIED\");\n})",
             "headers": []
         },
         {
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "name": "reauthenticate - check if token has changed",
             "params": [],
             "method": "GET",
@@ -484,7 +484,7 @@
             },
             "name": "edit user - no json",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"INVALID_JSON\");\n})",
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "body": {
                 "body": null,
                 "contentType": null
@@ -518,7 +518,7 @@
                 "body": "{\n    \"psswords\": \"Sonam1\"\n}",
                 "contentType": "application/json"
             },
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "auth": {
                 "username": "<<username1>>",
                 "value": "",
@@ -532,7 +532,7 @@
         },
         {
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})\n\n// write new password in environment\npw.env.set(\"password1\", \"Sonam1\");",
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "preRequestScript": "",
             "body": {
                 "contentType": "application/json",
@@ -562,7 +562,7 @@
         {
             "v": "1",
             "headers": [],
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "auth": {
                 "value": "",
                 "authType": "basic",
@@ -604,7 +604,7 @@
                 }
             ],
             "method": "GET",
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "v": "1",
             "body": {
                 "contentType": null,
@@ -622,7 +622,7 @@
                 "value": "",
                 "authType": "basic"
             },
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "preRequestScript": "",
             "name": "remove - user 2",
             "method": "GET",

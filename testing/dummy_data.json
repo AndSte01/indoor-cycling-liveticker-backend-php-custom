@@ -21,7 +21,7 @@
             },
             "v": "1",
             "preRequestScript": "// set username and password in environment\npw.env.set(\"username1\", \"Rashmi\");\npw.env.set(\"password1\", \"Sonam\");",
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "params": [
                 {
                     "active": true,
@@ -35,7 +35,7 @@
             "preRequestScript": "// set username and password in environment\npw.env.set(\"username2\", \"Jarka\");\npw.env.set(\"password2\", \"Gust\");",
             "name": "add user - user 2",
             "headers": [],
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "auth": {
                 "authActive": true,
                 "addTo": "Headers",
@@ -68,7 +68,7 @@
                 "contentType": null,
                 "body": null
             },
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "auth": {
                 "key": "",
                 "value": "",
@@ -97,7 +97,7 @@
             "params": [],
             "v": "1",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is Bearer token\", () => {\n  pw.expect(pw.response.body).toInclude(\"SmFya2E=:0:\"); // base 64 encoding of first username\n})\n\n// write bearer token to environment variable\npw.env.set(\"token2\", pw.response.body);",
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "body": {
                 "body": null,
                 "contentType": null
@@ -122,7 +122,7 @@
                 "contentType": "application/json",
                 "body": "{\n   \"date\":\"<<date>>\",\n   \"name\":\"Demo Competition 1\",\n   \"location\":\"Demo Location\",\n   \"areas\":0,\n   \"feature_set\":4,\n   \"live\":true\n}"
             },
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "params": [
                 {
                     "key": "method",
@@ -135,7 +135,7 @@
         {
             "name": "add competition - competition 2",
             "v": "1",
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "auth": {
                 "token": "<<token2>>",
                 "key": "",
@@ -162,7 +162,7 @@
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is id (number)\", () => {\n  pw.expect(pw.response.body.id).toBeType(\"number\");\n})\n\n// write id of competition in environment\npw.env.set(\"competition_id2\", pw.response.body.id.toString());"
         },
         {
-            "endpoint": "<<url>>/discipline.php",
+            "endpoint": "<<url>>/discipline",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.fallback_name).toBe(\"discipline1\");\n  pw.expect(pw.response.body.competition).toBe(parseInt(pw.env.get(\"competition_id1\")));\n})\n\n// write id in environment\npw.env.set(\"discipline_id1\", pw.response.body.id.toString());",
             "body": {
                 "body": "{\n  \"type\": -1,\n  \"fallback_name\": \"discipline1\",\n  \"round\": 0,\n  \"finished\": true\n}",
@@ -210,7 +210,7 @@
                 }
             ],
             "v": "1",
-            "endpoint": "<<url>>/discipline.php",
+            "endpoint": "<<url>>/discipline",
             "body": {
                 "body": "{\n  \"type\": -1,\n  \"fallback_name\": \"discipline2\",\n  \"round\": 0,\n  \"finished\": false\n}",
                 "contentType": "application/json"
@@ -243,7 +243,7 @@
             },
             "v": "1",
             "method": "POST",
-            "endpoint": "<<url>>/discipline.php",
+            "endpoint": "<<url>>/discipline",
             "preRequestScript": "",
             "body": {
                 "body": "{\n  \"type\": -1,\n  \"fallback_name\": \"discipline3\",\n  \"round\": 0,\n  \"finished\": true\n}",
@@ -265,7 +265,7 @@
         },
         {
             "v": "1",
-            "endpoint": "<<url>>/result.php",
+            "endpoint": "<<url>>/result",
             "name": "add result - result 1 (discipline 1)",
             "params": [
                 {
@@ -299,7 +299,7 @@
         },
         {
             "v": "1",
-            "endpoint": "<<url>>/result.php",
+            "endpoint": "<<url>>/result",
             "name": "add result - result 2 (discipline 1)",
             "params": [
                 {
@@ -333,7 +333,7 @@
         },
         {
             "v": "1",
-            "endpoint": "<<url>>/result.php",
+            "endpoint": "<<url>>/result",
             "name": "add result - result 3 (discipline 2)",
             "params": [
                 {
@@ -367,7 +367,7 @@
         },
         {
             "v": "1",
-            "endpoint": "<<url>>/result.php",
+            "endpoint": "<<url>>/result",
             "name": "add result - result 4 (discipline 3)",
             "params": [
                 {
@@ -401,7 +401,7 @@
         },
         {
             "v": "1",
-            "endpoint": "<<url>>/result.php",
+            "endpoint": "<<url>>/result",
             "name": "add result - result 5 (discipline 3)",
             "params": [
                 {
@@ -435,7 +435,7 @@
         },
         {
             "v": "1",
-            "endpoint": "<<url>>/result.php",
+            "endpoint": "<<url>>/result",
             "name": "add result - result 6 (discipline 3)",
             "params": [
                 {
@@ -469,7 +469,7 @@
         },
         {
             "v": "1",
-            "endpoint": "<<url>>/result.php",
+            "endpoint": "<<url>>/result",
             "name": "add result - result 7 (discipline 3)",
             "params": [
                 {
@@ -503,7 +503,7 @@
         },
         {
             "v": "1",
-            "endpoint": "<<url>>/result.php",
+            "endpoint": "<<url>>/result",
             "name": "add result - result 8 (discipline 3)",
             "params": [
                 {
@@ -537,7 +537,7 @@
         },
         {
             "v": "1",
-            "endpoint": "<<url>>/result.php",
+            "endpoint": "<<url>>/result",
             "name": "add result - result 9 (discipline 3)",
             "params": [
                 {

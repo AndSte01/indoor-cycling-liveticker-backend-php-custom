@@ -6,7 +6,7 @@
                 "body": null
             },
             "headers": [],
-            "endpoint": "<<url>>/setup_db.php",
+            "endpoint": "<<url>>/setup_db",
             "params": [],
             "method": "GET",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"INVALID_REQUEST\");\n})",
@@ -23,7 +23,7 @@
         },
         {
             "v": "1",
-            "endpoint": "<<url>>/setup_db.php",
+            "endpoint": "<<url>>/setup_db",
             "name": "drop tables",
             "params": [
                 {
@@ -50,7 +50,7 @@
         },
         {
             "v": "1",
-            "endpoint": "<<url>>/setup_db.php",
+            "endpoint": "<<url>>/setup_db",
             "name": "create tables",
             "params": [
                 {

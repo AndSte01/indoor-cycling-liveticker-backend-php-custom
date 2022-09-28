@@ -5,7 +5,7 @@
     "requests": [
         {
             "v": "1",
-            "endpoint": "<<url>>/poll.php",
+            "endpoint": "<<url>>/poll",
             "name": "poll - no competition",
             "params": [],
             "headers": [],
@@ -23,7 +23,7 @@
         },
         {
             "v": "1",
-            "endpoint": "<<url>>/poll.php",
+            "endpoint": "<<url>>/poll",
             "name": "poll - not existing competition",
             "params": [
                 {
@@ -47,7 +47,7 @@
         },
         {
             "v": "1",
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "name": "get competitions",
             "params": [],
             "headers": [],
@@ -65,7 +65,7 @@
         },
         {
             "v": "1",
-            "endpoint": "<<url>>/poll.php",
+            "endpoint": "<<url>>/poll",
             "name": "poll - latest competition",
             "params": [
                 {
@@ -89,7 +89,7 @@
         },
         {
             "v": "1",
-            "endpoint": "<<url>>/poll.php",
+            "endpoint": "<<url>>/poll",
             "name": "poll - timestamp in the future",
             "params": [
                 {

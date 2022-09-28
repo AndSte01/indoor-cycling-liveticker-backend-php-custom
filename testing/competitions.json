@@ -10,7 +10,7 @@
                 "body": "{\n    \"name\": \"<<username1>>\",\n    \"password\": \"<<password1>>\"\n}",
                 "contentType": "application/json"
             },
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
             "headers": [],
             "auth": {
@@ -34,7 +34,7 @@
                 "body": "{\n    \"name\": \"<<username2>>\",\n    \"password\": \"<<password2>>\"\n}",
                 "contentType": "application/json"
             },
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "auth": {
                 "addTo": "Headers",
                 "value": "",
@@ -61,7 +61,7 @@
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is Bearer token\", () => {\n  pw.expect(pw.response.body).toInclude(\"UmFzaG1p:0:\"); // base 64 encoding of first username\n})\n\n// write bearer token to environment variable\npw.env.set(\"token1\", pw.response.body);",
             "method": "GET",
             "params": [],
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "headers": [],
             "v": "1",
             "preRequestScript": "",
@@ -85,7 +85,7 @@
                 "contentType": null
             },
             "method": "GET",
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is Bearer token\", () => {\n  pw.expect(pw.response.body).toInclude(\"SmFya2E=:0:\"); // base 64 encoding of first username\n})\n\n// write bearer token to environment variable\npw.env.set(\"token2\", pw.response.body);",
             "preRequestScript": "",
             "headers": [],
@@ -121,7 +121,7 @@
             "name": "add competition - competition 1",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is id (number)\", () => {\n  pw.expect(pw.response.body.id).toBeType(\"number\");\n})\n\n// write id of competition in environment\npw.env.set(\"competition_id1\", pw.response.body.id.toString());",
             "headers": [],
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "method": "POST",
             "params": [
                 {
@@ -141,7 +141,7 @@
             ],
             "v": "1",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is id (number)\", () => {\n  pw.expect(pw.response.body.id).toBeType(\"number\");\n})\n\n// write id of competition in environment\npw.env.set(\"competition_id2\", pw.response.body.id.toString());",
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "method": "POST",
             "name": "add competition - competition 2",
             "headers": [],
@@ -162,7 +162,7 @@
         },
         {
             "v": "1",
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "name": "add competition - already existing",
             "params": [
                 {
@@ -191,7 +191,7 @@
         },
         {
             "v": "1",
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "name": "add competition - already existing (access denied)",
             "params": [
                 {
@@ -237,7 +237,7 @@
             },
             "preRequestScript": "",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"MISSING_INFORMATION\");\n})",
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "params": [
                 {
                     "value": "edit",
@@ -268,7 +268,7 @@
                 "body": "{\n   \"date\":\"2021-11-01\",\n   \"name\":\"Demo Competition 2\",\n   \"location\":\"Demo Location\",\n   \"areas\":0,\n   \"feature_set\":4,\n   \"live\":true\n}",
                 "contentType": "application/json"
             },
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "headers": [],
             "v": "1",
             "auth": {
@@ -309,7 +309,7 @@
                 "key": "",
                 "addTo": "Headers"
             },
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "headers": [],
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"ACCESS_DENIED\");\n})",
             "preRequestScript": "",
@@ -344,7 +344,7 @@
                 "body": "{\n   \"name\":\"Demo Competition 1.1\",\n}",
                 "contentType": "application/json"
             },
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "v": "1",
             "name": "edit competition - invalid json",
             "headers": []
@@ -369,7 +369,7 @@
                 "body": "{}",
                 "contentType": "application/json"
             },
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "auth": {
                 "key": "",
                 "authActive": true,
@@ -398,7 +398,7 @@
             "method": "POST",
             "headers": [],
             "preRequestScript": "let date = new Date();\ndate.setDate(date.getDate() - 2);\npw.env.set(\"date\", date.toISOString().split('T')[0]);",
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "params": [
                 {
                     "key": "method",
@@ -421,7 +421,7 @@
             "preRequestScript": "",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
             "name": "edit competition - name",
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "headers": [],
             "v": "1",
             "auth": {
@@ -471,7 +471,7 @@
                 "username": "<<token1>>"
             },
             "method": "POST",
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "params": [
                 {
                     "key": "method",
@@ -489,7 +489,7 @@
             "name": "edit competition - areas",
             "v": "1",
             "method": "POST",
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "params": [
                 {
                     "value": "edit",
@@ -548,7 +548,7 @@
                 "body": "{\n  \"feature_set\": 3\n}"
             },
             "method": "POST",
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "name": "edit competition - feature set",
             "headers": [],
             "preRequestScript": ""
@@ -577,7 +577,7 @@
             },
             "method": "POST",
             "preRequestScript": "",
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "body": {
                 "contentType": "application/json",
                 "body": "{\n  \"live\": 0\n}"
@@ -613,7 +613,7 @@
             },
             "v": "1",
             "preRequestScript": "",
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "method": "POST",
             "name": "edit competition - live (bool)",
             "body": {
@@ -623,7 +623,7 @@
         },
         {
             "name": "edit competition - check edited fields",
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "auth": {
                 "key": "",
                 "value": "",
@@ -673,7 +673,7 @@
             "headers": [],
             "method": "POST",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "auth": {
                 "username": "<<token1>>",
                 "token": "<<token1>>",
@@ -686,7 +686,7 @@
         },
         {
             "preRequestScript": "",
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "auth": {
                 "authType": "bearer",
                 "username": "<<token1>>",
@@ -727,7 +727,7 @@
             "headers": [],
             "method": "GET",
             "params": [],
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "v": "1",
             "body": {
                 "contentType": null,
@@ -741,7 +741,7 @@
             "method": "GET",
             "v": "1",
             "preRequestScript": "",
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "name": "get competition - limit 0",
             "auth": {
                 "token": "<<token1>>",
@@ -778,7 +778,7 @@
             },
             "v": "1",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\npw.test(\"Return is JSON and of length 1\", () => {\n  pw.expect(pw.response.body.length).toBe(1);\n})\n\npw.test(\"is correct competition (sort by date)\", () => {\n  pw.expect(pw.response.body[0].id).toBe(parseInt(pw.env.get(\"competition_id2\")));\n})",
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "headers": [],
             "params": [
                 {
@@ -821,7 +821,7 @@
                 "contentType": null
             },
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\npw.test(\"Return is JSON and of length 1\", () => {\n  pw.expect(pw.response.body.length).toBe(1);\n})\n\npw.test(\"Return contais correct competition (expect competition 2)\", () => {\n  pw.expect(pw.response.body[0].id).toBe(parseInt(pw.env.get(\"competition_id2\")));\n})",
-            "endpoint": "<<url>>/competition.php"
+            "endpoint": "<<url>>/competition"
         },
         {
             "auth": {
@@ -837,7 +837,7 @@
                 "body": null,
                 "contentType": null
             },
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "preRequestScript": "",
             "headers": [],
             "method": "GET",
@@ -884,7 +884,7 @@
             "v": "1",
             "headers": [],
             "name": "remove competition - competition 1",
-            "endpoint": "<<url>>/competition.php"
+            "endpoint": "<<url>>/competition"
         },
         {
             "name": "remove competition - not existing",
@@ -918,7 +918,7 @@
             },
             "headers": [],
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"NOT_EXISTING\");\n})\n",
-            "endpoint": "<<url>>/competition.php"
+            "endpoint": "<<url>>/competition"
         },
         {
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(400);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"ACCESS_DENIED\");\n})\n",
@@ -941,7 +941,7 @@
             "v": "1",
             "preRequestScript": "",
             "name": "remove competition - access denied",
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "headers": [],
             "auth": {
                 "authType": "bearer",
@@ -960,7 +960,7 @@
                 "body": null,
                 "contentType": null
             },
-            "endpoint": "<<url>>/competition.php",
+            "endpoint": "<<url>>/competition",
             "headers": [],
             "method": "GET",
             "auth": {
@@ -1005,7 +1005,7 @@
                 "body": null,
                 "contentType": null
             },
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "auth": {
                 "value": "",
                 "password": "<<password1>>",
@@ -1018,7 +1018,7 @@
             "name": "remove - user 1"
         },
         {
-            "endpoint": "<<url>>/user.php",
+            "endpoint": "<<url>>/user",
             "preRequestScript": "",
             "name": "remove - user 2",
             "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body[0]).toBe(\"SUCCESS\");\n})",
