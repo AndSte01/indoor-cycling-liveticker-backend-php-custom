@@ -68,7 +68,7 @@ try {
 }
 
 
-// now check if parameters are provided according to method nad also try if the can be converted to the correct types
+// now check if parameters are provided according to method and also try if the can be converted to the correct types
 switch ($param_method) {
     case null: // getting a discipline
         // we need either an id or a competition, timestamp is used but not required
@@ -79,7 +79,7 @@ switch ($param_method) {
 
     case "remove":
     case "edit":
-        // if we want to remove or add wee need the id
+        // if we want to remove or add we need the id
         if ($param_id === false) {
             die(errors::to_error_string([errors::MISSING_INFORMATION], true));
         }
