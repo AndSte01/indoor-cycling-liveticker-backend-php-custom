@@ -86,7 +86,7 @@ $authentication_result = $authentication_manager->authenticate(managerAuthentica
 
 // check if login was successful, else die with error as string
 if ($authentication_result != 0) {
-    printf(authenticationErrorsToString($result));
+    printf(authenticationErrorsToString($authentication_result));
     $db->close();
     exit();
 }
