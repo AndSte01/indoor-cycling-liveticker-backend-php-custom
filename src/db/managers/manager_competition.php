@@ -16,6 +16,7 @@ use db\adaptorCompetition;
 require_once(dirname(__FILE__) . "/../adaptor/adaptor_generic.php");
 require_once(dirname(__FILE__) . "/../adaptor/adaptor_competition.php");
 require_once(dirname(__FILE__) . "/../representatives/representative_competition.php");
+require_once("manager_scoreboard.php");
 
 /**
  * Helps managing competitions
@@ -194,6 +195,9 @@ class managerCompetition
         if ($result == null)
             return self::ERROR_ADAPTOR;
 
+        // now add scoreboards if required
+        $this->addScoreboardsToCompetition($result);
+
         // return added competition
         return $result;
     }
@@ -230,6 +234,16 @@ class managerCompetition
         if ($result == false)
             return self::ERROR_ADAPTOR;
 
+        // now add the scoreboards the competition should get
+        // check wether any relevant fields were edited (such as live or areas)
+        if (count(array_intersect([competition::KEY_LIVE, competition::KEY_AREAS], $fields)) > 0) {
+            // only one competition will exist in db, also the fields will already be updated
+            $competition = adaptorCompetition::search($this->db, true, $competition->{competition::KEY_ID})[0];
+
+            // request scoreboards
+            $this->addScoreboardsToCompetition($competition);
+        }
+
         // return 0 since action was successful (or the error wasn't reported)
         return 0;
     }
@@ -258,6 +272,25 @@ class managerCompetition
 
         // return empty error array
         return 0;
+    }
+
+    /**
+     * Requests the scoreboards for a competition from manager scoreboards
+     * 
+     * @param competition $competition the competition to request scoreboards for
+     */
+    protected function addScoreboardsToCompetition(competition $competition): void
+    {
+        // create new manager scoreboards with competition id
+        $manager_scoreboards = new managerScoreboard($this->db, $competition->{competition::KEY_ID});
+
+        if ($competition->{competition::KEY_LIVE}) { // if competition is live
+            // request scoreboards
+            $manager_scoreboards->requestScoreboards($competition->{competition::KEY_AREAS});
+        } else {
+            // if competition isn't live no scoreboards are required
+            $manager_scoreboards->removeAllScoreboards();
+        }
     }
 
     /**

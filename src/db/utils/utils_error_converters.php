@@ -15,6 +15,7 @@ use managerAuthentication;
 use managerCompetition;
 use managerDiscipline;
 use managerResult;
+use managerScoreboard;
 use managerUser;
 
 // import required filed
@@ -23,6 +24,7 @@ require_once(dirname(__FILE__) . "/../managers/manager_user.php");
 require_once(dirname(__FILE__) . "/../managers/manager_competition.php");
 require_once(dirname(__FILE__) . "/../managers/manager_discipline.php");
 require_once(dirname(__FILE__) . "/../managers/manager_result.php");
+require_once(dirname(__FILE__) . "/../managers/manager_scoreboard.php");
 require_once(dirname(__FILE__) . "/../../errors.php");
 
 /**
@@ -197,6 +199,40 @@ function resultErrorsToString(int $error, bool $prepareDie = false): string
             return errors::to_error_string([errors::MISSING_INFORMATION], $prepareDie);
 
         case managerResult::ERROR_ADAPTOR:
+            return errors::to_error_string([errors::INTERNAL_ERROR], $prepareDie);
+
+        default:
+            return errors::to_error_string([errors::SUCCESS]);
+    }
+}
+
+/**
+ * Converts scoreboard errors to a string of errors defined in errors.php
+ * 
+ * @param int $error the error from managerScoreboard
+ * @param bool $prepareDie Prepares the header for immediate call of die() afterwards
+ * 
+ * @return string the errors as a string
+ */
+function scoreboardErrorsToString(int $error, bool $prepareDie = false): string
+{
+    switch ($error) {
+        case managerScoreboard::ERROR_WRONG_COMPETITION_ID:
+            return errors::to_error_string([errors::INVALID_PARENT], $prepareDie);
+
+        case managerScoreboard::ERROR_OUT_OF_RANGE:
+            return errors::to_error_string([errors::PARAM_OUT_OF_RANGE], $prepareDie);
+
+        case managerScoreboard::ERROR_NOT_EXISTING:
+            return errors::to_error_string([errors::NOT_EXISTING], $prepareDie);
+
+        case managerScoreboard::ERROR_ALREADY_EXISTING:
+            return errors::to_error_string([errors::ALREADY_EXISTS], $prepareDie);
+
+        case managerScoreboard::ERROR_MISSING_INFORMATION:
+            return errors::to_error_string([errors::MISSING_INFORMATION], $prepareDie);
+
+        case managerScoreboard::ERROR_ADAPTOR:
             return errors::to_error_string([errors::INTERNAL_ERROR], $prepareDie);
 
         default:

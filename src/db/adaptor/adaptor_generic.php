@@ -84,6 +84,18 @@
  * | finished           | `TINYINT(1)` |    X     | 1                     |                                                                                 | Wether the competitor finished or not                           |
  * 
  * 
+ * scoreboard table
+ * 
+ * | column      | typ          | not null | default               | extra                                                                            | content                                                                       |
+ * | ----------- | ------------ | :------: | --------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+ * | ID          | `INT`        |    X     |                       | `AUTO_INCREMENT PRIMARY KEY`                                                     | The id of the scoreboard                                                      |
+ * | external_id | `TINYINT(1)` |    X     |                       |                                                                                  | The id used by the client to access the scoreboard (is predictable by client) |
+ * | timestamp   | `TIMESTAMP`  |    X     | `current_timestamp()` | `ON UPDATE current_timestamp()`                                                  | Timestamp for calculating deltas                                              |
+ * | competition | `INT`        |    X     |                       | `FOREIGN KEY ... REFERENCES competition(ID) ON DELETE CASCADE ON UPDATE CASCADE` | Id of the competition the scoreboard is assigned to                           |
+ * | content     | `INT`        |    X     | 0                     |                                                                                  | integer describing the content of the scoreboard                              |
+ * | custom_text | `text`       |          |                       |                                                                                  | custom text used in case `content == -1`                                      |
+ * 
+ * 
  * @package Database\Database
  * 
  * @todo make ID unsigned (some time in the future)
@@ -228,6 +240,26 @@ class adaptorGeneric
             return "couldn't create table '" . db_config::TABLE_RESULT . "': " . $db->error;
         }
 
+
+        // --- Scoreboard Table ---
+
+        // make query for TABLE_SCOREBOARD
+        $query = "create table IF NOT EXISTS " . db_config::TABLE_SCOREBOARD . " ( " .
+            db_kwd::SCOREBOARD_INTERNAL_ID .      " INT NOT NULL AUTO_INCREMENT, " .                                                  // Id of result (INT is enough)
+            db_kwd::SCOREBOARD_EXTERNAL_ID .      " TINYINT(1) NOT NULL, " .
+            db_kwd::SCOREBOARD_TIMESTAMP .        " TIMESTAMP NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(), " . // timestamp for calculating deltas
+            db_kwd::SCOREBOARD_COMPETITION .      " INT NOT NULL, " .                                                                 // id of the competition
+            db_kwd::SCOREBOARD_CONTENT .          " INT NOT NULL DEFAULT 0, " .                                                       // content of the scoreboard
+            db_kwd::SCOREBOARD_CUSTOM_TEXT .      " text, " .                                                                         // custom text of the scoreboard
+            "PRIMARY KEY (" . db_kwd::SCOREBOARD_INTERNAL_ID . "), " .
+            "FOREIGN KEY (" . db_kwd::SCOREBOARD_COMPETITION . ") REFERENCES " . db_config::TABLE_COMPETITION . "(" . db_kwd::COMPETITION_ID . ") ON DELETE CASCADE ON UPDATE CASCADE" .
+            ");";
+
+        // execute query and do error handling
+        if ($db->query($query) != true) {
+            return "couldn't create table '" . db_config::TABLE_RESULT . "': " . $db->error;
+        }
+
         return null;
     }
 
@@ -242,7 +274,7 @@ class adaptorGeneric
     public static function dropTables(mysqli $db): ?string
     {
         // create array with table names, the order matters (order by foreign keys)
-        $table_names = [db_config::TABLE_RESULT, db_config::TABLE_DISCIPLINE, db_config::TABLE_COMPETITION, db_config::TABLE_USER];
+        $table_names = [db_config::TABLE_RESULT, db_config::TABLE_DISCIPLINE, db_config::TABLE_SCOREBOARD, db_config::TABLE_COMPETITION, db_config::TABLE_USER];
 
         // iterate over table names
         foreach ($table_names as $table_name) {
@@ -316,5 +348,8 @@ class adaptorGeneric
 
         // optimize results
         $db->query("OPTIMIZE TABLE " . db_config::TABLE_RESULT);
+
+        // optimize scoreboards
+        $db->query("OPTIMIZE TABLE " . db_config::TABLE_SCOREBOARD);
     }
 }

@@ -18,6 +18,7 @@ use errors;
 use managerCompetition;
 use managerDiscipline;
 use managerResult;
+use managerScoreboard;
 
 // Error logging
 // ini_set('display_errors', 1);
@@ -79,8 +80,12 @@ $disciplines = $discipline_manager->getDiscipline($param_timestamp);
 $result_manager = new managerResult($db);
 $results = $result_manager->getResultByCompetition($param_competition_id, $param_timestamp);
 
+// get changed scoreboards
+$scoreboard_manager = new managerScoreboard($db, $param_competition_id);
+$scoreboards = $scoreboard_manager->getScoreboards($param_timestamp);
+
 // close database connection
 $db->close();
 
 // print out results as json array
-die(json_encode([$new_timestamp, $disciplines, $results]));
+die(json_encode([$new_timestamp, $disciplines, $results, $scoreboards]));

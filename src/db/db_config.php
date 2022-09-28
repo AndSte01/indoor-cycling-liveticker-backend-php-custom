@@ -30,6 +30,7 @@ class db_config
     const TABLE_COMPETITION = "dev_competitions_liveticker";
     const TABLE_DISCIPLINE  = "dev_disciplines_liveticker";
     const TABLE_RESULT      = "dev_results_liveticker";
+    const TABLE_SCOREBOARD  = "dev_scoreboards_liveticker";
 }
 
 /**
@@ -77,6 +78,14 @@ class db_kwd
     const RESULT_SCORE_ACCOMPLISHED = "score_accomplished";
     const RESULT_TIME               = "time";
     const RESULT_FINISHED           = "finished";
+
+    // for const TABLE_SCOREBOARD
+    const SCOREBOARD_INTERNAL_ID          = "ID";
+    const SCOREBOARD_EXTERNAL_ID = "external_id";
+    const SCOREBOARD_TIMESTAMP   = "timestamp";
+    const SCOREBOARD_COMPETITION = "competition";
+    const SCOREBOARD_CONTENT     = "content";
+    const SCOREBOARD_CUSTOM_TEXT = "custom_text";
 }
 
 /**
