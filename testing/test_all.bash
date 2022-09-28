@@ -16,6 +16,12 @@ FORCE_COLOR=true hopp test competitions.json -e env.json | tee -a test_results.a
 # clean
 hopp test setup.json -e env.json > /dev/null
 
+# scoreboards
+FORCE_COLOR=true hopp test competitions_scoreboards.json -e env.json | tee -a test_results.ansi
+
+# clean
+hopp test setup.json -e env.json > /dev/null
+
 # disciplines
 FORCE_COLOR=true hopp test disciplines.json -e env.json | tee -a test_results.ansi
 

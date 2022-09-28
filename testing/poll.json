@@ -81,7 +81,7 @@
                 "authActive": true
             },
             "preRequestScript": "",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.length).toBe(3);\n  pw.expect(pw.response.body[0]).toBeType(\"number\");\n  pw.expect(pw.response.body[1]).toBeType(\"object\");\n  pw.expect(pw.response.body[2]).toBeType(\"object\");\n\n  for(var discipline of pw.response.body[1]){\n    pw.expect(discipline.competition).toBe(parseInt(pw.env.get(\"competition_id\")))\n  };\n})",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.length).toBe(4);\n  pw.expect(pw.response.body[0]).toBeType(\"number\");\n  pw.expect(pw.response.body[1]).toBeType(\"object\");\n  pw.expect(pw.response.body[2]).toBeType(\"object\");\n  pw.expect(pw.response.body[3]).toBeType(\"object\");\n\n  for(var discipline of pw.response.body[1]){\n    pw.expect(discipline.competition).toBe(parseInt(pw.env.get(\"competition_id\")))\n  };\n})",
             "body": {
                 "contentType": null,
                 "body": null
@@ -110,7 +110,7 @@
                 "authActive": true
             },
             "preRequestScript": "let date = new Date();\ndate.setDate(date.getDate() + 3);\npw.env.set(\"timestamp\", String(date.getTime()));",
-            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.length).toBe(3);\n  pw.expect(pw.response.body[0]).toBeType(\"number\");\n  pw.expect(pw.response.body[1]).toBeType(\"object\");\n  pw.expect(pw.response.body[1].length).toBe(0);\n  pw.expect(pw.response.body[2]).toBeType(\"object\");\n  pw.expect(pw.response.body[2].length).toBe(0);\n})",
+            "testScript": "// Check status code is correct\npw.test(\"Status code is correct\", ()=> {\n  pw.expect(pw.response.status).toBe(200);\n});\n\n// check for correct return\npw.test(\"Return is JSON and contains correct data\", () => {\n  pw.expect(pw.response.body.length).toBe(4);\n  pw.expect(pw.response.body[0]).toBeType(\"number\");\n  pw.expect(pw.response.body[1]).toBeType(\"object\");\n  pw.expect(pw.response.body[1].length).toBe(0);\n  pw.expect(pw.response.body[2]).toBeType(\"object\");\n  pw.expect(pw.response.body[2].length).toBe(0);\n  pw.expect(pw.response.body[3]).toBeType(\"object\");\n  pw.expect(pw.response.body[3].length).toBe(0);\n})",
             "body": {
                 "contentType": null,
                 "body": null
