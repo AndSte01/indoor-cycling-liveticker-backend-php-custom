@@ -145,10 +145,11 @@ class adaptorResult implements adaptorInterface
      * 
      * This function joins results and discipline table (at discipline's id) and then searches for competition id. 
      * This is all done with a single MySQL statement:
-     * `SELECT results.* FROM results LEFT JOIN disciplines ON results.discipline = disciplines.ID WHERE disciplines.competition = ? [AND timestamp >=?];`
+     * `SELECT results.* FROM results LEFT JOIN disciplines ON results.discipline = disciplines.ID WHERE disciplines.competition = ? [AND timestamp >=?];` (note: statement is outdated)
      * 
      * @param mysqli $db The database to work with
      * @param int $competition_id The id of the competition the desired results are indirectly (via disciplines) assigned to.
+     * @param int $result_id The id of the result you want to search (might be useful if you want to check wether a result exists in the context of a competition)
      * @param ?DateTime $modified_since Get results that were modified after the time passed
      * 
      * @return results[] The results that were found
@@ -156,22 +157,30 @@ class adaptorResult implements adaptorInterface
     public static function searchByCompetition(
         mysqli $db,
         int $competition_id,
+        int $result_id = null,
         ?DateTime $modified_since = null,
     ): array {
         // empty return
         $return = [];
 
-        // empty timestamp filter
-        $timestamp =  "";
+        // empty variable for additional filters
+        $additional_filters =  "";
 
         // parameters
-        $parameters = [$competition_id];
+        $parameters = [$competition_id]; // competition id is always provided
+
+        // check if additional filter for result id should be added
+        if ($result_id != null) {
+            $additional_filters = $additional_filters . " AND " . db_config::TABLE_RESULT . "." . db_kwd::RESULT_ID . "=?";
+            $parameters[] = $result_id;
+        }
 
         // check if additional filter for timestamp should be added
         if ($modified_since != null) {
-            $timestamp = " AND " . db_config::TABLE_RESULT . "." . db_kwd::RESULT_TIMESTAMP . ">=?";
+            $additional_filters = $additional_filters . " AND " . db_config::TABLE_RESULT . "." . db_kwd::RESULT_TIMESTAMP . ">=?";
             $parameters[] = $modified_since->format('Y-m-d H:i:s');
         }
+
 
         // small function is applied to all array elements and adds name of the table in front of it
         // accessing the function by name seems to be the fastest way https://stackoverflow.com/questions/18144782
@@ -207,7 +216,7 @@ class adaptorResult implements adaptorInterface
             " LEFT JOIN " . db_config::TABLE_DISCIPLINE .
             " ON " . db_config::TABLE_RESULT . "." . db_kwd::RESULT_DISCIPLINE . " = " . db_config::TABLE_DISCIPLINE . "." . db_kwd::DISCIPLINE_ID .
             " WHERE " . db_kwd::DISCIPLINE_COMPETITION . "=?" .
-            $timestamp .
+            $additional_filters .
             ";");
 
         // execute statement

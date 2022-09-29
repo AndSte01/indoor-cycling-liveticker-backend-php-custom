@@ -9,6 +9,7 @@
 // global namespace is desired
 
 // define aliases
+use db\adaptorResult;
 use db\scoreboard;
 use db\adaptorScoreboard;
 
@@ -174,7 +175,7 @@ class managerScoreboard
     public function edit(scoreboard $scoreboard, array $fields): int
     {
         // validate scoreboard
-        $validation = $this->validate($this->db, $scoreboard);
+        $validation = $this->validate($this->db, $this->currentCompetitionID, $scoreboard);
 
         // check wether validation was successful or not
         if ($validation != 0)
@@ -221,7 +222,7 @@ class managerScoreboard
      * 
      * @return int Return 0 if validation was passed, else error as int (>1)
      */
-    private function validate(mysqli $db, scoreboard $scoreboardToValidate): int
+    private function validate(mysqli $db, int $competition_id, scoreboard $scoreboardToValidate): int
     {
         // check if external_id is present
         if ($scoreboardToValidate->{scoreboard::KEY_EXTERNAL_ID} == 0)
@@ -233,6 +234,13 @@ class managerScoreboard
         // check if any scoreboards were found
         if ($found_scoreboards == null)
             return self::ERROR_NOT_EXISTING;
+
+        // in case the scoreboard should present a result check wether the result exists and is from the same competition
+        if ($scoreboardToValidate->{scoreboard::KEY_CONTENT} > 0) {
+            $found_results = adaptorResult::searchByCompetition($db, $competition_id, $scoreboardToValidate->{scoreboard::KEY_CONTENT});
+            if ($found_results == null)
+                return self::ERROR_NOT_EXISTING;
+        }
 
         // return 0 if no errors ocurred
         return 0;
