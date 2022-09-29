@@ -108,7 +108,7 @@ class managerResult
     public function getResultByCompetition(int $competition_id, DateTime $modified_since = null): array
     {
         // search for result with corresponding parameters
-        return adaptorResult::searchByCompetition($this->db, $competition_id, $modified_since);
+        return adaptorResult::searchByCompetition($this->db, $competition_id, null, $modified_since);
     }
 
     /**
