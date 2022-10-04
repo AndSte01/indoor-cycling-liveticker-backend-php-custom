@@ -65,12 +65,14 @@ class db_kwd
     const RESULT_FINISHED           = "finished";
 
     // for const TABLE_SCOREBOARD
-    const SCOREBOARD_INTERNAL_ID          = "ID";
+    const SCOREBOARD_INTERNAL_ID = "ID";
     const SCOREBOARD_EXTERNAL_ID = "external_id";
     const SCOREBOARD_TIMESTAMP   = "timestamp";
     const SCOREBOARD_COMPETITION = "competition";
     const SCOREBOARD_CONTENT     = "content";
     const SCOREBOARD_CUSTOM_TEXT = "custom_text";
+    const SCOREBOARD_TIMER_STATE = "timer_state";
+    const SCOREBOARD_TIMER_VALUE = "timer_value";
 }
 
 /**

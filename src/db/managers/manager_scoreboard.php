@@ -9,6 +9,7 @@
 // global namespace is desired
 
 // define aliases
+use db\adaptorGeneric;
 use db\adaptorResult;
 use db\scoreboard;
 use db\adaptorScoreboard;
@@ -204,6 +205,153 @@ class managerScoreboard
     }
 
     /**
+     * Starts the timer of the scoreboard with the provided external id.
+     * The timer is either started at the provided timestamp or at the current timestamp of the database.
+     * Timestamps are in **milliseconds**
+     * 
+     * @param int $external_id the external id of the scoreboard whose timer should be started
+     * @param int $at the timestamp in **milliseconds** at which the timer should be started
+     * 
+     * @return int Errors that happened during execution
+     */
+    public function startTimer(int $external_id, int $at = null): int
+    {
+        // now check wether a certain timestamp for starting the timer was provided (if not get one immediately)
+        $at = $at ?? adaptorGeneric::getCurrentTimeMillis($this->db);
+
+        // now we need the current scoreboard
+        $current_scoreboard = $this->getScoreboardByExternalId($external_id);
+
+        // check wether such a scoreboard has been found, else return error
+        if ($current_scoreboard == null)
+            return self::ERROR_NOT_EXISTING;
+
+        // check if timer is already started
+        if ($current_scoreboard->{scoreboard::KEY_TIMER_STATE} == 1)
+            return 0; // act as if nothing happened
+
+        // calculate offset (caused by resuming timers)
+        $offset = 0;
+        if ($current_scoreboard->{scoreboard::KEY_TIMER_STATE} == 0)
+            $offset = -$current_scoreboard->{scoreboard::KEY_TIMER_VALUE};
+
+        // create a new scoreboard with the new timer values
+        $scoreboard = new scoreboard(
+            null,
+            $external_id,
+            null,
+            null, // not important since validate is accessing current competition id directly
+            null,
+            null,
+            1, // mark timer as started
+            $at + $offset // set the start timestamp
+        );
+
+        // validate scoreboard and set it's internal id
+        $validation = $this->validate($this->db, $scoreboard);
+
+        // check wether validation was successful or not
+        if ($validation != 0)
+            // return error that happened during validation
+            return $validation;
+
+        // now edit the scoreboard in the database
+        $result = adaptorScoreboard::edit($this->db, $scoreboard, [scoreboard::KEY_TIMER_STATE, scoreboard::KEY_TIMER_VALUE]);
+
+        // check if scoreboard was written successfully
+        if ($result == false)
+            return self::ERROR_ADAPTOR;
+
+        // return 0 since action was successful (or the error wasn't reported)
+        return 0;
+    }
+
+    /**
+     * Stops the timer of the scoreboard with the provided external id.
+     * The timer is either stopped at the provided timestamp or is stopped and set to a certain value or is stopped at the current timestamp of the database.
+     * Timestamps are in **milliseconds**
+     * 
+     * @param int $external_id the external id of the scoreboard whose timer should be started
+     * @param int $at the timestamp in **milliseconds** at which the timer should be started
+     * @param int $count stops the timer with a certain amount of **milliseconds** already counted (0 resets the timer), ignored if $at is present.
+     * 
+     * @return int Errors that happened during execution
+     */
+    public function stopTimer(int $external_id, int $at = null, int $count = null): int
+    {
+        // whenever we want to calculate the count from timestamps we need the current timestamp
+        if ($count == null && $at == null)
+            $current_timestamp  = $at ?? adaptorGeneric::getCurrentTimeMillis($this->db);
+
+        // now we need the current scoreboard
+        $current_scoreboard = $this->getScoreboardByExternalId($external_id);
+
+        // check wether such a scoreboard has been found, else return error
+        if ($current_scoreboard == null)
+            return self::ERROR_NOT_EXISTING;
+
+        // now handle the case in which the current value should be set (please note the strict comparison needed for resetting with count = 0)
+        if ($count !== null)
+            $new_timer_value = $count;
+        else {
+            // check if the current scoreboard is in a valid state for calculation value with timestamps
+            if (!self::validateTimerState($current_scoreboard))
+                $new_timer_value = 0;
+
+            else if ($current_scoreboard->{scoreboard::KEY_TIMER_STATE} == 0) // timer is already stopped (please not you can set new counts on already stopped timers)
+                $new_timer_value = $current_scoreboard->{scoreboard::KEY_TIMER_VALUE}; // use the old timer value
+
+            else {
+                if ($at != null)
+                    $new_timer_value = $at - $current_scoreboard->{scoreboard::KEY_TIMER_VALUE}; // stop timestamp - start timestamp
+                else
+                    $new_timer_value = $current_timestamp - $current_scoreboard->{scoreboard::KEY_TIMER_VALUE}; // current timestamp - start timestamp
+
+            }
+        }
+
+        // create a new scoreboard with updated values
+        $updated_scoreboard = new scoreboard(
+            $current_scoreboard->{scoreboard::KEY_INTERNAL_ID},
+            $current_scoreboard->{scoreboard::KEY_EXTERNAL_ID},
+            null,
+            $this->currentCompetitionID,
+            null,
+            null,
+            0,
+            $new_timer_value
+        );
+
+        // no need for validation, the code above will always produce valid scoreboards
+
+        // prepare scoreboard for the database
+        adaptorScoreboard::makeRepresentativeDbReady($this->db, $updated_scoreboard);
+
+        // now edit the scoreboard in the database
+        $result = adaptorScoreboard::edit($this->db, $updated_scoreboard, [scoreboard::KEY_TIMER_STATE, scoreboard::KEY_TIMER_VALUE]);
+
+        // check if scoreboard was written successfully
+        if ($result == false)
+            return self::ERROR_ADAPTOR;
+
+        // return 0 since action was successful (or the error wasn't reported)
+        return 0;
+    }
+
+    /**
+     * Checks wether a scoreboard was started correctly (or is already stopped).
+     * False in case the timer_state isn't 0 and the timer_value is 0 (it is assumed timers don't start at epoch)
+     * 
+     * @param scoreboard $scoreboard The scoreboard to validate
+     * 
+     * @return bool true if scoreboard was started correctly, false if scoreboard is already stopped or wasn't stated correctly
+     */
+    private static function validateTimerState(scoreboard $scoreboard): bool
+    {
+        return !($scoreboard->{scoreboard::KEY_TIMER_STATE} != 0 && $scoreboard->{scoreboard::KEY_TIMER_VALUE} == 0);
+    }
+
+    /**
      * Removes all scoreboards assigned to a competition
      */
     public function removeAllScoreboards(): void
@@ -213,16 +361,16 @@ class managerScoreboard
     }
 
     /**
-     * Checks wether a scoreboard can be edited (or removed)
+     * Checks wether a scoreboard can be edited (or removed). It also adds the internal id to a scoreboard.
      * 
      * id is checked as well as the existence of the scoreboard in the database
      * 
      * @param mysqli $db The database to validate against
-     * @param scoreboard $scoreboardToValidate The scoreboard to validate
+     * @param scoreboard &$scoreboardToValidate The scoreboard to validate
      * 
      * @return int Return 0 if validation was passed, else error as int (>1)
      */
-    private function validate(mysqli $db, scoreboard $scoreboardToValidate): int
+    private function validate(mysqli $db, scoreboard &$scoreboardToValidate): int
     {
         // check if external_id is present
         if ($scoreboardToValidate->{scoreboard::KEY_EXTERNAL_ID} == 0)
@@ -234,6 +382,9 @@ class managerScoreboard
         // check if any scoreboards were found
         if ($found_scoreboards == null)
             return self::ERROR_NOT_EXISTING;
+
+        // add the internal id to the scoreboard
+        $scoreboardToValidate->updateId($found_scoreboards[0]->{scoreboard::KEY_INTERNAL_ID});
 
         // in case the scoreboard should present a result check wether the result exists and is from the same competition
         if ($scoreboardToValidate->{scoreboard::KEY_CONTENT} > 0) {

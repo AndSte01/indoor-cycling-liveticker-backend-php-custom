@@ -21,6 +21,7 @@ require_once(dirname(__FILE__) . "/../db_kwd.php");
 
 // define aliases
 use DateTime;
+use errors;
 use mysqli;
 
 /**
@@ -93,7 +94,9 @@ class adaptorScoreboard implements adaptorInterface
             db_kwd::SCOREBOARD_TIMESTAMP,
             db_kwd::SCOREBOARD_COMPETITION,
             db_kwd::SCOREBOARD_CONTENT,
-            db_kwd::SCOREBOARD_CUSTOM_TEXT
+            db_kwd::SCOREBOARD_CUSTOM_TEXT,
+            db_kwd::SCOREBOARD_TIMER_STATE,
+            db_kwd::SCOREBOARD_TIMER_VALUE
         ]) .
             " FROM " . db_kwd::TABLE_SCOREBOARD . " $filter;");
 
@@ -101,12 +104,12 @@ class adaptorScoreboard implements adaptorInterface
         $statement->execute($parameters);
 
         // bind result values to statement
-        $statement->bind_result($_1, $_2, $_3, $_4, $_5, $_6);
+        $statement->bind_result($_1, $_2, $_3, $_4, $_5, $_6, $_7, $_8);
 
         // iterate over results
         while ($statement->fetch()) {
             $entry = new scoreboard();
-            $entry->parse($_1, $_2, $_3, $_4, $_5, $_6);
+            $entry->parse($_1, $_2, $_3, $_4, $_5, $_6, $_7, $_8);
 
             // append to list
             $return[] = $entry;
@@ -130,17 +133,21 @@ class adaptorScoreboard implements adaptorInterface
                 db_kwd::SCOREBOARD_EXTERNAL_ID,
                 db_kwd::SCOREBOARD_COMPETITION,
                 db_kwd::SCOREBOARD_CONTENT,
-                db_kwd::SCOREBOARD_CUSTOM_TEXT
+                db_kwd::SCOREBOARD_CUSTOM_TEXT,
+                db_kwd::SCOREBOARD_TIMER_STATE,
+                db_kwd::SCOREBOARD_TIMER_VALUE
             ])
-            . ") VALUES (?, ?, ?, ?);");
+            . ") VALUES (?, ?, ?, ?, ?, ?);");
 
         // bind parameters to statement
         $statement->bind_param(
-            "iiis",
+            "iiisii",
             $scoreboard_external_id,
             $scoreboard_competition_id,
             $scoreboard_content,
-            $scoreboard_custom_text
+            $scoreboard_custom_text,
+            $scoreboard_timer_state,
+            $scoreboard_timer_value
         );
 
         // iterate through array of scoreboards and add to database
@@ -149,6 +156,8 @@ class adaptorScoreboard implements adaptorInterface
             $scoreboard_competition_id = $scoreboard->{scoreboard::KEY_COMPETITION_ID};
             $scoreboard_content = $scoreboard->{scoreboard::KEY_CONTENT};
             $scoreboard_custom_text = $scoreboard->{scoreboard::KEY_CUSTOM_TEXT};
+            $scoreboard_timer_state = $scoreboard->{scoreboard::KEY_TIMER_STATE};
+            $scoreboard_timer_value = $scoreboard->{scoreboard::KEY_TIMER_VALUE};
 
             if (!$statement->execute()) {
                 error_log("error while writing scoreboard to database");
@@ -174,7 +183,9 @@ class adaptorScoreboard implements adaptorInterface
             scoreboard::KEY_EXTERNAL_ID => db_kwd::SCOREBOARD_EXTERNAL_ID,
             scoreboard::KEY_COMPETITION_ID => db_kwd::SCOREBOARD_COMPETITION,
             scoreboard::KEY_CONTENT => db_kwd::SCOREBOARD_CONTENT,
-            scoreboard::KEY_CUSTOM_TEXT => db_kwd::SCOREBOARD_CUSTOM_TEXT
+            scoreboard::KEY_CUSTOM_TEXT => db_kwd::SCOREBOARD_CUSTOM_TEXT,
+            scoreboard::KEY_TIMER_STATE => db_kwd::SCOREBOARD_TIMER_STATE,
+            scoreboard::KEY_TIMER_VALUE => db_kwd::SCOREBOARD_TIMER_VALUE,
         ];
 
         // empty arrays to hold fields that should be updated
@@ -238,6 +249,8 @@ class adaptorScoreboard implements adaptorInterface
         $old_competition_id = $representative->{scoreboard::KEY_COMPETITION_ID};
         $new_content = $representative->{scoreboard::KEY_CONTENT};
         $new_custom_text = $representative->{scoreboard::KEY_CUSTOM_TEXT};
+        $new_timer_state = $representative->{scoreboard::KEY_TIMER_STATE};
+        $new_timer_value = $representative->{scoreboard::KEY_TIMER_VALUE};
 
         // check if invalid characters are present in string, if so remove them and add error
         if (strcmp($new_custom_text, $db->real_escape_string($new_custom_text)) != 0) {
@@ -256,6 +269,24 @@ class adaptorScoreboard implements adaptorInterface
             $error |= scoreboard::ERROR_CONTENT;
         }
 
+        // validate timer state (currently only 0 and 1 are allowed)
+        if ($new_timer_state < 0) {
+            $new_timer_state = 0;
+            $error |= scoreboard::KEY_TIMER_STATE;
+        } else if ($new_timer_state > 1) {
+            $new_timer_state = 1;
+            $error |= scoreboard::ERROR_TIMER_STATE;
+        }
+
+        // validate timer value
+        if ($new_timer_value < 0) {
+            $new_timer_value =  0;
+            $error |= scoreboard::ERROR_TIMER_VALUE;
+        } else if ($new_timer_value > PHP_INT_MAX) { // prevent to big ints from being written
+            $new_timer_value = PHP_INT_MAX;
+            $error |= scoreboard::ERROR_TIMER_VALUE;
+        }
+
         // overwrite scoreboard with new one containing the newly created variables
         $representative = new scoreboard(
             $old_id,
@@ -263,7 +294,9 @@ class adaptorScoreboard implements adaptorInterface
             $old_timestamp,
             $old_competition_id,
             $new_content,
-            $new_custom_text
+            $new_custom_text,
+            $new_timer_state,
+            $new_timer_value
         );
 
         // return possible errors

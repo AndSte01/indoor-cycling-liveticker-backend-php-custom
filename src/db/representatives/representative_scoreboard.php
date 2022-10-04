@@ -44,6 +44,10 @@ class scoreboard implements JsonSerializable, RepresentativeChildInterface
     public const KEY_CONTENT = "content";
     /** @var string custom text used in case content is set to -1 */
     public const KEY_CUSTOM_TEXT = "custom_text";
+    /** @var string current state of the timer (such as started/stopped) */
+    public const KEY_TIMER_STATE = "timer_state";
+    /** @var string current value of the timer in milliseconds (please note only values till 2⁶³ can be stored, php limitations)*/
+    public const KEY_TIMER_VALUE = "timer_value";
 
     /** @var array data stored in the discipline */
     protected $data = [
@@ -52,7 +56,9 @@ class scoreboard implements JsonSerializable, RepresentativeChildInterface
         self::KEY_TIMESTAMP => 0,
         self::KEY_COMPETITION_ID => 0,
         self::KEY_CONTENT => 0,
-        self::KEY_CUSTOM_TEXT => ""
+        self::KEY_CUSTOM_TEXT => "",
+        self::KEY_TIMER_STATE => 0,
+        self::KEY_TIMER_VALUE => 0,
     ];
 
     // Errors
@@ -68,6 +74,10 @@ class scoreboard implements JsonSerializable, RepresentativeChildInterface
     const ERROR_CONTENT = 16;
     /** @var int Error while parsing custom text (or if it contained invalid characters and they were removed) */
     const ERROR_CUSTOM_TEXT = 32;
+    /** @var int Error while parsing the timers state */
+    const ERROR_TIMER_STATE = 64;
+    /** @var int Error while parsing the timers value */
+    const ERROR_TIMER_VALUE = 128;
 
     /**
      * Constructor 
@@ -77,6 +87,8 @@ class scoreboard implements JsonSerializable, RepresentativeChildInterface
      * @param int $competition_id ID of the competition the scoreboard is assigned to
      * @param int $content Content of the scoreboard (see documentation of const KEY_CONTENT to get more information about the values)
      * @param string $custom_text Custom text used in case `content == -1`
+     * @param int $timer_state Current state of the timer (such as started/stopped)
+     * @param int $timer_value Current value of the timer in milliseconds
      */
     function __construct(
         int $internal_ID = null,
@@ -84,7 +96,9 @@ class scoreboard implements JsonSerializable, RepresentativeChildInterface
         DateTime $timestamp = null,
         int $competition_id = null,
         int $content = null,
-        string $custom_text = null
+        string $custom_text = null,
+        int $timer_state = null,
+        int $timer_value = null
     ) {
         // this strange way of setting the defaults is used so one can just null all unused fields during construction
         // not relay performant but makes debugging a bit easier
@@ -94,6 +108,8 @@ class scoreboard implements JsonSerializable, RepresentativeChildInterface
         $this->data[self::KEY_COMPETITION_ID] = $competition_id ?? 0;
         $this->data[self::KEY_CONTENT]        = $content        ?? 0;
         $this->data[self::KEY_CUSTOM_TEXT]    = $custom_text    ?? "";
+        $this->data[self::KEY_TIMER_STATE]    = $timer_state    ?? 0;
+        $this->data[self::KEY_TIMER_VALUE]    = $timer_value    ?? 0;
     }
 
     /** @var bool Stores if timestamp was parsed successfully (might be required for cases in which an accurate timestamp of modifications in the database is mandatory) */
@@ -131,6 +147,8 @@ class scoreboard implements JsonSerializable, RepresentativeChildInterface
      * @param ?string $competition_id Id of the competition the scoreboard is assigned to
      * @param ?string $content Content of the scoreboard (see documentation of const KEY_CONTENT to get more information about the values)
      * @param ?string $custom_text Custom text used in case `content == -1`
+     * @param ?string $timer_state Current state of the timer (such as started/stopped)
+     * @param ?string $timer_value Current value of the timer in milliseconds
      * 
      * @return int the errors occurred during parsing
      */
@@ -141,6 +159,8 @@ class scoreboard implements JsonSerializable, RepresentativeChildInterface
         ?string $competition_id = "",
         ?string $content = "",
         ?string $custom_text = "",
+        ?string $timer_state = "",
+        ?string $timer_value = ""
     ): int {
         // variable for error
         $error = 0;
@@ -164,6 +184,8 @@ class scoreboard implements JsonSerializable, RepresentativeChildInterface
         $this->data[self::KEY_EXTERNAL_ID] = intval($external_ID);
         $this->data[self::KEY_COMPETITION_ID] = intval($competition_id);
         $this->data[self::KEY_CONTENT] = intval($content);
+        $this->data[self::KEY_TIMER_STATE] = intval($timer_state);
+        $this->data[self::KEY_TIMER_VALUE] = intval($timer_value);
 
         // return errors
         return $error;
@@ -182,7 +204,9 @@ class scoreboard implements JsonSerializable, RepresentativeChildInterface
             // self::KEY_TIMESTAMP => $this->{self::KEY_TIMESTAMP}->getTimestamp(),
             self::KEY_COMPETITION_ID => $this->{self::KEY_COMPETITION_ID},
             self::KEY_CONTENT => $this->{self::KEY_CONTENT},
-            self::KEY_CUSTOM_TEXT => $this->{self::KEY_CUSTOM_TEXT}
+            self::KEY_CUSTOM_TEXT => $this->{self::KEY_CUSTOM_TEXT},
+            self::KEY_TIMER_STATE => $this->{self::KEY_TIMER_STATE},
+            self::KEY_TIMER_VALUE => $this->{self::KEY_TIMER_VALUE}
         ];
     }
 }
