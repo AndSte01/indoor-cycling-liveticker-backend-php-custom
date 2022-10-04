@@ -316,8 +316,7 @@ class adaptorGeneric
 
         // try to generate DateTime from result, if it fails, log error and set time to current server time
         try {
-            $time = new DateTime();
-            $time->setTimestamp($timestamp); // set timestamp from database
+            $time = new DateTime("@" . $timestamp); // set timestamp from database
         } catch (\Exception $e) {
             error_log($e);
             return new DateTime();
