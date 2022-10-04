@@ -230,7 +230,6 @@ class adaptorGeneric
             db_kwd::RESULT_CLUB .                 " text, " .                                                                            // empty in case of Twitter
             db_kwd::RESULT_SCORE_SUBMITTED .      " float, " .                                                                           // -1 in case of Twitter
             db_kwd::RESULT_SCORE_ACCOMPLISHED .   " float, " .
-            db_kwd::RESULT_TIME .                 " SMALLINT UNSIGNED DEFAULT 0, " .                                                     // time in seconds
             db_kwd::RESULT_FINISHED .             " TINYINT(1) NOT NULL DEFAULT 1, " .                                                   // 0 ongoing, 1 done
             "PRIMARY KEY (" . db_kwd::RESULT_ID . "), " .
             "FOREIGN KEY (" . db_kwd::RESULT_DISCIPLINE . ") REFERENCES " . db_kwd::TABLE_DISCIPLINE . "(" . db_kwd::DISCIPLINE_ID . ") ON DELETE CASCADE ON UPDATE CASCADE" .

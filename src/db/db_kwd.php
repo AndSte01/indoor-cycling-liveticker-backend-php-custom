@@ -62,7 +62,6 @@ class db_kwd
     const RESULT_CLUB               = "club";
     const RESULT_SCORE_SUBMITTED    = "score_submitted";
     const RESULT_SCORE_ACCOMPLISHED = "score_accomplished";
-    const RESULT_TIME               = "time";
     const RESULT_FINISHED           = "finished";
 
     // for const TABLE_SCOREBOARD

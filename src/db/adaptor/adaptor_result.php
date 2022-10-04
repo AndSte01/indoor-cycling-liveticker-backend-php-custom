@@ -97,7 +97,6 @@ class adaptorResult implements adaptorInterface
             db_kwd::RESULT_CLUB,
             db_kwd::RESULT_SCORE_SUBMITTED,
             db_kwd::RESULT_SCORE_ACCOMPLISHED,
-            db_kwd::RESULT_TIME,
             db_kwd::RESULT_FINISHED
         ]) .
             " FROM " . db_kwd::TABLE_RESULT . " $filter;");
@@ -127,12 +126,12 @@ class adaptorResult implements adaptorInterface
         $statement->execute($parameters);
 
         // bind result values to statement
-        $statement->bind_result($_1, $_2, $_3, $_4, $_5, $_6, $_7, $_8, $_9, $_10);
+        $statement->bind_result($_1, $_2, $_3, $_4, $_5, $_6, $_7, $_8, $_9);
 
         // iterate over results
         while ($statement->fetch()) {
             $entry = new result();
-            $entry->parse($_1, $_2, $_3, $_4, $_5, $_6, $_7, $_8, $_9, $_10);
+            $entry->parse($_1, $_2, $_3, $_4, $_5, $_6, $_7, $_8, $_9);
 
             // append to list
             $return[] = $entry;
@@ -209,7 +208,6 @@ class adaptorResult implements adaptorInterface
                         db_kwd::RESULT_CLUB,
                         db_kwd::RESULT_SCORE_SUBMITTED,
                         db_kwd::RESULT_SCORE_ACCOMPLISHED,
-                        db_kwd::RESULT_TIME,
                         db_kwd::RESULT_FINISHED
                     ]
                 )
@@ -225,12 +223,12 @@ class adaptorResult implements adaptorInterface
         $statement->execute($parameters);
 
         // bind result values to statement
-        $statement->bind_result($_1, $_2, $_3, $_4, $_5, $_6, $_7, $_8, $_9, $_10);
+        $statement->bind_result($_1, $_2, $_3, $_4, $_5, $_6, $_7, $_8, $_9);
 
         // iterate over results
         while ($statement->fetch()) {
             $entry = new result();
-            $entry->parse($_1, $_2, $_3, $_4, $_5, $_6, $_7, $_8, $_9, $_10);
+            $entry->parse($_1, $_2, $_3, $_4, $_5, $_6, $_7, $_8, $_9);
 
             // append to list
             $return[] = $entry;
@@ -257,21 +255,19 @@ class adaptorResult implements adaptorInterface
                 db_kwd::RESULT_CLUB,
                 db_kwd::RESULT_SCORE_SUBMITTED,
                 db_kwd::RESULT_SCORE_ACCOMPLISHED,
-                db_kwd::RESULT_TIME,
                 db_kwd::RESULT_FINISHED
             ])
-            . ") VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
+            . ") VALUES (?, ?, ?, ?, ?, ?, ?);");
 
         // bind parameters to statement
         $statement->bind_param(
-            "iissddii",
+            "iissddi",
             $result_discipline_id,
             $result_start_number,
             $result_name,
             $result_club,
             $result_score_submitted,
             $result_score_accomplished,
-            $result_time,
             $result_finished
         );
 
@@ -283,7 +279,6 @@ class adaptorResult implements adaptorInterface
             $result_club = $result->{result::KEY_CLUB};
             $result_score_submitted = $result->{result::KEY_SCORE_SUBMITTED};
             $result_score_accomplished = $result->{result::KEY_SCORE_ACCOMPLISHED};
-            $result_time = $result->{result::KEY_TIME};
             $result_finished = (int) $result->{result::KEY_FINISHED};
 
             if (!$statement->execute()) {
@@ -313,7 +308,6 @@ class adaptorResult implements adaptorInterface
             result::KEY_CLUB => db_kwd::RESULT_CLUB,
             result::KEY_SCORE_SUBMITTED => db_kwd::RESULT_SCORE_SUBMITTED,
             result::KEY_SCORE_ACCOMPLISHED => db_kwd::RESULT_SCORE_ACCOMPLISHED,
-            result::KEY_TIME => db_kwd::RESULT_TIME,
             result::KEY_FINISHED => db_kwd::RESULT_FINISHED
         ];
 
@@ -391,7 +385,6 @@ class adaptorResult implements adaptorInterface
         $new_club = $representative->{result::KEY_CLUB};
         $new_score_submitted = $representative->{result::KEY_SCORE_SUBMITTED};
         $new_score_accomplished = $representative->{result::KEY_SCORE_ACCOMPLISHED};
-        $new_time = $representative->{result::KEY_TIME};
         $new_finished = $representative->{result::KEY_FINISHED};
 
         // timestamp won't be checked because it's never written to database (only relevant when getting a result form it)
@@ -417,16 +410,6 @@ class adaptorResult implements adaptorInterface
         if ($new_start_number > 65535) {
             $new_start_number = 65535;
             $error |= result::ERROR_START_NUMBER;
-        }
-
-        // time is greater or equal 0 by definition (max. value determined by database)
-        if ($new_time < 0) {
-            $new_time = 0;
-            $error |= result::ERROR_TIME;
-        }
-        if ($new_time > 65535) {
-            $new_time = 65535;
-            $error |= result::ERROR_TIME;
         }
 
         // check if floats are in their correct range
@@ -461,7 +444,6 @@ class adaptorResult implements adaptorInterface
             $new_club,
             $new_score_submitted,
             $new_score_accomplished,
-            $new_time,
             $new_finished
         );
 

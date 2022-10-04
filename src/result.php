@@ -229,7 +229,6 @@ $parsing_errors = $result->parse(
     strval($decoded[result::KEY_CLUB]),
     strval($decoded[result::KEY_SCORE_SUBMITTED]),
     strval($decoded[result::KEY_SCORE_ACCOMPLISHED]),
-    strval($decoded[result::KEY_TIME]),
     strval($decoded[result::KEY_FINISHED])
 );
 
@@ -244,9 +243,6 @@ switch (true) { // inverted switch, don't use break since multiple errors could 
 
     case $parsing_errors & result::ERROR_SCORE_ACCOMPLISHED:
         unset($decoded[result::KEY_SCORE_ACCOMPLISHED]);
-
-    case $parsing_errors & result::ERROR_TIME:
-        unset($decoded[result::KEY_TIME]);
 
     case $parsing_errors & result::ERROR_FINISHED:
         unset($decoded[result::KEY_FINISHED]);

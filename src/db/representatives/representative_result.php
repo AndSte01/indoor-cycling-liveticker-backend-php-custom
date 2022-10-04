@@ -39,8 +39,6 @@ class result implements JsonSerializable, RepresentativeChildInterface
     public const KEY_SCORE_SUBMITTED = "score_submitted";
     /** @var string accomplished score of the competitor */
     public const KEY_SCORE_ACCOMPLISHED = "score_accomplished";
-    /** @var string current time of the competitor */
-    public const KEY_TIME = "time";
     /** @var string wether the competitor is done or not */
     public const KEY_FINISHED = "finished";
 
@@ -54,7 +52,6 @@ class result implements JsonSerializable, RepresentativeChildInterface
         self::KEY_CLUB => "",
         self::KEY_SCORE_SUBMITTED => 0.0,
         self::KEY_SCORE_ACCOMPLISHED => 0.0,
-        self::KEY_TIME => 0,
         self::KEY_FINISHED => false
     ];
 
@@ -75,10 +72,8 @@ class result implements JsonSerializable, RepresentativeChildInterface
     const ERROR_SCORE_SUBMITTED = 64;
     /** @var int Error while parsing score_accomplished */
     const ERROR_SCORE_ACCOMPLISHED = 128;
-    /** @var int Error while parsing time */
-    const ERROR_TIME = 256;
     /** @var int Error while setting result as finished (or not) */
-    const ERROR_FINISHED = 512;
+    const ERROR_FINISHED = 256;
 
     /**
      * Constructor 
@@ -91,7 +86,6 @@ class result implements JsonSerializable, RepresentativeChildInterface
      * @param string $club The club of the competitor
      * @param float $score_submitted The submitted score of the competitor
      * @param float $score_accomplished The accomplished score of the competitor
-     * @param int $time Current time of the competitor
      * @param bool $finished Wether the competitor is done or not
      */
     function __construct(
@@ -103,7 +97,6 @@ class result implements JsonSerializable, RepresentativeChildInterface
         string $club = null,
         float $score_submitted = null,
         float $score_accomplished = null,
-        int $time = null,
         bool $finished = null
     ) {
         // this strange way of setting the defaults is used so one can just null all unused fields during construction
@@ -116,7 +109,6 @@ class result implements JsonSerializable, RepresentativeChildInterface
         $this->data[self::KEY_CLUB]               = $club               ?? "";
         $this->data[self::KEY_SCORE_SUBMITTED]    = $score_submitted    ?? 0.0;
         $this->data[self::KEY_SCORE_ACCOMPLISHED] = $score_accomplished ?? 0.0;
-        $this->data[self::KEY_TIME]               = $time               ?? 0;
         $this->data[self::KEY_FINISHED]           = $finished           ?? false;
     }
 
@@ -159,7 +151,6 @@ class result implements JsonSerializable, RepresentativeChildInterface
      * @param ?string $club The club of the competitor
      * @param ?string $score_submitted The submitted score of the competitor (NOTE: use '.' as decimal separator)
      * @param ?string $score_accomplished The accomplished score of the competitor (NOTE: use '.' as decimal separator)
-     * @param ?string $time Current time of the competitor
      * @param ?string $finished Wether the competitor is done or not
      * 
      * @return int the errors occurred during parsing
@@ -173,7 +164,6 @@ class result implements JsonSerializable, RepresentativeChildInterface
         ?string $club = "",
         ?string $score_submitted = "",
         ?string $score_accomplished = "",
-        ?string $time = "",
         ?string $finished = ""
     ): int {
         // variable for error
@@ -198,7 +188,6 @@ class result implements JsonSerializable, RepresentativeChildInterface
         $this->data[self::KEY_ID] = intval($ID);
         $this->data[self::KEY_DISCIPLINE_ID] = intval($discipline_id);
         $this->data[self::KEY_START_NUMBER] = intval($start_number);
-        $this->data[self::KEY_TIME] = intval($time);
 
         // parsing floats
         $this->data[self::KEY_SCORE_SUBMITTED] = floatval($score_submitted);
@@ -227,7 +216,6 @@ class result implements JsonSerializable, RepresentativeChildInterface
             self::KEY_CLUB => $this->{self::KEY_CLUB},
             self::KEY_SCORE_SUBMITTED => $this->{self::KEY_SCORE_SUBMITTED},
             self::KEY_SCORE_ACCOMPLISHED => $this->{self::KEY_SCORE_ACCOMPLISHED},
-            self::KEY_TIME => $this->{self::KEY_TIME},
             self::KEY_FINISHED => $this->{self::KEY_FINISHED}
         ];
     }
