@@ -86,14 +86,16 @@
  * 
  * scoreboard table
  * 
- * | column      | typ          | not null | default               | extra                                                                            | content                                                                       |
- * | ----------- | ------------ | :------: | --------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
- * | ID          | `INT`        |    X     |                       | `AUTO_INCREMENT PRIMARY KEY`                                                     | The id of the scoreboard                                                      |
- * | external_id | `TINYINT(1)` |    X     |                       |                                                                                  | The id used by the client to access the scoreboard (is predictable by client) |
- * | timestamp   | `TIMESTAMP`  |    X     | `current_timestamp()` | `ON UPDATE current_timestamp()`                                                  | Timestamp for calculating deltas                                              |
- * | competition | `INT`        |    X     |                       | `FOREIGN KEY ... REFERENCES competition(ID) ON DELETE CASCADE ON UPDATE CASCADE` | Id of the competition the scoreboard is assigned to                           |
- * | content     | `INT`        |    X     | 0                     |                                                                                  | integer describing the content of the scoreboard                              |
- * | custom_text | `text`       |          |                       |                                                                                  | custom text used in case `content == -1`                                      |
+ * | column      | typ          | not null | default               | extra                                                                            | content                                                                                      |
+ * | ----------- | ------------ | :------: | --------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+ * | ID          | `INT`        |    X     |                       | `AUTO_INCREMENT PRIMARY KEY`                                                     | The id of the scoreboard                                                                     |
+ * | external_id | `TINYINT(1)` |    X     |                       |                                                                                  | The id used by the client to access the scoreboard (is predictable by client)                |
+ * | timestamp   | `TIMESTAMP`  |    X     | `current_timestamp()` | `ON UPDATE current_timestamp()`                                                  | Timestamp for calculating deltas                                                             |
+ * | competition | `INT`        |    X     |                       | `FOREIGN KEY ... REFERENCES competition(ID) ON DELETE CASCADE ON UPDATE CASCADE` | Id of the competition the scoreboard is assigned to                                          |
+ * | content     | `INT`        |    X     | 0                     |                                                                                  | integer describing the content of the scoreboard                                             |
+ * | custom_text | `text`       |          |                       |                                                                                  | custom text used in case `content == -1`                                                     |
+ * | timer_state | `TINYINT(1)` |    X     | 0                     |                                                                                  | The current state of the timer (such as started/stopped)                                     |
+ * | timer_value | `BIGINT`     |    X     | 0                     | `UNSIGNED`                                                                       | the current value of the timer in milliseconds (interpreted as timestamp and/or plain value) |
  * 
  * 
  * @package Database\Database
@@ -245,12 +247,14 @@ class adaptorGeneric
 
         // make query for TABLE_SCOREBOARD
         $query = "create table IF NOT EXISTS " . db_kwd::TABLE_SCOREBOARD . " ( " .
-            db_kwd::SCOREBOARD_INTERNAL_ID .      " INT NOT NULL AUTO_INCREMENT, " .                                                  // Id of result (INT is enough)
-            db_kwd::SCOREBOARD_EXTERNAL_ID .      " TINYINT(1) NOT NULL, " .
-            db_kwd::SCOREBOARD_TIMESTAMP .        " TIMESTAMP NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(), " . // timestamp for calculating deltas
-            db_kwd::SCOREBOARD_COMPETITION .      " INT NOT NULL, " .                                                                 // id of the competition
-            db_kwd::SCOREBOARD_CONTENT .          " INT NOT NULL DEFAULT 0, " .                                                       // content of the scoreboard
-            db_kwd::SCOREBOARD_CUSTOM_TEXT .      " text, " .                                                                         // custom text of the scoreboard
+            db_kwd::SCOREBOARD_INTERNAL_ID . " INT NOT NULL AUTO_INCREMENT, " .                                                  // Id of result (INT is enough)
+            db_kwd::SCOREBOARD_EXTERNAL_ID . " TINYINT(1) NOT NULL, " .
+            db_kwd::SCOREBOARD_TIMESTAMP .   " TIMESTAMP NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(), " . // timestamp for calculating deltas
+            db_kwd::SCOREBOARD_COMPETITION . " INT NOT NULL, " .                                                                 // id of the competition
+            db_kwd::SCOREBOARD_CONTENT .     " INT NOT NULL DEFAULT 0, " .                                                       // content of the scoreboard
+            db_kwd::SCOREBOARD_CUSTOM_TEXT . " text, " .                                                                         // custom text of the scoreboard
+            db_kwd::SCOREBOARD_TIMER_STATE . " TINYINT(1) NOT NULL DEFAULT 0, " .                                                // current state of the timer (such as started/stopped)
+            db_kwd::SCOREBOARD_TIMER_VALUE . " BIGINT UNSIGNED NOT NULL DEFAULT 0, " .                                           // current value of the timer in milliseconds
             "PRIMARY KEY (" . db_kwd::SCOREBOARD_INTERNAL_ID . "), " .
             "FOREIGN KEY (" . db_kwd::SCOREBOARD_COMPETITION . ") REFERENCES " . db_kwd::TABLE_COMPETITION . "(" . db_kwd::COMPETITION_ID . ") ON DELETE CASCADE ON UPDATE CASCADE" .
             ");";
@@ -321,6 +325,38 @@ class adaptorGeneric
             error_log($e);
             return new DateTime();
         }
+
+        // return the mysql server time as DateTime object
+        return $time;
+    }
+
+    /**
+     * Returns the current time of the database (might be different if MySQL server and php server aren't the same device).
+     * The way an unsuccessful query is handled might be irritating (returning the php servers timer) but makes sense because, it helps code relying
+     * on this functions not to break, furthermore if the MySQL server can't return it's current time it probably has an error preventing it from handling all
+     * query relying on an accurate timestamp.
+     * 
+     * @param mysqli $db Database in which tables are created
+     * @return DateTime time of MySQL server (in case of error the time of the php server is returned)
+     */
+    public static function getCurrentTimeMillis(mysqli $db): int
+    {
+        // prepare statement to request current timestamp
+        $statement = $db->prepare("SELECT FLOOR(UNIX_TIMESTAMP(NOW(3))*1000);");
+
+        // execute statement and check if it was executed successfully
+        if ($statement->execute() == false) {
+            // return the current time of the server
+            return floor(microtime(true) * 1000); // ((current microtime as float) * 1000) floored to int
+        }
+
+        // bind variable to result
+        $statement->bind_result($time);
+
+        // no while required because only one result will be sent
+        $statement->fetch();
+
+        // note time should be an int
 
         // return the mysql server time as DateTime object
         return $time;

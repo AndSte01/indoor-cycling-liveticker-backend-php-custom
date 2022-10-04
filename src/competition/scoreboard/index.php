@@ -28,11 +28,11 @@ use function db\utils\scoreboardErrorsToString;
 // error_reporting(E_ALL);
 
 // import required files
-require_once(dirname(__FILE__) . "/../db/managers/manager_authentication.php");
-require_once(dirname(__FILE__) . "/../db/managers/manager_user.php");
-require_once(dirname(__FILE__) . "/../db/managers/manager_competition.php");
-require_once(dirname(__FILE__) . "/../db/managers/manager_scoreboard.php");
-require_once(dirname(__FILE__) . "/../db/utils/utils_error_converters.php");
+require_once(dirname(__FILE__) . "/../../db/managers/manager_authentication.php");
+require_once(dirname(__FILE__) . "/../../db/managers/manager_user.php");
+require_once(dirname(__FILE__) . "/../../db/managers/manager_competition.php");
+require_once(dirname(__FILE__) . "/../../db/managers/manager_scoreboard.php");
+require_once(dirname(__FILE__) . "/../../db/utils/utils_error_converters.php");
 
 // realm for authentication
 $realm = "global";
@@ -143,9 +143,10 @@ if ($manager_competition->userHasAccess($selected_competition->{competition::KEY
 // now edit the scoreboard in the database
 
 // get scoreboard from the database
-$selected_scoreboard = $manager_scoreboard->getScoreboardByExternalId($param_id);
+// TODO this is now done by the manager can be removed (after testing)
+/*$selected_scoreboard = $manager_scoreboard->getScoreboardByExternalId($param_id);
 if ($selected_scoreboard == null)
-    die(errors::to_error_string([errors::NOT_EXISTING], true)); // die with error
+    die(errors::to_error_string([errors::NOT_EXISTING], true)); // die with error*/
 
 // first try to decode and parse scoreboard
 
@@ -161,10 +162,10 @@ if (gettype($decoded) != "array") {
 // create scoreboard and parse data into it
 $scoreboard = new scoreboard();
 $parsing_errors = $scoreboard->parse(
-    strval($selected_scoreboard->{scoreboard::KEY_INTERNAL_ID}),
-    strval($selected_scoreboard->{scoreboard::KEY_EXTERNAL_ID}),
     "",
-    strval($selected_competition->{competition::KEY_ID}),
+    strval($param_id),
+    "",
+    strval($param_competition_id),
     strval($decoded[scoreboard::KEY_CONTENT]),
     strval($decoded[scoreboard::KEY_CUSTOM_TEXT])
 );
