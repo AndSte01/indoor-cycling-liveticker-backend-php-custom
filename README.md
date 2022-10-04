@@ -9,7 +9,7 @@ A small overview of the projects architecture. Please note that this diagram rep
 All of the documentation can be found in the [wiki](https://github.com/AndSte01/indoor-cycling-liveticker-backend-php/wiki).
 
 ## To-Do
-All documentation needs to be revisited.
+All documentation needs to be revisited. Add additional test for scoreboards (where the result doesn't exist, where the result does exist but doesn't belong to the competition)
 
 ## Testing
 Testing is done with [Hoppscotch](https://hoppscotch.io/) using the [environment](./testing/env.json) and test cases in the [testing](./testing) folder.
