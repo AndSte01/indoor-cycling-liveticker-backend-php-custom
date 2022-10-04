@@ -17,6 +17,8 @@ namespace db;
 // import required files
 require_once("adaptor_interface.php");
 require_once(dirname(__FILE__) . "/../representatives/representative_result.php");
+require_once(dirname(__FILE__) . "/../db_config.php");
+require_once(dirname(__FILE__) . "/../db_kwd.php");
 
 // define aliases
 use DateTime;
@@ -98,7 +100,7 @@ class adaptorResult implements adaptorInterface
             db_kwd::RESULT_TIME,
             db_kwd::RESULT_FINISHED
         ]) .
-            " FROM " . db_config::TABLE_RESULT . " $filter;");
+            " FROM " . db_kwd::TABLE_RESULT . " $filter;");
 
         /**
          * awful but gets a beautiful replacement with php >8.1
@@ -171,13 +173,13 @@ class adaptorResult implements adaptorInterface
 
         // check if additional filter for result id should be added
         if ($result_id != null) {
-            $additional_filters = $additional_filters . " AND " . db_config::TABLE_RESULT . "." . db_kwd::RESULT_ID . "=?";
+            $additional_filters = $additional_filters . " AND " . db_kwd::TABLE_RESULT . "." . db_kwd::RESULT_ID . "=?";
             $parameters[] = $result_id;
         }
 
         // check if additional filter for timestamp should be added
         if ($modified_since != null) {
-            $additional_filters = $additional_filters . " AND " . db_config::TABLE_RESULT . "." . db_kwd::RESULT_TIMESTAMP . ">=?";
+            $additional_filters = $additional_filters . " AND " . db_kwd::TABLE_RESULT . "." . db_kwd::RESULT_TIMESTAMP . ">=?";
             $parameters[] = $modified_since->format('Y-m-d H:i:s');
         }
 
@@ -186,7 +188,7 @@ class adaptorResult implements adaptorInterface
         // accessing the function by name seems to be the fastest way https://stackoverflow.com/questions/18144782
         function addTableName($field)
         {
-            return db_config::TABLE_RESULT . "." . strval($field);
+            return db_kwd::TABLE_RESULT . "." . strval($field);
         };
 
         // SELECT dev_results_liveticker.* FROM dev_results_liveticker LEFT JOIN dev_disciplines_liveticker ON dev_results_liveticker.discipline = dev_disciplines_liveticker.ID WHERE dev_disciplines_liveticker.competition = ? AND timestamp>=?;
@@ -212,9 +214,9 @@ class adaptorResult implements adaptorInterface
                     ]
                 )
             ) .
-            " FROM " . db_config::TABLE_RESULT .
-            " LEFT JOIN " . db_config::TABLE_DISCIPLINE .
-            " ON " . db_config::TABLE_RESULT . "." . db_kwd::RESULT_DISCIPLINE . " = " . db_config::TABLE_DISCIPLINE . "." . db_kwd::DISCIPLINE_ID .
+            " FROM " . db_kwd::TABLE_RESULT .
+            " LEFT JOIN " . db_kwd::TABLE_DISCIPLINE .
+            " ON " . db_kwd::TABLE_RESULT . "." . db_kwd::RESULT_DISCIPLINE . " = " . db_kwd::TABLE_DISCIPLINE . "." . db_kwd::DISCIPLINE_ID .
             " WHERE " . db_kwd::DISCIPLINE_COMPETITION . "=?" .
             $additional_filters .
             ";");
@@ -247,7 +249,7 @@ class adaptorResult implements adaptorInterface
         $return = [];
 
         // use prepared statement to prevent SQL injections
-        $statement = $db->prepare("INSERT INTO " . db_config::TABLE_RESULT . " (" .
+        $statement = $db->prepare("INSERT INTO " . db_kwd::TABLE_RESULT . " (" .
             implode(", ", [
                 db_kwd::RESULT_DISCIPLINE,
                 db_kwd::RESULT_START_NUMBER,
@@ -352,7 +354,7 @@ class adaptorResult implements adaptorInterface
         $params[] = $representative->{discipline::KEY_ID};
 
         // use prepared statement to prevent SQL injections
-        $statement = $db->prepare("UPDATE " . db_config::TABLE_RESULT . " SET " .
+        $statement = $db->prepare("UPDATE " . db_kwd::TABLE_RESULT . " SET " .
             implode(", ", $fields)
             . " WHERE " . db_kwd::RESULT_ID . "=?");
 
@@ -364,7 +366,7 @@ class adaptorResult implements adaptorInterface
     public static function remove(mysqli $db, array $representatives): void
     {
         // prepare statement
-        $statement = $db->prepare("DELETE FROM " . db_config::TABLE_RESULT . " WHERE " . db_kwd::RESULT_ID . "=?");
+        $statement = $db->prepare("DELETE FROM " . db_kwd::TABLE_RESULT . " WHERE " . db_kwd::RESULT_ID . "=?");
         $statement->bind_param("i", $ID);
 
         // iterate through array and execute statement for different ids

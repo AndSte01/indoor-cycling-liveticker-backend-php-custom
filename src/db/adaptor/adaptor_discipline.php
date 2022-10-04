@@ -18,6 +18,8 @@ namespace db;
 require_once("adaptor_interface.php");
 require_once(dirname(__FILE__) . "/../representatives/representative_discipline.php");
 require_once(dirname(__FILE__) . "/../utils/utils_discipline.php");
+require_once(dirname(__FILE__) . "/../db_config.php");
+require_once(dirname(__FILE__) . "/../db_kwd.php");
 
 // define aliases
 use DateTime;
@@ -98,7 +100,7 @@ class adaptorDiscipline implements adaptorInterface
             db_kwd::DISCIPLINE_ROUND,
             db_kwd::DISCIPLINE_FINISHED
         ]) .
-            " FROM " . db_config::TABLE_DISCIPLINE . " $filter;");
+            " FROM " . db_kwd::TABLE_DISCIPLINE . " $filter;");
 
         /**
          * awful but gets a beautiful replacement with php >8.1
@@ -153,7 +155,7 @@ class adaptorDiscipline implements adaptorInterface
         $return = [];
 
         // use prepared statement to prevent SQL injections
-        $statement = $db->prepare("INSERT INTO " . db_config::TABLE_DISCIPLINE . " (" .
+        $statement = $db->prepare("INSERT INTO " . db_kwd::TABLE_DISCIPLINE . " (" .
             implode(", ", [
                 db_kwd::DISCIPLINE_COMPETITION,
                 db_kwd::DISCIPLINE_TYPE,
@@ -250,7 +252,7 @@ class adaptorDiscipline implements adaptorInterface
         $params[] = $representative->{discipline::KEY_ID};
 
         // use prepared statement to prevent SQL injections
-        $statement = $db->prepare("UPDATE " . db_config::TABLE_DISCIPLINE . " SET " .
+        $statement = $db->prepare("UPDATE " . db_kwd::TABLE_DISCIPLINE . " SET " .
             implode(", ", $fields)
             . " WHERE " . db_kwd::DISCIPLINE_ID . "=?");
 
@@ -262,7 +264,7 @@ class adaptorDiscipline implements adaptorInterface
     public static function remove(mysqli $db, array $representatives): void
     {
         // prepare statement
-        $statement = $db->prepare("DELETE FROM " . db_config::TABLE_DISCIPLINE . " WHERE " . db_kwd::DISCIPLINE_ID . " = ?");
+        $statement = $db->prepare("DELETE FROM " . db_kwd::TABLE_DISCIPLINE . " WHERE " . db_kwd::DISCIPLINE_ID . " = ?");
         $statement->bind_param("i", $ID);
 
         // iterate through array and execute statement for different ids

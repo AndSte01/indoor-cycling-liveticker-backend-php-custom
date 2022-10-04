@@ -111,6 +111,7 @@ use mysqli;
 
 // Global database definitions
 require_once(dirname(__FILE__) . "/../db_config.php");
+require_once(dirname(__FILE__) . "/../db_kwd.php");
 
 /**
  * A collection of generic functions used to interact with the database 
@@ -156,7 +157,7 @@ class adaptorGeneric
         // --- User Table ---
 
         // make query for TABLE_USER
-        $query = "create table IF NOT EXISTS " . db_config::TABLE_USER . " ( " .
+        $query = "create table IF NOT EXISTS " . db_kwd::TABLE_USER . " ( " .
             db_kwd::USER_ID .                          " INT NOT NULL AUTO_INCREMENT, " .                                                // Id of the user
             db_kwd::USER_NAME .                        " text NOT NULL, " .                                                              // Username
             db_kwd::USER_ROLE .                        " INT NOT NULL DEFAULT 0, " .                                                     // Role
@@ -170,14 +171,14 @@ class adaptorGeneric
 
         // execute query and do error handling
         if ($db->query($query) != true) {
-            return "couldn't create table '" . db_config::TABLE_USER . "': " . $db->error;
+            return "couldn't create table '" . db_kwd::TABLE_USER . "': " . $db->error;
         }
 
 
         // --- Competition Table ---
 
         // make query for TABLE_COMPETITION
-        $query = "create table IF NOT EXISTS " . db_config::TABLE_COMPETITION . " ( " .
+        $query = "create table IF NOT EXISTS " . db_kwd::TABLE_COMPETITION . " ( " .
             db_kwd::COMPETITION_ID .          " INT NOT NULL AUTO_INCREMENT, " .            // Id of Competition
             db_kwd::COMPETITION_DATE .        " date NOT NULL DEFAULT (CURRENT_DATE()), " . // Date of competition  // WARN requires MySQL >8.0.13
             db_kwd::COMPETITION_NAME .        " text, " .
@@ -187,19 +188,19 @@ class adaptorGeneric
             db_kwd::COMPETITION_FEATURE_SET . " TINYINT(1) NOT NULL DEFAULT 0, " .
             db_kwd::COMPETITION_LIVE .        " TINYINT(1) NOT NULL DEFAULT 0, " .          // 0 isn't Live, 1 is Live
             "PRIMARY KEY (" . db_kwd::COMPETITION_ID . "), " .
-            "FOREIGN KEY (" . db_kwd::COMPETITION_USER . ") REFERENCES " . db_config::TABLE_USER . "(" . db_kwd::USER_ID . ") ON DELETE SET NULL ON UPDATE CASCADE" .
+            "FOREIGN KEY (" . db_kwd::COMPETITION_USER . ") REFERENCES " . db_kwd::TABLE_USER . "(" . db_kwd::USER_ID . ") ON DELETE SET NULL ON UPDATE CASCADE" .
             ");";
 
         // execute query and do error handling
         if ($db->query($query) != true) {
-            return "couldn't create table '" . db_config::TABLE_COMPETITION . "': " . $db->error;
+            return "couldn't create table '" . db_kwd::TABLE_COMPETITION . "': " . $db->error;
         }
 
 
         // --- Discipline Table ---
 
         // make query for TABLE_DISCIPLINE
-        $query = "create table  IF NOT EXISTS " . db_config::TABLE_DISCIPLINE . " ( " .
+        $query = "create table  IF NOT EXISTS " . db_kwd::TABLE_DISCIPLINE . " ( " .
             db_kwd::DISCIPLINE_ID .            " INT NOT NULL AUTO_INCREMENT, " .                                                    // Id of discipline
             db_kwd::DISCIPLINE_TIMESTAMP .     " TIMESTAMP NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(), " .   // timestamp for calculating deltas
             db_kwd::DISCIPLINE_COMPETITION .   " INT NOT NULL, " .                                                                   // competition id
@@ -209,18 +210,18 @@ class adaptorGeneric
             db_kwd::DISCIPLINE_ROUND .         " TINYINT(1) UNSIGNED NOT NULL DEFAULT 0, " .                                         // round of the discipline inside of the competition (e.g. preliminary and final round)
             db_kwd::DISCIPLINE_FINISHED .      " TINYINT(1) NOT NULL DEFAULT 1, " .                                                  // 0 ongoing, 1 done
             "PRIMARY KEY (" . db_kwd::DISCIPLINE_ID . "), " .
-            "FOREIGN KEY (" . db_kwd::DISCIPLINE_COMPETITION . ") REFERENCES " . db_config::TABLE_COMPETITION . "(" . db_kwd::COMPETITION_ID . ") ON DELETE CASCADE ON UPDATE CASCADE" .
+            "FOREIGN KEY (" . db_kwd::DISCIPLINE_COMPETITION . ") REFERENCES " . db_kwd::TABLE_COMPETITION . "(" . db_kwd::COMPETITION_ID . ") ON DELETE CASCADE ON UPDATE CASCADE" .
             ");";
         // execute query and do error handling
         if ($db->query($query) != true) {
-            return "couldn't create table '" . db_config::TABLE_DISCIPLINE . "': " . $db->error;
+            return "couldn't create table '" . db_kwd::TABLE_DISCIPLINE . "': " . $db->error;
         }
 
 
         // --- Results Table ---
 
         // make query for TABLE_RESULT
-        $query = "create table IF NOT EXISTS " . db_config::TABLE_RESULT . " ( " .
+        $query = "create table IF NOT EXISTS " . db_kwd::TABLE_RESULT . " ( " .
             db_kwd::RESULT_ID .                   " INT NOT NULL AUTO_INCREMENT, " .                                                     // Id of result (INT is enough)
             db_kwd::RESULT_TIMESTAMP .            " TIMESTAMP NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(), " .    // timestamp for calculating deltas
             db_kwd::RESULT_DISCIPLINE .           " INT NOT NULL, " .                                                                    // id of the discipline
@@ -232,19 +233,19 @@ class adaptorGeneric
             db_kwd::RESULT_TIME .                 " SMALLINT UNSIGNED DEFAULT 0, " .                                                     // time in seconds
             db_kwd::RESULT_FINISHED .             " TINYINT(1) NOT NULL DEFAULT 1, " .                                                   // 0 ongoing, 1 done
             "PRIMARY KEY (" . db_kwd::RESULT_ID . "), " .
-            "FOREIGN KEY (" . db_kwd::RESULT_DISCIPLINE . ") REFERENCES " . db_config::TABLE_DISCIPLINE . "(" . db_kwd::DISCIPLINE_ID . ") ON DELETE CASCADE ON UPDATE CASCADE" .
+            "FOREIGN KEY (" . db_kwd::RESULT_DISCIPLINE . ") REFERENCES " . db_kwd::TABLE_DISCIPLINE . "(" . db_kwd::DISCIPLINE_ID . ") ON DELETE CASCADE ON UPDATE CASCADE" .
             ");";
 
         // execute query and do error handling
         if ($db->query($query) != true) {
-            return "couldn't create table '" . db_config::TABLE_RESULT . "': " . $db->error;
+            return "couldn't create table '" . db_kwd::TABLE_RESULT . "': " . $db->error;
         }
 
 
         // --- Scoreboard Table ---
 
         // make query for TABLE_SCOREBOARD
-        $query = "create table IF NOT EXISTS " . db_config::TABLE_SCOREBOARD . " ( " .
+        $query = "create table IF NOT EXISTS " . db_kwd::TABLE_SCOREBOARD . " ( " .
             db_kwd::SCOREBOARD_INTERNAL_ID .      " INT NOT NULL AUTO_INCREMENT, " .                                                  // Id of result (INT is enough)
             db_kwd::SCOREBOARD_EXTERNAL_ID .      " TINYINT(1) NOT NULL, " .
             db_kwd::SCOREBOARD_TIMESTAMP .        " TIMESTAMP NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(), " . // timestamp for calculating deltas
@@ -252,12 +253,12 @@ class adaptorGeneric
             db_kwd::SCOREBOARD_CONTENT .          " INT NOT NULL DEFAULT 0, " .                                                       // content of the scoreboard
             db_kwd::SCOREBOARD_CUSTOM_TEXT .      " text, " .                                                                         // custom text of the scoreboard
             "PRIMARY KEY (" . db_kwd::SCOREBOARD_INTERNAL_ID . "), " .
-            "FOREIGN KEY (" . db_kwd::SCOREBOARD_COMPETITION . ") REFERENCES " . db_config::TABLE_COMPETITION . "(" . db_kwd::COMPETITION_ID . ") ON DELETE CASCADE ON UPDATE CASCADE" .
+            "FOREIGN KEY (" . db_kwd::SCOREBOARD_COMPETITION . ") REFERENCES " . db_kwd::TABLE_COMPETITION . "(" . db_kwd::COMPETITION_ID . ") ON DELETE CASCADE ON UPDATE CASCADE" .
             ");";
 
         // execute query and do error handling
         if ($db->query($query) != true) {
-            return "couldn't create table '" . db_config::TABLE_RESULT . "': " . $db->error;
+            return "couldn't create table '" . db_kwd::TABLE_RESULT . "': " . $db->error;
         }
 
         return null;
@@ -274,7 +275,7 @@ class adaptorGeneric
     public static function dropTables(mysqli $db): ?string
     {
         // create array with table names, the order matters (order by foreign keys)
-        $table_names = [db_config::TABLE_RESULT, db_config::TABLE_DISCIPLINE, db_config::TABLE_SCOREBOARD, db_config::TABLE_COMPETITION, db_config::TABLE_USER];
+        $table_names = [db_kwd::TABLE_RESULT, db_kwd::TABLE_DISCIPLINE, db_kwd::TABLE_SCOREBOARD, db_kwd::TABLE_COMPETITION, db_kwd::TABLE_USER];
 
         // iterate over table names
         foreach ($table_names as $table_name) {
@@ -338,18 +339,18 @@ class adaptorGeneric
         // OPTIMIZE TABLE users; 
 
         // optimize users
-        $db->query("OPTIMIZE TABLE " . db_config::TABLE_USER);
+        $db->query("OPTIMIZE TABLE " . db_kwd::TABLE_USER);
 
         // optimize competitions
-        $db->query("OPTIMIZE TABLE " . db_config::TABLE_COMPETITION);
+        $db->query("OPTIMIZE TABLE " . db_kwd::TABLE_COMPETITION);
 
         // optimize disciplines
-        $db->query("OPTIMIZE TABLE " . db_config::TABLE_DISCIPLINE);
+        $db->query("OPTIMIZE TABLE " . db_kwd::TABLE_DISCIPLINE);
 
         // optimize results
-        $db->query("OPTIMIZE TABLE " . db_config::TABLE_RESULT);
+        $db->query("OPTIMIZE TABLE " . db_kwd::TABLE_RESULT);
 
         // optimize scoreboards
-        $db->query("OPTIMIZE TABLE " . db_config::TABLE_SCOREBOARD);
+        $db->query("OPTIMIZE TABLE " . db_kwd::TABLE_SCOREBOARD);
     }
 }

@@ -17,6 +17,8 @@ namespace db;
 // import required files
 require_once("adaptor_interface.php");
 require_once(dirname(__FILE__) . "/../representatives/representative_user.php");
+require_once(dirname(__FILE__) . "/../db_config.php");
+require_once(dirname(__FILE__) . "/../db_kwd.php");
 
 // define aliases
 use DateTime;
@@ -69,7 +71,7 @@ class adaptorUser implements adaptorInterface
             db_kwd::USER_BINARY_TIMESTAMP,
             db_kwd::USER_BINARY_TOKEN
         ]) .
-            " FROM " . db_config::TABLE_USER . " $filter;");
+            " FROM " . db_kwd::TABLE_USER . " $filter;");
 
         // execute statement
         $statement->execute($parameters);
@@ -97,7 +99,7 @@ class adaptorUser implements adaptorInterface
         $return = [];
 
         // use prepared statement to prevent SQL injections
-        $statement = $db->prepare("INSERT INTO " . db_config::TABLE_USER . " (" .
+        $statement = $db->prepare("INSERT INTO " . db_kwd::TABLE_USER . " (" .
             implode(", ", [
                 db_kwd::USER_NAME,
                 db_kwd::USER_ROLE,
@@ -183,7 +185,7 @@ class adaptorUser implements adaptorInterface
         $params[] = $representative->{user::KEY_ID};
 
         // use prepared statement to prevent SQL injections
-        $statement = $db->prepare("UPDATE " . db_config::TABLE_USER . " SET " .
+        $statement = $db->prepare("UPDATE " . db_kwd::TABLE_USER . " SET " .
             implode(", ", $fields)
             . " WHERE " . db_kwd::USER_ID . "=?");
 
@@ -196,7 +198,7 @@ class adaptorUser implements adaptorInterface
     public static function remove(mysqli $db, array $representatives): void
     {
         // prepare statement
-        $statement = $db->prepare("DELETE FROM " . db_config::TABLE_USER . " WHERE " . db_kwd::USER_ID . "=?");
+        $statement = $db->prepare("DELETE FROM " . db_kwd::TABLE_USER . " WHERE " . db_kwd::USER_ID . "=?");
         $statement->bind_param("i", $ID);
 
         // iterate through array and execute statement for different ids

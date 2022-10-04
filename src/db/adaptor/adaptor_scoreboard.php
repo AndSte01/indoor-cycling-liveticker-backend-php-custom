@@ -16,6 +16,8 @@ namespace db;
 // import required files
 require_once("adaptor_interface.php");
 require_once(dirname(__FILE__) . "/../representatives/representative_scoreboard.php");
+require_once(dirname(__FILE__) . "/../db_config.php");
+require_once(dirname(__FILE__) . "/../db_kwd.php");
 
 // define aliases
 use DateTime;
@@ -93,7 +95,7 @@ class adaptorScoreboard implements adaptorInterface
             db_kwd::SCOREBOARD_CONTENT,
             db_kwd::SCOREBOARD_CUSTOM_TEXT
         ]) .
-            " FROM " . db_config::TABLE_SCOREBOARD . " $filter;");
+            " FROM " . db_kwd::TABLE_SCOREBOARD . " $filter;");
 
         // execute statement
         $statement->execute($parameters);
@@ -123,7 +125,7 @@ class adaptorScoreboard implements adaptorInterface
         $return = [];
 
         // use prepared statement to prevent SQL injections
-        $statement = $db->prepare("INSERT INTO " . db_config::TABLE_SCOREBOARD . " (" .
+        $statement = $db->prepare("INSERT INTO " . db_kwd::TABLE_SCOREBOARD . " (" .
             implode(", ", [
                 db_kwd::SCOREBOARD_EXTERNAL_ID,
                 db_kwd::SCOREBOARD_COMPETITION,
@@ -201,7 +203,7 @@ class adaptorScoreboard implements adaptorInterface
         $params[] = $representative->{scoreboard::KEY_INTERNAL_ID};
 
         // use prepared statement to prevent SQL injections
-        $statement = $db->prepare("UPDATE " . db_config::TABLE_SCOREBOARD . " SET " .
+        $statement = $db->prepare("UPDATE " . db_kwd::TABLE_SCOREBOARD . " SET " .
             implode(", ", $fields)
             . " WHERE " . db_kwd::SCOREBOARD_INTERNAL_ID . "=?");
 
@@ -213,7 +215,7 @@ class adaptorScoreboard implements adaptorInterface
     public static function remove(mysqli $db, array $representatives): void
     {
         // prepare statement
-        $statement = $db->prepare("DELETE FROM " . db_config::TABLE_SCOREBOARD . " WHERE " . db_kwd::SCOREBOARD_INTERNAL_ID . " = ?");
+        $statement = $db->prepare("DELETE FROM " . db_kwd::TABLE_SCOREBOARD . " WHERE " . db_kwd::SCOREBOARD_INTERNAL_ID . " = ?");
         $statement->bind_param("i", $ID);
 
         // iterate through array and execute statement for different ids

@@ -17,6 +17,8 @@ namespace db;
 // import required files
 require_once("adaptor_interface.php");
 require_once(dirname(__FILE__) . "/../representatives/representative_competition.php");
+require_once(dirname(__FILE__) . "/../db_config.php");
+require_once(dirname(__FILE__) . "/../db_kwd.php");
 
 // define aliases
 use mysqli;
@@ -109,7 +111,7 @@ class adaptorCompetition implements adaptorInterface
             db_kwd::COMPETITION_FEATURE_SET,
             db_kwd::COMPETITION_LIVE
         ]) .
-            " FROM " . db_config::TABLE_COMPETITION . " $filter ORDER by date DESC $str_limit;");
+            " FROM " . db_kwd::TABLE_COMPETITION . " $filter ORDER by date DESC $str_limit;");
 
         /**
          * awful but gets a beautiful replacement with php >8.1
@@ -166,7 +168,7 @@ class adaptorCompetition implements adaptorInterface
         $return = [];
 
         // use prepared statement to prevent SQL injections
-        $statement = $db->prepare("INSERT INTO " . db_config::TABLE_COMPETITION . " (" .
+        $statement = $db->prepare("INSERT INTO " . db_kwd::TABLE_COMPETITION . " (" .
             implode(", ", [
                 db_kwd::COMPETITION_DATE,
                 db_kwd::COMPETITION_NAME,
@@ -270,7 +272,7 @@ class adaptorCompetition implements adaptorInterface
         $params[] = $representative->{competition::KEY_ID};
 
         // use prepared statement to prevent SQL injections
-        $statement = $db->prepare("UPDATE " . db_config::TABLE_COMPETITION . " SET " .
+        $statement = $db->prepare("UPDATE " . db_kwd::TABLE_COMPETITION . " SET " .
             implode(", ", $fields)
             . " WHERE " . db_kwd::COMPETITION_ID . "=?");
 
@@ -283,7 +285,7 @@ class adaptorCompetition implements adaptorInterface
     public static function remove(mysqli $db, array $representatives): void
     {
         // prepare statement
-        $statement = $db->prepare("DELETE FROM " . db_config::TABLE_COMPETITION . " WHERE " . db_kwd::COMPETITION_ID . " = ?");
+        $statement = $db->prepare("DELETE FROM " . db_kwd::TABLE_COMPETITION . " WHERE " . db_kwd::COMPETITION_ID . " = ?");
         $statement->bind_param("i", $ID);
 
         // iterate through array and execute statement for different ids
@@ -391,7 +393,7 @@ class adaptorCompetition implements adaptorInterface
 
         // no prepared statement is needed
         // remove all competitions where the user_id is null
-        $result = $db->query("DELETE FROM "  . db_config::TABLE_COMPETITION . " WHERE " . db_kwd::COMPETITION_USER . " = NULL");
+        $result = $db->query("DELETE FROM "  . db_kwd::TABLE_COMPETITION . " WHERE " . db_kwd::COMPETITION_USER . " = NULL");
 
         // if $result is boolean return it's value (value is probably false)
         if (is_bool($result))
