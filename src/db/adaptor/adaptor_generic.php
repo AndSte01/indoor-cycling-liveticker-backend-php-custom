@@ -300,7 +300,7 @@ class adaptorGeneric
     public static function getCurrentTime(mysqli $db): DateTime
     {
         // prepare statement to request current timestamp
-        $statement = $db->prepare("select now()");
+        $statement = $db->prepare("SELECT UNIX_TIMESTAMP(NOW())");
 
         // execute statement and check if it was executed successfully
         if ($statement->execute() == false) {
@@ -309,14 +309,15 @@ class adaptorGeneric
         }
 
         // bind variable to result
-        $statement->bind_result($time);
+        $statement->bind_result($timestamp);
 
         // no while required because only one result will be sent
         $statement->fetch();
 
         // try to generate DateTime from result, if it fails, log error and set time to current server time
         try {
-            $time = new DateTime($time);
+            $time = new DateTime();
+            $time->setTimestamp($timestamp); // set timestamp from database
         } catch (\Exception $e) {
             error_log($e);
             return new DateTime();
