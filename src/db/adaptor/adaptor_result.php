@@ -391,12 +391,12 @@ class adaptorResult implements adaptorInterface
 
         // check if invalid characters are present in string, if so remove them and add error
         if (strcmp($new_name, $db->real_escape_string($new_name)) != 0) {
-            $new_name = $db->real_escape_string($new_name);
+            $new_name = stripslashes($db->real_escape_string($new_name));
             $error |= result::ERROR_NAME;
         }
 
         if (strcmp($new_club, $db->real_escape_string($new_club)) != 0) {
-            $new_club = $db->real_escape_string($new_club);
+            $new_club = stripslashes($db->real_escape_string($new_club));
             $error |= result::ERROR_CLUB;
         }
 

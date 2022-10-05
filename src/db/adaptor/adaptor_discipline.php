@@ -292,7 +292,7 @@ class adaptorDiscipline implements adaptorInterface
 
         // check if invalid characters are present in string, if so remove them and add error
         if (strcmp($new_fallback_name, $db->real_escape_string($new_fallback_name)) != 0) {
-            $new_fallback_name = $db->real_escape_string($new_fallback_name);
+            $new_fallback_name = stripslashes($db->real_escape_string($new_fallback_name));
             $error |= discipline::ERROR_FALLBACK_NAME;
         }
 

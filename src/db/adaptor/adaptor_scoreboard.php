@@ -254,7 +254,7 @@ class adaptorScoreboard implements adaptorInterface
 
         // check if invalid characters are present in string, if so remove them and add error
         if (strcmp($new_custom_text, $db->real_escape_string($new_custom_text)) != 0) {
-            $new_custom_text = $db->real_escape_string($new_custom_text);
+            $new_custom_text = stripslashes($db->real_escape_string($new_custom_text));
             $error |= scoreboard::ERROR_CUSTOM_TEXT;
         }
 
