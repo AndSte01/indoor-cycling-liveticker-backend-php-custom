@@ -1,5 +1,5 @@
-# indoor-cycling-liveticker-backend-php
-backend for liveticker written in php
+# indoor-cycling-liveticker-backend-php-custom
+backend for liveticker written in php using a custom architecture.
 
 ## Architecture
 A small overview of the projects architecture. Please note that this diagram represents the different parts of the software and how they interact, some small relations have been left out to make it more readable. for more details, have a look at the [wiki](https://github.com/AndSte01/indoor-cycling-liveticker-backend-php/wiki).
