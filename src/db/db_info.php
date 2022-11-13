@@ -21,5 +21,5 @@ class db_info
     /** @var string Version of the software */
     const BACKEND_VERSION = "beta"; // major.minor.bugfix
     /** @var string Type of the backend */
-    const BACKEND_TYPE = "git: AndSte01/indoor-cycling-liveticker-backend-php";
+    const BACKEND_TYPE = "git: AndSte01/indoor-cycling-liveticker-backend-php-custom";
 }
